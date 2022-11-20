@@ -612,6 +612,18 @@ TileIndex GetOtherTunnelBridgeEndOld(TileIndex tile)
 	return tile;
 }
 
+static int GetAmountOwnedBy(const Company* c, Owner owner)
+{
+	int count = 0;
+	for (int i = 0; i < lengthof(c->share_owners); i++) {
+		if (c->share_owners[i] == owner) {
+			count++;
+		}
+	}
+
+	return count;
+}
+
 
 /**
  * Perform a (large) amount of savegame conversion *magic* in order to
@@ -2082,7 +2094,7 @@ bool AfterLoadGame()
 		 * 2) shares that are owned by inactive companies or self
 		 *     (caused by cheating clients in earlier revisions) */
 		for (Company *c : Company::Iterate()) {
-			for (uint i = 0; i < 4; i++) {
+			for (uint i = 0; i < lengthof(c->share_owners); i++) {
 				CompanyID company = c->share_owners[i];
 				if (company == INVALID_COMPANY) continue;
 				if (!Company::IsValidID(company) || company == c->index) c->share_owners[i] = INVALID_COMPANY;
@@ -3831,6 +3843,41 @@ bool AfterLoadGame()
 	/* Station acceptance is some kind of cache */
 	if (IsSavegameVersionBefore(SLV_127)) {
 		for (Station *st : Station::Iterate()) UpdateStationAcceptance(st, false);
+	}
+
+	if (IsSavegameVersionBefore(SLV_SMALLER_COMPANY_SHARES)) {
+		for (Company* co1 : Company::Iterate()) {
+			Owner tempOwners[10]{};
+
+			for (int i = 0; i < lengthof(tempOwners); i++)
+			{
+				tempOwners[i] = INVALID_COMPANY;
+			}
+
+			int index = 0;
+			for (const Company* co2 : Company::Iterate()) {
+				int shares_owned = GetAmountOwnedBy(co1, co2->index);
+
+				switch (shares_owned)
+				{
+					case 0:
+						continue;
+					case 1:
+						tempOwners[index++] = tempOwners[index++] = co2->index;
+					case 2:
+						tempOwners[index++] = tempOwners[index++] = tempOwners[index++] = tempOwners[index++] = tempOwners[index++] = co2->index;
+					case 3:
+						tempOwners[index++] = tempOwners[index++] = tempOwners[index++] = tempOwners[index++] = tempOwners[index++] = tempOwners[index++] = tempOwners[index++] = co2->index;
+					default:
+						break;
+				}
+			}
+
+			for (int i = 0; i < lengthof(tempOwners); i++)
+			{
+				co1->share_owners[i] = tempOwners[i];
+			}
+		}
 	}
 
 	// setting moved from game settings to company settings

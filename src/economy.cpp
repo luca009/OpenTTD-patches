@@ -126,7 +126,7 @@ Money CalculateCompanyValue(const Company *c, bool including_loan)
 	for (const Company *co : Company::Iterate()) {
 		int shares_owned = GetAmountOwnedBy(co, c->index);
 
-		if (shares_owned > 0) owned_shares_value += (CalculateCompanyValueExcludingShares(co) / 4) * shares_owned;
+		if (shares_owned > 0) owned_shares_value += (CalculateCompanyValueExcludingShares(co) / (int)(lengthof(co->share_owners))) * shares_owned;
 	}
 
 	return owned_shares_value + CalculateCompanyValueExcludingShares(c);
@@ -336,7 +336,8 @@ void ChangeOwnershipOfCompanyItems(Owner old_owner, Owner new_owner)
 
 		/* See if the old_owner had shares in other companies */
 		for (const Company *c : Company::Iterate()) {
-			for (i = 0; i < 4; i++) {
+			int arraySize = sizeof(c->share_owners) / sizeof(int);
+			for (i = 0; i < arraySize; i++) {
 				if (c->share_owners[i] == old_owner) {
 					/* Sell its shares */
 					CommandCost res = DoCommand(0, c->index, 0, DC_EXEC | DC_BANKRUPT, CMD_SELL_SHARE_IN_COMPANY);
@@ -350,7 +351,8 @@ void ChangeOwnershipOfCompanyItems(Owner old_owner, Owner new_owner)
 		/* Sell all the shares that people have on this company */
 		Backup<CompanyID> cur_company2(_current_company, FILE_LINE);
 		Company *c = Company::Get(old_owner);
-		for (i = 0; i < 4; i++) {
+		int arraySize = sizeof(c->share_owners) / sizeof(int);
+		for (i = 0; i < arraySize; i++) {
 			if (c->share_owners[i] == INVALID_OWNER) continue;
 
 			if (c->bankrupt_value == 0 && c->share_owners[i] == new_owner) {
@@ -2457,11 +2459,11 @@ CommandCost CmdBuyShareInCompany(TileIndex tile, DoCommandFlag flags, uint32 p1,
 	if (GetAmountOwnedBy(c, COMPANY_SPECTATOR) == 1) {
 		if (!c->is_ai) return cost; //  We can not buy out a real company (temporarily). TODO: well, enable it obviously.
 
-		if (GetAmountOwnedBy(c, _current_company) == 3 && !MayCompanyTakeOver(_current_company, target_company)) return_cmd_error(STR_ERROR_TOO_MANY_VEHICLES_IN_GAME);
+		if (GetAmountOwnedBy(c, _current_company) == lengthof(c->share_owners) - 1 && !MayCompanyTakeOver(_current_company, target_company)) return_cmd_error(STR_ERROR_TOO_MANY_VEHICLES_IN_GAME);
 	}
 
 
-	cost.AddCost(CalculateCompanyValue(c) >> 2);
+	cost.AddCost(CalculateCompanyValue(c) / (int)lengthof(c->share_owners));
 	if (flags & DC_EXEC) {
 		Owner *b = c->share_owners;
 
@@ -2469,7 +2471,7 @@ CommandCost CmdBuyShareInCompany(TileIndex tile, DoCommandFlag flags, uint32 p1,
 		*b = _current_company;
 
 		for (int i = 0; c->share_owners[i] == _current_company;) {
-			if (++i == 4) {
+			if (++i == lengthof(c->share_owners)) {
 				c->bankrupt_value = 0;
 				DoAcquireCompany(c);
 				break;
@@ -2506,7 +2508,7 @@ CommandCost CmdSellShareInCompany(TileIndex tile, DoCommandFlag flags, uint32 p1
 	if (GetAmountOwnedBy(c, _current_company) == 0) return CommandCost();
 
 	/* adjust it a little to make it less profitable to sell and buy */
-	Money cost = CalculateCompanyValue(c) >> 2;
+	Money cost = CalculateCompanyValue(c) / (int)lengthof(c->share_owners);
 	cost = -(cost - (cost >> 7));
 
 	if (flags & DC_EXEC) {

@@ -6,3 +6,9 @@ docs/gamedocs/*
 docs/source/*
 /out
 *.tmp
+/src/.vs
+/src/CMakeFiles
+/src/out/build/x64-Debug
+/src/CMakeCache.txt
+/src/strgen/CMakeFiles
+*.txt
