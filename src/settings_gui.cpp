@@ -1786,11 +1786,6 @@ static SettingsContainer &GetSettingsTree()
 			graphics->Add(new SettingEntry("gui.smallmap_land_colour"));
 			graphics->Add(new SettingEntry("gui.linkgraph_colours"));
 			graphics->Add(new SettingEntry("gui.graph_line_thickness"));
-			graphics->Add(new SettingEntry("gui.show_vehicle_route_steps"));
-			graphics->Add(new SettingEntry("gui.show_vehicle_route"));
-			graphics->Add(new SettingEntry("gui.dash_level_of_route_lines"));
-			graphics->Add(new SettingEntry("gui.show_restricted_signal_default"));
-			graphics->Add(new SettingEntry("gui.show_all_signal_default"));
 		}
 
 		SettingsPage *sound = main->Add(new SettingsPage(STR_CONFIG_SETTING_SOUND));
@@ -1819,7 +1814,7 @@ static SettingsContainer &GetSettingsTree()
 
 			SettingsPage *viewports = interface->Add(new SettingsPage(STR_CONFIG_SETTING_INTERFACE_VIEWPORTS));
 			{
-				SettingsPage *viewport_map = interface->Add(new SettingsPage(STR_CONFIG_SETTING_VIEWPORT_MAP_OPTIONS));
+				SettingsPage *viewport_map = viewports->Add(new SettingsPage(STR_CONFIG_SETTING_VIEWPORT_MAP_OPTIONS));
 				{
 					viewport_map->Add(new SettingEntry("gui.default_viewport_map_mode"));
 					viewport_map->Add(new SettingEntry("gui.action_when_viewport_map_is_dblclicked"));
@@ -1829,6 +1824,19 @@ static SettingsContainer &GetSettingsTree()
 					viewport_map->Add(new SettingEntry("gui.show_bridges_on_map"));
 					viewport_map->Add(new SettingEntry("gui.show_tunnels_on_map"));
 					viewport_map->Add(new SettingEntry("gui.use_owner_colour_for_tunnelbridge"));
+				}
+				SettingsPage *viewport_signals = viewports->Add(new SettingsPage(STR_CONFIG_SETTING_VIEWPORT_SIGNALS));
+				{
+					viewport_signals->Add(new SettingEntry("construction.train_signal_side"));
+					viewport_signals->Add(new SettingEntry("gui.show_restricted_signal_default"));
+					viewport_signals->Add(new SettingEntry("gui.show_all_signal_default"));
+				}
+				SettingsPage *viewport_route_overlay = viewports->Add(new SettingsPage(STR_CONFIG_SETTING_VEHICLE_ROUTE_OVERLAY));
+				{
+					viewport_route_overlay->Add(new SettingEntry("gui.show_vehicle_route_mode"));
+					viewport_route_overlay->Add(new ConditionallyHiddenSettingEntry("gui.show_vehicle_route_steps", []() -> bool { return _settings_client.gui.show_vehicle_route_mode == 0; }));
+					viewport_route_overlay->Add(new ConditionallyHiddenSettingEntry("gui.show_vehicle_route", []() -> bool { return _settings_client.gui.show_vehicle_route_mode == 0; }));
+					viewport_route_overlay->Add(new ConditionallyHiddenSettingEntry("gui.dash_level_of_route_lines", []() -> bool { return _settings_client.gui.show_vehicle_route_mode == 0 || !_settings_client.gui.show_vehicle_route; }));
 				}
 
 				viewports->Add(new SettingEntry("gui.auto_scrolling"));
@@ -1845,7 +1853,6 @@ static SettingsContainer &GetSettingsTree()
 #endif
 				viewports->Add(new SettingEntry("gui.population_in_label"));
 				viewports->Add(new SettingEntry("gui.liveries"));
-				viewports->Add(new SettingEntry("construction.train_signal_side"));
 				viewports->Add(new SettingEntry("gui.measure_tooltip"));
 				viewports->Add(new SettingEntry("gui.loading_indicators"));
 				viewports->Add(new SettingEntry("gui.show_track_reservation"));

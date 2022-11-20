@@ -274,45 +274,11 @@ void BaseVehicleListWindow::BuildVehicleList()
 	this->vscroll->SetCount(static_cast<int>(this->vehgroups.size()));
 }
 
-/** Cargo filter functions */
-static bool CDECL CargoFilter(const Vehicle * const *vid, const CargoID cid)
+static bool GroupCargoFilter(const GUIVehicleGroup* group, const CargoID cid)
 {
-	if (cid == BaseVehicleListWindow::CF_ANY) {
-		return true;
-	} else if (cid == BaseVehicleListWindow::CF_NONE) {
-		for (const Vehicle *w = (*vid); w != nullptr; w = w->Next()) {
-			if (w->cargo_cap > 0) {
-				return false;
-			}
-		}
-		return true;
-	} else if (cid == BaseVehicleListWindow::CF_FREIGHT) {
-		bool have_capacity = false;
-		for (const Vehicle *w = (*vid); w != nullptr; w = w->Next()) {
-			if (w->cargo_cap) {
-				if (IsCargoInClass(w->cargo_type, CC_PASSENGERS)) {
-					return false;
-				} else {
-					have_capacity = true;
-				}
-			}
-		}
-		return have_capacity;
-	} else {
-		for (const Vehicle *w = (*vid); w != nullptr; w = w->Next()) {
-			if (w->cargo_cap > 0 && w->cargo_type == cid) {
-				return true;
-			}
-		}
-		return false;
-	}
-}
-
-static bool CDECL GroupCargoFilter(const GUIVehicleGroup* group, const CargoID cid)
-{
-	if (cid == BaseVehicleListWindow::CF_ANY) return true;
+	if (cid == CF_ANY) return true;
 	for (VehicleList::const_iterator v = group->vehicles_begin; v != group->vehicles_end; ++v) {
-		if (CargoFilter(&(*v), cid)) return true;
+		if (VehicleCargoFilter(*v, cid)) return true;
 	}
 	return false;
 }
@@ -2133,6 +2099,15 @@ private:
 		BP_SHARED_ORDERS, ///< Show the normal caption.
 	};
 
+	void RefreshRouteOverlay() const
+	{
+		if (this->vli.type == VL_SHARED_ORDERS) {
+			const Vehicle *v = Vehicle::GetIfValid(this->vli.index);
+			MarkAllRoutePathsDirty(v);
+			MarkAllRouteStepsDirty(v);
+		}
+	}
+
 public:
 	VehicleListWindow(WindowDesc *desc, WindowNumber window_number) : BaseVehicleListWindow(desc, window_number)
 	{
@@ -2168,6 +2143,17 @@ public:
 	~VehicleListWindow()
 	{
 		*this->sorting = this->vehgroups.GetListing();
+		this->RefreshRouteOverlay();
+	}
+
+	virtual void OnFocus(Window *previously_focused_window) override
+	{
+		this->RefreshRouteOverlay();
+	}
+
+	virtual void OnFocusLost(Window *newly_focused_window) override
+	{
+		this->RefreshRouteOverlay();
 	}
 
 	void UpdateWidgetSize(int widget, Dimension *size, const Dimension &padding, Dimension *fill, Dimension *resize) override
@@ -2393,7 +2379,7 @@ public:
 
 			case WID_VL_STOP_ALL:
 			case WID_VL_START_ALL:
-				DoCommandP(0, (1 << 1) | (widget == WID_VL_START_ALL ? (1 << 0) : 0), this->window_number, CMD_MASS_START_STOP);
+				DoCommandP(0, (1 << 1) | (widget == WID_VL_START_ALL ? (1 << 0) : 0) | (this->GetCargoFilter() << 8), this->window_number, CMD_MASS_START_STOP);
 				break;
 		}
 	}
@@ -2426,14 +2412,14 @@ public:
 						break;
 					case ADI_SERVICE: // Send for servicing
 					case ADI_DEPOT: // Send to Depots
-						DoCommandP(0, DEPOT_MASS_SEND | (index == ADI_SERVICE ? DEPOT_SERVICE : (DepotCommand)0), this->window_number, GetCmdSendToDepot(this->vli.vtype));
+						DoCommandP(0, DEPOT_MASS_SEND | (index == ADI_SERVICE ? DEPOT_SERVICE : (DepotCommand)0) | this->GetCargoFilter(), this->window_number, GetCmdSendToDepot(this->vli.vtype));
 						break;
 					case ADI_CANCEL_DEPOT:
-						DoCommandP(0, DEPOT_MASS_SEND | DEPOT_CANCEL, this->window_number, GetCmdSendToDepot(this->vli.vtype));
+						DoCommandP(0, DEPOT_MASS_SEND | DEPOT_CANCEL | this->GetCargoFilter(), this->window_number, GetCmdSendToDepot(this->vli.vtype));
 						break;
 
 					case ADI_DEPOT_SELL:
-						DoCommandP(0, DEPOT_MASS_SEND | DEPOT_SELL, this->window_number, GetCmdSendToDepot(this->vli.vtype));
+						DoCommandP(0, DEPOT_MASS_SEND | DEPOT_SELL | this->GetCargoFilter(), this->window_number, GetCmdSendToDepot(this->vli.vtype));
 						break;
 
 					case ADI_CHANGE_ORDER:
@@ -2467,7 +2453,7 @@ public:
 
 	void OnQueryTextFinished(char *str) override
 	{
-		DoCommandP(0, this->window_number, 0, CMD_CREATE_GROUP_FROM_LIST | CMD_MSG(STR_ERROR_GROUP_CAN_T_CREATE), nullptr, str);
+		DoCommandP(0, this->window_number, this->GetCargoFilter(), CMD_CREATE_GROUP_FROM_LIST | CMD_MSG(STR_ERROR_GROUP_CAN_T_CREATE), nullptr, str);
 	}
 
 	virtual void OnPlaceObject(Point pt, TileIndex tile) override
@@ -2479,7 +2465,7 @@ public:
 			if (this->vli.vtype == VEH_ROAD && GetPresentRoadTramTypes(Depot::Get(this->vli.index)->xy) != GetPresentRoadTramTypes(tile)) return;
 
 			DestinationID dest = (this->vli.vtype == VEH_AIRCRAFT) ? GetStationIndex(tile) : GetDepotIndex(tile);
-			DoCommandP(0, this->vli.index | (this->vli.vtype << 16) | (OT_GOTO_DEPOT << 20), dest, CMD_MASS_CHANGE_ORDER);
+			DoCommandP(0, this->vli.index | (this->vli.vtype << 16) | (OT_GOTO_DEPOT << 20) | (this->GetCargoFilter() << 24), dest, CMD_MASS_CHANGE_ORDER);
 			ResetObjectToPlace();
 			return;
 		}
@@ -2490,7 +2476,7 @@ public:
 				|| (IsBuoyTile(tile) && this->vli.vtype == VEH_SHIP)) {
 			if (this->vli.type != VL_STATION_LIST) return;
 			if (!(Station::Get(this->vli.index)->facilities & FACIL_WAYPOINT)) return;
-			DoCommandP(0, this->vli.index | (this->vli.vtype << 16) | (OT_GOTO_WAYPOINT << 20), GetStationIndex(tile), CMD_MASS_CHANGE_ORDER);
+			DoCommandP(0, this->vli.index | (this->vli.vtype << 16) | (OT_GOTO_WAYPOINT << 20) | (this->GetCargoFilter() << 24), GetStationIndex(tile), CMD_MASS_CHANGE_ORDER);
 			ResetObjectToPlace();
 			return;
 		}
@@ -2508,7 +2494,7 @@ public:
 					(this->vli.vtype == VEH_TRAIN && st->facilities & FACIL_TRAIN) ||
 					(this->vli.vtype == VEH_AIRCRAFT && st->facilities & FACIL_AIRPORT) ||
 					(this->vli.vtype == VEH_ROAD && st->facilities & (FACIL_BUS_STOP | FACIL_TRUCK_STOP))) {
-				DoCommandP(0, this->vli.index | (this->vli.vtype << 16) | (OT_GOTO_STATION << 20), GetStationIndex(tile), CMD_MASS_CHANGE_ORDER);
+				DoCommandP(0, this->vli.index | (this->vli.vtype << 16) | (OT_GOTO_STATION << 20) | (this->GetCargoFilter() << 24), GetStationIndex(tile), CMD_MASS_CHANGE_ORDER);
 				ResetObjectToPlace();
 				return;
 			}

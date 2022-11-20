@@ -2122,7 +2122,10 @@ CommandCost CmdModifyOrder(TileIndex tile, DoCommandFlag flags, uint32 p1, uint3
 						break;
 
 					case OCV_TIMETABLE:
-						if (!old_var_was_tt) order->GetXDataRef() = 0;
+						if (!old_var_was_tt) {
+							order->SetConditionValue(0);
+							order->GetXDataRef() = 0;
+						}
 						if (occ == OCC_IS_TRUE || occ == OCC_IS_FALSE || occ == OCC_EQUALS || occ == OCC_NOT_EQUALS) order->SetConditionComparator(OCC_LESS_THAN);
 						break;
 
@@ -2716,7 +2719,12 @@ void CheckOrders(const Vehicle *v)
 		if (v->orders != nullptr) v->orders->DebugCheckSanity();
 #endif
 
-		if (message == INVALID_STRING_ID && !has_depot_order && v->type != VEH_AIRCRAFT && _settings_client.gui.no_depot_order_warn) message = STR_NEWS_VEHICLE_NO_DEPOT_ORDER;
+		if (message == INVALID_STRING_ID && !has_depot_order && v->type != VEH_AIRCRAFT) {
+			if (_settings_client.gui.no_depot_order_warn == 1 ||
+					(_settings_client.gui.no_depot_order_warn == 2 && _settings_game.difficulty.vehicle_breakdowns != 0)) {
+				message = STR_NEWS_VEHICLE_NO_DEPOT_ORDER;
+			}
+		}
 
 		/* We don't have a problem */
 		if (message == INVALID_STRING_ID) return;
@@ -3500,6 +3508,7 @@ bool Order::CanLeaveWithCargo(bool has_cargo, CargoID cargo) const
  * - p1 = (bit  0 - 15) - The destination ID to change from
  * - p1 = (bit 16 - 18) - The vehicle type
  * - p1 = (bit 20 - 23) - The order type
+ * - p1 = (bit 24 - 31) - Cargo filter
  * @param p2 various bitstuffed elements
   * - p2 = (bit  0 - 15) - The destination ID to change to
  * @param text unused
@@ -3510,11 +3519,12 @@ CommandCost CmdMassChangeOrder(TileIndex tile, DoCommandFlag flags, uint32 p1, u
 	DestinationID from_dest = GB(p1, 0, 16);
 	VehicleType vehtype = Extract<VehicleType, 16, 3>(p1);
 	OrderType order_type = (OrderType) GB(p1, 20, 4);
+	CargoID cargo_filter = GB(p1, 24, 8);
 	DestinationID to_dest = GB(p2, 0, 16);
 
 	if (flags & DC_EXEC) {
 		for (Vehicle *v : Vehicle::Iterate()) {
-			if (v->type == vehtype && v->IsPrimaryVehicle() && CheckOwnership(v->owner).Succeeded()) {
+			if (v->type == vehtype && v->IsPrimaryVehicle() && CheckOwnership(v->owner).Succeeded() && VehicleCargoFilter(v, cargo_filter)) {
 				int index = 0;
 				bool changed = false;
 
