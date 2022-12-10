@@ -84,6 +84,7 @@ add_files(
     clear_map.h
     cmd_helper.h
     command.cpp
+    command_aux.h
     command_func.h
     command_type.h
     company_base.h
@@ -219,6 +220,12 @@ add_files(
     landscape.h
     landscape_type.h
     language.h
+    league_base.h
+    league_cmd.cpp
+    league_cmd.h
+    league_gui.h
+    league_gui.cpp
+    league_type.h
     livery.h
     main_gui.cpp
     map.cpp

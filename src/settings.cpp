@@ -109,6 +109,8 @@ std::string _secrets_file; ///< Secrets configuration file of OpenTTD.
 typedef std::list<ErrorMessageData> ErrorList;
 static ErrorList _settings_error_list; ///< Errors while loading minimal settings.
 
+static bool _fallback_gui_zoom_max = false;
+
 
 /**
  * List of all the generic setting tables.
@@ -613,6 +615,20 @@ const std::string &StringSettingDesc::Read(const void *object) const
 	return *reinterpret_cast<std::string *>(GetVariableAddress(object, this->save));
 }
 
+static const char *GetSettingConfigName(const SettingDesc &sd)
+{
+	const char *name = sd.name;
+	if (sd.guiproc != nullptr) {
+		SettingOnGuiCtrlData data;
+		data.type = SOGCT_CFG_NAME;
+		data.str = name;
+		if (sd.guiproc(data)) {
+			name = data.str;
+		}
+	}
+	return name;
+}
+
 /**
  * Load values from a group of an IniFile structure into the internal representation
  * @param ini pointer to IniFile structure that holds administrative information
@@ -635,7 +651,7 @@ static void IniLoadSettings(IniFile &ini, const SettingTable &settings_table, co
 			item = nullptr;
 		} else {
 			/* For settings.xx.yy load the settings from [xx] yy = ? */
-			std::string s{ sd->name };
+			std::string s{ GetSettingConfigName(*sd) };
 			auto sc = s.find('.');
 			if (sc != std::string::npos) {
 				group = ini.GetGroup(s.substr(0, sc));
@@ -655,6 +671,13 @@ static void IniLoadSettings(IniFile &ini, const SettingTable &settings_table, co
 				 * did not exist (e.g. loading old config files with a [yapf] section */
 				sc = s.find('.');
 				if (sc != std::string::npos) item = ini.GetGroup(s.substr(0, sc))->GetItem(s.substr(sc + 1), false);
+			}
+			if (item == nullptr && sd->guiproc != nullptr) {
+				SettingOnGuiCtrlData data;
+				data.type = SOGCT_CFG_FALLBACK_NAME;
+				if (sd->guiproc(data)) {
+					item = group->GetItem(data.str, false);
+				}
 			}
 		}
 
@@ -719,7 +742,7 @@ static void IniSaveSettings(IniFile &ini, const SettingTable &settings_table, co
 		if (sd->flags & SF_NO_NEWGAME) continue;
 
 		/* XXX - wtf is this?? (group override?) */
-		std::string s{ sd->name };
+		std::string s{ GetSettingConfigName(*sd) };
 		auto sc = s.find('.');
 		if (sc != std::string::npos) {
 			group = ini.GetGroup(s.substr(0, sc));
@@ -960,6 +983,7 @@ static void UpdateConsists(int32 new_value)
 	AfterLoadTemplateVehiclesUpdateProperties();
 
 	InvalidateWindowClassesData(WC_BUILD_VEHICLE, 0);
+	InvalidateWindowClassesData(WC_BUILD_VIRTUAL_TRAIN, 0);
 	SetWindowClassesDirty(WC_TEMPLATEGUI_MAIN);
 	SetWindowClassesDirty(WC_CREATE_TEMPLATE);
 }
@@ -1045,6 +1069,7 @@ static void TrainAccelerationModelChanged(int32 new_value)
 	/* These windows show acceleration values only when realistic acceleration is on. They must be redrawn after a setting change. */
 	SetWindowClassesDirty(WC_ENGINE_PREVIEW);
 	InvalidateWindowClassesData(WC_BUILD_VEHICLE, 0);
+	InvalidateWindowClassesData(WC_BUILD_VIRTUAL_TRAIN, 0);
 	SetWindowClassesDirty(WC_VEHICLE_DETAILS);
 	SetWindowClassesDirty(WC_TEMPLATEGUI_MAIN);
 	SetWindowClassesDirty(WC_CREATE_TEMPLATE);
@@ -1183,6 +1208,7 @@ static void RoadVehAccelerationModelChanged(int32 new_value)
 	/* These windows show acceleration values only when realistic acceleration is on. They must be redrawn after a setting change. */
 	SetWindowClassesDirty(WC_ENGINE_PREVIEW);
 	InvalidateWindowClassesData(WC_BUILD_VEHICLE, 0);
+	InvalidateWindowClassesData(WC_BUILD_VIRTUAL_TRAIN, 0);
 	SetWindowClassesDirty(WC_VEHICLE_DETAILS);
 }
 
@@ -1284,7 +1310,7 @@ static void InvalidateNewGRFChangeWindows(int32 new_value)
 {
 	InvalidateWindowClassesData(WC_SAVELOAD);
 	DeleteWindowByClass(WC_GAME_OPTIONS);
-	ReInitAllWindows(_gui_zoom_cfg);
+	ReInitAllWindows(false);
 }
 
 static void InvalidateCompanyLiveryWindow(int32 new_value)
@@ -1827,6 +1853,24 @@ static bool AllowRoadStopsUnderBridgesSettingGUI(SettingOnGuiCtrlData &data)
 	}
 }
 
+static bool ZoomMaxCfgName(SettingOnGuiCtrlData &data)
+{
+	switch (data.type) {
+		case SOGCT_CFG_NAME:
+			data.str = "gui.zoom_max_extra";
+			_fallback_gui_zoom_max = false;
+			return true;
+
+		case SOGCT_CFG_FALLBACK_NAME:
+			data.str = "zoom_max";
+			_fallback_gui_zoom_max = true;
+			return true;
+
+		default:
+			return false;
+	}
+}
+
 /* End - GUI callbacks */
 
 /**
@@ -2206,7 +2250,7 @@ static void RemoveEntriesFromIni(IniFile &ini, const SettingTable &table)
 {
 	for (auto &sd : table) {
 		/* For settings.xx.yy load the settings from [xx] yy = ? */
-		std::string s{ sd->name };
+		std::string s{ GetSettingConfigName(*sd) };
 		auto sc = s.find('.');
 		if (sc == std::string::npos) continue;
 
@@ -2275,6 +2319,9 @@ void LoadFromConfig(bool startup)
 		if (FindWindowById(WC_ERRMSG, 0) == nullptr) ShowFirstError();
 	} else {
 		PostTransparencyOptionLoad();
+		if (_fallback_gui_zoom_max && _settings_client.gui.zoom_max <= ZOOM_LVL_OUT_32X) {
+			_settings_client.gui.zoom_max = ZOOM_LVL_MAX;
+		}
 	}
 }
 
@@ -2644,7 +2691,7 @@ void SyncCompanySettings()
 		if (!SlIsObjectCurrentlyValid(sd->save.version_from, sd->save.version_to, sd->save.ext_feature_test)) continue;
 		uint32 old_value = (uint32)sd->AsIntSetting()->Read(old_object);
 		uint32 new_value = (uint32)sd->AsIntSetting()->Read(new_object);
-		if (old_value != new_value) NetworkSendCommand(0, 0, new_value, 0, CMD_CHANGE_COMPANY_SETTING, nullptr, sd->name, _local_company, 0);
+		if (old_value != new_value) NetworkSendCommand(0, 0, new_value, 0, CMD_CHANGE_COMPANY_SETTING, nullptr, sd->name, _local_company, nullptr);
 	}
 }
 

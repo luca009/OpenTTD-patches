@@ -592,7 +592,7 @@ class NIHHouse : public NIHelper {
 		const HouseSpec *hs = HouseSpec::Get(GetHouseType(index));
 		seprintf(buffer, lastof(buffer), "  building_flags: 0x%X", hs->building_flags);
 		output.print(buffer);
-		seprintf(buffer, lastof(buffer), "  extra_flags: 0x%X", hs->extra_flags);
+		seprintf(buffer, lastof(buffer), "  extra_flags: 0x%X, ctrl_flags: 0x%X", hs->extra_flags, hs->ctrl_flags);
 		output.print(buffer);
 		seprintf(buffer, lastof(buffer), "  remove_rating_decrease: %u, minimum_life: %u", hs->remove_rating_decrease, hs->minimum_life);
 		output.print(buffer);
@@ -967,7 +967,7 @@ class NIHCargo : public NIHelper {
 				spec->label >> 24, spec->label >> 16, spec->label >> 8, spec->label,
 				spec->callback_mask);
 		output.print(buffer);
-		char *b = buffer + seprintf(buffer, lastof(buffer), "  Cargo class: %s%s%s%s%s%s%s%s%s%s%s",
+		int written = seprintf(buffer, lastof(buffer), "  Cargo class: %s%s%s%s%s%s%s%s%s%s%s",
 				(spec->classes & CC_PASSENGERS)   != 0 ? "passenger, " : "",
 				(spec->classes & CC_MAIL)         != 0 ? "mail, " : "",
 				(spec->classes & CC_EXPRESS)      != 0 ? "express, " : "",
@@ -979,7 +979,7 @@ class NIHCargo : public NIHelper {
 				(spec->classes & CC_HAZARDOUS)    != 0 ? "hazardous, " : "",
 				(spec->classes & CC_COVERED)      != 0 ? "covered/sheltered, " : "",
 				(spec->classes & CC_SPECIAL)      != 0 ? "special, " : "");
-		if (b[-2] == ',') b[-2] = 0;
+		if (written >= 2 && buffer[written - 2] == ',') buffer[written - 2] = 0;
 		output.print(buffer);
 
 		seprintf(buffer, lastof(buffer), "  Weight: %u, Capacity multiplier: %u", spec->weight, spec->multiplier);
