@@ -2850,6 +2850,13 @@ static ChangeInfoResult GlobalVarChangeInfo(uint gvid, int numinfo, int prop, co
 				break;
 			}
 
+			case A0RPI_GLOBALVAR_ALLOW_ROCKS_DESERT: {
+				if (MappedPropertyLengthMismatch(buf, 1, mapping_entry)) break;
+				extern bool _allow_rocks_desert;
+				_allow_rocks_desert = (buf->ReadByte() != 0);
+				break;
+			}
+
 			default:
 				ret = HandleAction0PropertyDefault(buf, prop);
 				break;
@@ -2922,6 +2929,7 @@ static ChangeInfoResult GlobalVarReserveInfo(uint gvid, int numinfo, int prop, c
 			case A0RPI_GLOBALVAR_EXTRA_STATION_NAMES_PROBABILITY:
 			case A0RPI_GLOBALVAR_LIGHTHOUSE_GENERATE_AMOUNT:
 			case A0RPI_GLOBALVAR_TRANSMITTER_GENERATE_AMOUNT:
+			case A0RPI_GLOBALVAR_ALLOW_ROCKS_DESERT:
 				buf->Skip(buf->ReadExtendedByte());
 				break;
 
@@ -5171,6 +5179,15 @@ static ChangeInfoResult NewLandscapeChangeInfo(uint id, int numinfo, int prop, c
 				bool enabled = (buf->ReadByte() != 0 ? 1 : 0);
 				if (id == NLA3ID_CUSTOM_ROCKS) {
 					SB(_cur.grffile->new_landscape_ctrl_flags, NLCF_ROCKS_RECOLOUR_ENABLED, 1, enabled);
+				}
+				break;
+			}
+
+			case A0RPI_NEWLANDSCAPE_ENABLE_DRAW_SNOWY_ROCKS: {
+				if (MappedPropertyLengthMismatch(buf, 1, mapping_entry)) break;
+				bool enabled = (buf->ReadByte() != 0 ? 1 : 0);
+				if (id == NLA3ID_CUSTOM_ROCKS) {
+					SB(_cur.grffile->new_landscape_ctrl_flags, NLCF_ROCKS_DRAW_SNOWY_ENABLED, 1, enabled);
 				}
 				break;
 			}

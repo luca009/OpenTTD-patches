@@ -13,6 +13,7 @@
 #include "../newgrf_roadstop.h"
 #include "../newgrf_cargo.h"
 #include "../newgrf_newsignals.h"
+#include "../newgrf_newlandscape.h"
 #include "../date_func.h"
 #include "../timetable.h"
 #include "../ship.h"
@@ -22,6 +23,7 @@
 #include "../string_func_extra.h"
 #include "../newgrf_extension.h"
 #include "../animated_tile.h"
+#include "../clear_map.h"
 
 /* Helper for filling property tables */
 #define NIP(prop, base, variable, type, name) { name, (ptrdiff_t)cpp_offsetof(base, variable), cpp_sizeof(base, variable), prop, type }
@@ -168,6 +170,9 @@ class NIHVehicle : public NIHelper {
 		}
 		if (BaseStation::IsValidID(v->last_loading_station)) {
 			seprintf(buffer, lastof(buffer), "  V Last loading station: %u, %s", v->last_loading_station, BaseStation::Get(v->last_loading_station)->GetCachedName());
+			output.print(buffer);
+			seprintf(buffer, lastof(buffer), "  V Last loading tick: " OTTD_PRINTF64 " (" OTTD_PRINTF64 ", " OTTD_PRINTF64 " mins ago)",
+					v->last_loading_tick, _scaled_tick_counter - v->last_loading_tick, (_scaled_tick_counter - v->last_loading_tick) / _settings_time.ticks_per_minute);
 			output.print(buffer);
 		}
 		if (v->IsGroundVehicle()) {
@@ -1751,6 +1756,68 @@ static const NIFeature _nif_roadstop = {
 	new NIHRoadStop(),
 };
 
+static const NIVariable _niv_newlandscape[] = {
+	NIV(0x40, "terrain type"),
+	NIV(0x41, "tile slope"),
+	NIV(0x42, "tile height"),
+	NIV(0x43, "tile hash"),
+	NIV(0x44, "landscape type"),
+	NIV(0x45, "ground info"),
+	NIV(0x60, "land info of nearby tiles"),
+	NIV_END(),
+};
+
+class NIHNewLandscape : public NIHelper {
+	bool IsInspectable(uint index) const override        { return true; }
+	bool ShowExtraInfoOnly(uint index) const override    { return _new_landscape_rocks_grfs.empty(); }
+	bool ShowSpriteDumpButton(uint index) const override { return true; }
+	uint GetParent(uint index) const override            { return UINT32_MAX; }
+	const void *GetInstance(uint index)const override    { return nullptr; }
+	const void *GetSpec(uint index) const override       { return nullptr; }
+	void SetStringParameters(uint index) const override  { this->SetObjectAtStringParameters(STR_LAI_CLEAR_DESCRIPTION_ROCKS, INVALID_STRING_ID, index); }
+	uint32 GetGRFID(uint index) const override           { return 0; }
+
+	uint Resolve(uint index, uint var, uint param, GetVariableExtra *extra) const override
+	{
+		if (!IsTileType(index, MP_CLEAR)) return 0;
+
+		TileInfo ti;
+		ti.x = TileX(index);
+		ti.y = TileY(index);
+		ti.tileh = GetTilePixelSlope(index, &ti.z);
+		ti.tile = index;
+
+		NewLandscapeResolverObject ro(nullptr, &ti, NEW_LANDSCAPE_ROCKS);
+		return ro.GetScope(VSG_SCOPE_SELF)->GetVariable(var, param, extra);
+	}
+
+	void ExtraInfo(uint index, NIExtraInfoOutput &output) const override
+	{
+		char buffer[1024];
+		output.print("New Landscape GRFs:");
+		for (const GRFFile *grf : _new_landscape_rocks_grfs) {
+			seprintf(buffer, lastof(buffer), "  GRF: %08X", BSWAP32(grf->grfid));
+			output.print(buffer);
+			seprintf(buffer, lastof(buffer), "    Enable rocks recolour: %d, Enable drawing snowy rocks: %d",
+					HasBit(grf->new_landscape_ctrl_flags, NLCF_ROCKS_RECOLOUR_ENABLED), HasBit(grf->new_landscape_ctrl_flags, NLCF_ROCKS_DRAW_SNOWY_ENABLED));
+			output.print(buffer);
+		}
+	}
+
+	/* virtual */ void SpriteDump(uint index, DumpSpriteGroupPrinter print) const override
+	{
+		extern void DumpNewLandscapeRocksSpriteGroups(DumpSpriteGroupPrinter print);
+		DumpNewLandscapeRocksSpriteGroups(std::move(print));
+	}
+};
+
+static const NIFeature _nif_newlandscape = {
+	nullptr,
+	nullptr,
+	_niv_newlandscape,
+	new NIHNewLandscape(),
+};
+
 /** Table with all NIFeatures. */
 static const NIFeature * const _nifeatures[] = {
 	&_nif_vehicle,      // GSF_TRAINS
@@ -1774,7 +1841,7 @@ static const NIFeature * const _nifeatures[] = {
 	&_nif_roadtype,     // GSF_ROADTYPES
 	&_nif_roadtype,     // GSF_TRAMTYPES
 	&_nif_roadstop,     // GSF_ROADSTOPS
-	nullptr,            // GSF_NEWLANDSCAPE
+	&_nif_newlandscape, // GSF_NEWLANDSCAPE
 	&_nif_town,         // GSF_FAKE_TOWNS
 	&_nif_station_struct,  // GSF_FAKE_STATION_STRUCT
 };
