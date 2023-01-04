@@ -1666,18 +1666,23 @@ static const NWidgetPart _nested_vehicle_list[] = {
 	EndContainer(),
 
 	NWidget(NWID_HORIZONTAL),
-		NWidget(WWT_TEXTBTN, COLOUR_GREY, WID_VL_GROUP_ORDER), SetMinimalSize(81, 12), SetFill(0, 1), SetDataTip(STR_STATION_VIEW_GROUP, STR_TOOLTIP_GROUP_ORDER),
-		NWidget(WWT_DROPDOWN, COLOUR_GREY, WID_VL_GROUP_BY_PULLDOWN), SetMinimalSize(167, 12), SetFill(0, 1), SetDataTip(0x0, STR_TOOLTIP_GROUP_ORDER),
-		NWidget(WWT_PANEL, COLOUR_GREY), SetMinimalSize(12, 12), SetFill(1, 1), SetResize(1, 0), EndContainer(),
-	EndContainer(),
-
-	NWidget(NWID_HORIZONTAL),
-		NWidget(WWT_PUSHTXTBTN, COLOUR_GREY, WID_VL_SORT_ORDER), SetMinimalSize(81, 12), SetFill(0, 1), SetDataTip(STR_BUTTON_SORT_BY, STR_TOOLTIP_SORT_ORDER),
-		NWidget(WWT_DROPDOWN, COLOUR_GREY, WID_VL_SORT_BY_PULLDOWN), SetMinimalSize(167, 12), SetFill(0, 1), SetDataTip(0x0, STR_TOOLTIP_SORT_CRITERIA),
-		NWidget(NWID_SELECTION, INVALID_COLOUR, WID_VL_FILTER_BY_CARGO_SEL),
-			NWidget(WWT_DROPDOWN, COLOUR_GREY, WID_VL_FILTER_BY_CARGO), SetMinimalSize(167, 12), SetFill(0, 1), SetDataTip(STR_JUST_STRING, STR_TOOLTIP_FILTER_CRITERIA),
+		NWidget(NWID_VERTICAL),
+			NWidget(WWT_TEXTBTN, COLOUR_GREY, WID_VL_GROUP_ORDER), SetMinimalSize(0, 12), SetFill(1, 0), SetDataTip(STR_STATION_VIEW_GROUP, STR_TOOLTIP_GROUP_ORDER),
+			NWidget(WWT_PUSHTXTBTN, COLOUR_GREY, WID_VL_SORT_ORDER), SetMinimalSize(0, 12), SetFill(1, 0), SetDataTip(STR_BUTTON_SORT_BY, STR_TOOLTIP_SORT_ORDER),
 		EndContainer(),
-		NWidget(WWT_PANEL, COLOUR_GREY), SetMinimalSize(12, 12), SetFill(1, 1), SetResize(1, 0), EndContainer(),
+		NWidget(NWID_VERTICAL),
+			NWidget(WWT_DROPDOWN, COLOUR_GREY, WID_VL_GROUP_BY_PULLDOWN), SetMinimalSize(0, 12), SetFill(1, 0), SetDataTip(0x0, STR_TOOLTIP_GROUP_ORDER),
+			NWidget(WWT_DROPDOWN, COLOUR_GREY, WID_VL_SORT_BY_PULLDOWN), SetMinimalSize(0, 12), SetFill(1, 0), SetDataTip(0x0, STR_TOOLTIP_SORT_CRITERIA),
+		EndContainer(),
+		NWidget(NWID_VERTICAL),
+			NWidget(WWT_PANEL, COLOUR_GREY), SetMinimalSize(0, 12), SetFill(1, 1), SetResize(1, 0), EndContainer(),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(NWID_SELECTION, INVALID_COLOUR, WID_VL_FILTER_BY_CARGO_SEL),
+					NWidget(WWT_DROPDOWN, COLOUR_GREY, WID_VL_FILTER_BY_CARGO), SetMinimalSize(0, 12), SetFill(0, 0), SetDataTip(STR_JUST_STRING, STR_TOOLTIP_FILTER_CRITERIA),
+				EndContainer(),
+				NWidget(WWT_PANEL, COLOUR_GREY), SetMinimalSize(0, 12), SetFill(1, 1), SetResize(1, 0), EndContainer(),
+			EndContainer(),
+		EndContainer(),
 	EndContainer(),
 
 	NWidget(NWID_HORIZONTAL),
@@ -2210,6 +2215,20 @@ public:
 				*size = maxdim(*size, d);
 				break;
 			}
+
+			case WID_VL_GROUP_BY_PULLDOWN:
+				size->width = GetStringListWidth(this->vehicle_group_by_names) + padding.width;
+				break;
+
+			case WID_VL_SORT_BY_PULLDOWN:
+				size->width = GetStringListWidth(this->vehicle_group_none_sorter_names);
+				size->width = std::max(size->width, GetStringListWidth(this->vehicle_group_shared_orders_sorter_names));
+				size->width += padding.width;
+				break;
+
+			case WID_VL_FILTER_BY_CARGO:
+				size->width = GetStringListWidth(this->cargo_filter_texts) + padding.width;
+				break;
 
 			case WID_VL_MANAGE_VEHICLES_DROPDOWN: {
 				Dimension d = this->GetActionDropdownSize(this->vli.type == VL_STANDARD, false,
@@ -3176,10 +3195,10 @@ struct VehicleDetailsWindow : Window {
 
 				/* Articulated road vehicles use a complete line. */
 				if (v->type == VEH_ROAD && v->HasArticulatedPart()) {
-					DrawVehicleImage(v, tr, INVALID_VEHICLE, EIT_IN_DETAILS, 0);
+					DrawVehicleImage(v, tr.WithHeight(ScaleGUITrad(GetVehicleHeight(v->type)), false), INVALID_VEHICLE, EIT_IN_DETAILS, 0);
 				} else {
 					Rect sr = tr.WithWidth(sprite_width, rtl);
-					DrawVehicleImage(v, sr, INVALID_VEHICLE, EIT_IN_DETAILS, 0);
+					DrawVehicleImage(v, sr.WithHeight(ScaleGUITrad(GetVehicleHeight(v->type)), false), INVALID_VEHICLE, EIT_IN_DETAILS, 0);
 				}
 
 				DrawVehicleDetails(v, tr.Indent(sprite_width, rtl), 0, 0, this->tab);
@@ -3204,7 +3223,7 @@ struct VehicleDetailsWindow : Window {
 		const Vehicle *v = Vehicle::Get(this->window_number);
 
 		if (v->type == VEH_TRAIN) {
-			this->DisableWidget(this->tab + WID_VD_DETAILS_CARGO_CARRIED);
+			this->LowerWidget(this->tab + WID_VD_DETAILS_CARGO_CARRIED);
 			this->vscroll->SetCount(GetTrainDetailsWndVScroll(v->index, this->tab));
 		}
 
@@ -3248,7 +3267,7 @@ struct VehicleDetailsWindow : Window {
 			case WID_VD_DETAILS_TRAIN_VEHICLES:
 			case WID_VD_DETAILS_CAPACITY_OF_EACH:
 			case WID_VD_DETAILS_TOTAL_CARGO:
-				this->SetWidgetsDisabledState(false,
+				this->SetWidgetsLoweredState(false,
 					WID_VD_DETAILS_CARGO_CARRIED,
 					WID_VD_DETAILS_TRAIN_VEHICLES,
 					WID_VD_DETAILS_CAPACITY_OF_EACH,
@@ -4266,11 +4285,14 @@ void SetMouseCursorVehicle(const Vehicle *v, EngineImageType image_type)
 
 		if (_cursor.sprite_count + seq.count > lengthof(_cursor.sprite_seq)) break;
 
+		int x_offs = 0;
+		if (v->type == VEH_TRAIN) x_offs = Train::From(v)->GetCursorImageOffset();
+
 		for (uint i = 0; i < seq.count; ++i) {
 			PaletteID pal2 = (v->vehstatus & VS_CRASHED) || !seq.seq[i].pal ? pal : seq.seq[i].pal;
 			_cursor.sprite_seq[_cursor.sprite_count].sprite = seq.seq[i].sprite;
 			_cursor.sprite_seq[_cursor.sprite_count].pal = pal2;
-			_cursor.sprite_pos[_cursor.sprite_count].x = rtl ? -total_width : total_width;
+			_cursor.sprite_pos[_cursor.sprite_count].x = rtl ? (-total_width + x_offs) : (total_width + x_offs);
 			_cursor.sprite_pos[_cursor.sprite_count].y = y_offset;
 			_cursor.sprite_count++;
 		}

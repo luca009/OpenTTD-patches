@@ -2807,7 +2807,7 @@ STR_LANDSCAPING_TOOLBAR                                         :{WHITE}景观�
 STR_LANDSCAPING_TOOLTIP_LOWER_A_CORNER_OF_LAND                  :{BLACK}降低地块的一角
 STR_LANDSCAPING_TOOLTIP_RAISE_A_CORNER_OF_LAND                  :{BLACK}升高地块的一角
 STR_LANDSCAPING_LEVEL_LAND_TOOLTIP                              :{BLACK}拉平地面
-STR_LANDSCAPING_TOOLTIP_PURCHASE_LAND                           :{BLACK}购买土地以备将来使用，按住 Shift 键操作可以显示所需资金
+STR_LANDSCAPING_TOOLTIP_PURCHASE_LAND                           :{BLACK}购买土地以备将来使用。按 Ctrl 键可选择对角线区域。按 Shift 键可以预览所需资金。
 
 # Object construction window
 STR_OBJECT_BUILD_CAPTION                                        :{WHITE}物体选单
@@ -3333,6 +3333,10 @@ STR_SPRITE_ALIGNER_PREVIOUS_BUTTON                              :{BLACK}上一�
 STR_SPRITE_ALIGNER_PREVIOUS_TOOLTIP                             :{BLACK}继续处理上一个正常的图形元素，略过任何虚位／重新着色／文字字型相关的图形元素；并且在处理到第一个图形元素后，返回最后的图形元素继续处理。
 STR_SPRITE_ALIGNER_SPRITE_TOOLTIP                               :{BLACK}显示目前选取的 sprite。当 sprite 正在描绘时会忽略其定位。
 STR_SPRITE_ALIGNER_MOVE_TOOLTIP                                 :{BLACK}从 X 及 Y 座标方向移动图形元素。如按住 Ctrl 键再点击，可一次移动 8 个单位
+
+###length 2
+
+
 STR_SPRITE_ALIGNER_RESET_BUTTON                                 :{BLACK}重置相关
 STR_SPRITE_ALIGNER_RESET_TOOLTIP                                :{BLACK}重置当前相关偏移
 STR_SPRITE_ALIGNER_OFFSETS_ABS                                  :{BLACK}X 偏移: {NUM}, Y 偏移: {NUM} (绝对)

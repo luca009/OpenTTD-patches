@@ -251,8 +251,9 @@ static void FillTimetableArrivalDepartureTable(const Vehicle *v, VehicleOrderID 
  */
 static void ChangeTimetableStartIntl(uint32 p1, DateTicksScaled date)
 {
-	DateTicks date_part = date / _settings_game.economy.day_length_factor;
-	uint32 sub_ticks = date % _settings_game.economy.day_length_factor;
+	DateTicks date_part;
+	uint16 sub_ticks;
+	std::tie(date_part, sub_ticks) = ScaledDateTicksToDateTicksAndSubTicks(date);
 	DoCommandP(0, p1 | (sub_ticks << 21), (Ticks)(date_part - (((DateTicks)_date * DAY_TICKS) + _date_fract)), CMD_SET_TIMETABLE_START | CMD_MSG(STR_ERROR_CAN_T_TIMETABLE_VEHICLE));
 }
 
@@ -635,27 +636,19 @@ struct TimetableWindow : GeneralVehicleWindow {
 	{
 		switch (widget) {
 			case WID_VT_CHANGE_TIME: {
-				uint64 params[1];
-				params[0] = STR_TIMETABLE_WAIT_TIME_TOOLTIP;
-				GuiShowTooltips(this, STR_TIMETABLE_WAIT_TIME_TOOLTIP_EXTRA, 1, params, close_cond);
+				GuiShowTooltips(this, STR_TIMETABLE_WAIT_TIME_TOOLTIP, 0, nullptr, close_cond);
 				return true;
 			}
 			case WID_VT_CLEAR_TIME: {
-				uint64 params[1];
-				params[0] = STR_TIMETABLE_CLEAR_TIME_TOOLTIP;
-				GuiShowTooltips(this, STR_TIMETABLE_CLEAR_TIME_TOOLTIP_EXTRA, 1, params, close_cond);
+				GuiShowTooltips(this, STR_TIMETABLE_CLEAR_TIME_TOOLTIP, 0, nullptr, close_cond);
 				return true;
 			}
 			case WID_VT_CHANGE_SPEED: {
-				uint64 params[1];
-				params[0] = STR_TIMETABLE_CHANGE_SPEED_TOOLTIP;
-				GuiShowTooltips(this, STR_TIMETABLE_CHANGE_SPEED_TOOLTIP_EXTRA, 1, params, close_cond);
+				GuiShowTooltips(this, STR_TIMETABLE_CHANGE_SPEED_TOOLTIP, 0, nullptr, close_cond);
 				return true;
 			}
 			case WID_VT_CLEAR_SPEED: {
-				uint64 params[1];
-				params[0] = STR_TIMETABLE_CLEAR_SPEED_TOOLTIP;
-				GuiShowTooltips(this, STR_TIMETABLE_CLEAR_SPEED_TOOLTIP_EXTRA, 1, params, close_cond);
+				GuiShowTooltips(this, STR_TIMETABLE_CLEAR_SPEED_TOOLTIP, 0, nullptr, close_cond);
 				return true;
 			}
 			default:
@@ -815,7 +808,7 @@ struct TimetableWindow : GeneralVehicleWindow {
 					/* We are running towards the first station so we can start the
 					 * timetable at the given time. */
 					SetDParam(0, STR_JUST_DATE_WALLCLOCK_TINY);
-					SetDParam(1, (((DateTicksScaled) v->timetable_start) * _settings_game.economy.day_length_factor) + v->timetable_start_subticks);
+					SetDParam(1, DateTicksToScaledDateTicks(v->timetable_start) + v->timetable_start_subticks);
 					DrawString(tr, STR_TIMETABLE_STATUS_START_AT);
 				} else if (!HasBit(v->vehicle_flags, VF_TIMETABLE_STARTED)) {
 					/* We aren't running on a timetable yet, so how can we be "on time"

@@ -61,7 +61,7 @@ macro(compile_flags)
 
     if(MSVC)
         add_compile_options(/W3)
-        if(MSVC_VERSION GREATER 1929)
+        if(MSVC_VERSION GREATER 1929 AND CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
             # Starting with version 19.30, there is an optimisation bug, see #9966 for details
             # This flag disables the broken optimisation to work around the bug
             add_compile_options(/d2ssa-rse-)
@@ -192,5 +192,10 @@ macro(compile_flags)
     if(NOT WIN32 AND NOT HAIKU)
         # rdynamic is used to get useful stack traces from crash reports.
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -rdynamic")
+    endif()
+
+    if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+        # workaround for MacOS 10.13 and below which does not support std::variant, etc
+        add_definitions(-D_LIBCPP_DISABLE_AVAILABILITY)
     endif()
 endmacro()

@@ -362,9 +362,13 @@ class NIHVehicle : public NIHelper {
 		}
 
 		if (show_engine) {
-			seprintf(buffer, lastof(buffer), "  Engine: %u", v->engine_type);
-			output.print(buffer);
 			const Engine *e = Engine::GetIfValid(v->engine_type);
+			char *b = buffer + seprintf(buffer, lastof(buffer), "  Engine: %u", v->engine_type);
+			if (e->info.variant_id != INVALID_ENGINE) {
+				b += seprintf(b, lastof(buffer), ", variant of: %u", e->info.variant_id);
+			}
+			output.print(buffer);
+
 			if (e != nullptr) {
 				seprintf(buffer, lastof(buffer), "    Callbacks: 0x%X, CB36 Properties: 0x" OTTD_PRINTFHEX64,
 						e->callbacks_used, e->cb36_properties_used);
@@ -411,8 +415,11 @@ class NIHVehicle : public NIHelper {
 				}
 				YearMonthDay ymd;
 				ConvertDateToYMD(e->intro_date, &ymd);
-				seprintf(buffer, lastof(buffer), "    Intro: %4i-%02i-%02i, Age: %u, Base life: %u, Durations: %u %u %u (sum: %u)",
-						ymd.year, ymd.month + 1, ymd.day, e->age, e->info.base_life, e->duration_phase_1, e->duration_phase_2, e->duration_phase_3,
+				YearMonthDay base_ymd;
+				ConvertDateToYMD(e->info.base_intro, &base_ymd);
+				seprintf(buffer, lastof(buffer), "    Intro: %4i-%02i-%02i (base: %4i-%02i-%02i), Age: %u, Base life: %u, Durations: %u %u %u (sum: %u)",
+						ymd.year, ymd.month + 1, ymd.day, base_ymd.year, base_ymd.month + 1, base_ymd.day,
+						e->age, e->info.base_life, e->duration_phase_1, e->duration_phase_2, e->duration_phase_3,
 						e->duration_phase_1 + e->duration_phase_2 + e->duration_phase_3);
 				output.print(buffer);
 				seprintf(buffer, lastof(buffer), "    Cargo type: %u, Refit mask: 0x" OTTD_PRINTFHEX64 ", Cargo age period: %u",
@@ -430,11 +437,65 @@ class NIHVehicle : public NIHelper {
 					};
 					seprintf(buffer, lastof(buffer), "    Rail veh type: %s, power: %u", engine_types[e->u.rail.railveh_type], e->u.rail.power);
 					output.print(buffer);
+
+					output.register_next_line_click_flag_toggle(2);
+					if (output.flags & 2) {
+						seprintf(buffer, lastof(buffer), "    [-] Engine Misc Flags:\n");
+						output.print(buffer);
+						auto print_bit = [&](int bit, const char *name) {
+							if (HasBit(e->info.misc_flags, bit)) {
+								seprintf(buffer, lastof(buffer), "      %s\n", name);
+								output.print(buffer);
+							}
+						};
+						print_bit(EF_RAIL_TILTS,                  "EF_RAIL_TILTS");
+						print_bit(EF_USES_2CC,                    "EF_USES_2CC");
+						print_bit(EF_RAIL_IS_MU,                  "EF_RAIL_IS_MU");
+						print_bit(EF_RAIL_FLIPS,                  "EF_RAIL_FLIPS");
+						print_bit(EF_AUTO_REFIT,                  "EF_AUTO_REFIT");
+						print_bit(EF_NO_DEFAULT_CARGO_MULTIPLIER, "EF_NO_DEFAULT_CARGO_MULTIPLIER");
+						print_bit(EF_NO_BREAKDOWN_SMOKE,          "EF_NO_BREAKDOWN_SMOKE");
+						print_bit(EF_SPRITE_STACK,                "EF_SPRITE_STACK");
+					} else {
+						seprintf(buffer, lastof(buffer), "    [+] Engine Misc Flags: %c%c%c%c%c%c%c%c",
+								HasBit(e->info.misc_flags, EF_RAIL_TILTS)                  ? 't' : '-',
+								HasBit(e->info.misc_flags, EF_USES_2CC)                    ? '2' : '-',
+								HasBit(e->info.misc_flags, EF_RAIL_IS_MU)                  ? 'm' : '-',
+								HasBit(e->info.misc_flags, EF_RAIL_FLIPS)                  ? 'f' : '-',
+								HasBit(e->info.misc_flags, EF_AUTO_REFIT)                  ? 'r' : '-',
+								HasBit(e->info.misc_flags, EF_NO_DEFAULT_CARGO_MULTIPLIER) ? 'c' : '-',
+								HasBit(e->info.misc_flags, EF_NO_BREAKDOWN_SMOKE)          ? 'b' : '-',
+								HasBit(e->info.misc_flags, EF_SPRITE_STACK)                ? 's' : '-');
+						output.print(buffer);
+					}
 				}
 				if (e->type == VEH_ROAD) {
 					const RoadTypeInfo* rti = GetRoadTypeInfo(e->u.road.roadtype);
 					seprintf(buffer, lastof(buffer), "    Roadtype: %u (0x" OTTD_PRINTFHEX64 "), Powered: 0x" OTTD_PRINTFHEX64,
 							e->u.road.roadtype, (static_cast<RoadTypes>(1) << e->u.road.roadtype), rti->powered_roadtypes);
+					output.print(buffer);
+				}
+
+				output.register_next_line_click_flag_toggle(4);
+				if (output.flags & 4) {
+					seprintf(buffer, lastof(buffer), "    [-] Extra Engine Flags:\n");
+					output.print(buffer);
+					auto print_bit = [&](ExtraEngineFlags flag, const char *name) {
+						if ((e->info.extra_flags & flag) != ExtraEngineFlags::None) {
+							seprintf(buffer, lastof(buffer), "      %s\n", name);
+							output.print(buffer);
+						}
+					};
+					print_bit(ExtraEngineFlags::NoNews,          "NoNews");
+					print_bit(ExtraEngineFlags::NoPreview,       "NoPreview");
+					print_bit(ExtraEngineFlags::JoinPreview,     "JoinPreview");
+					print_bit(ExtraEngineFlags::SyncReliability, "SyncReliability");
+				} else {
+					seprintf(buffer, lastof(buffer), "    [+] Extra Engine Flags: %c%c%c%c",
+							(e->info.extra_flags & ExtraEngineFlags::NoNews)          != ExtraEngineFlags::None ? 'n' : '-',
+							(e->info.extra_flags & ExtraEngineFlags::NoPreview)       != ExtraEngineFlags::None ? 'p' : '-',
+							(e->info.extra_flags & ExtraEngineFlags::JoinPreview)     != ExtraEngineFlags::None ? 'j' : '-',
+							(e->info.extra_flags & ExtraEngineFlags::SyncReliability) != ExtraEngineFlags::None ? 's' : '-');
 					output.print(buffer);
 				}
 			}
@@ -513,6 +574,82 @@ class NIHStation : public NIHelper {
 	{
 		StationResolverObject ro(GetStationSpec(index), Station::GetByTile(index), index, INVALID_RAILTYPE);
 		return ro.GetScope(VSG_SCOPE_SELF)->GetVariable(var, param, extra);
+	}
+
+	/* virtual */ void ExtraInfo(uint index, NIExtraInfoOutput &output) const override
+	{
+		char buffer[1024];
+
+		const StationSpec *statspec = GetStationSpec(index);
+		if (statspec == nullptr) return;
+
+		for (size_t i = 0; i < statspec->renderdata.size(); i++) {
+			seprintf(buffer, lastof(buffer), "Tile Layout %u:", (uint)i);
+			output.print(buffer);
+			const NewGRFSpriteLayout &dts = statspec->renderdata[i];
+
+			const TileLayoutRegisters *registers = dts.registers;
+			auto print_reg_info = [&](char *b, uint i, bool is_parent) {
+				if (registers == nullptr) {
+					output.print(buffer);
+					return;
+				}
+				const TileLayoutRegisters *reg = registers + i;
+				if (reg->flags == 0) {
+					output.print(buffer);
+					return;
+				}
+				seprintf(b, lastof(buffer), ", register flags: %X", reg->flags);
+				output.print(buffer);
+				auto log_reg = [&](TileLayoutFlags flag, const char *name, uint8 flag_reg) {
+					if (reg->flags & flag) {
+						seprintf(buffer, lastof(buffer), "  %s reg: %X", name, flag_reg);
+						output.print(buffer);
+					}
+				};
+				log_reg(TLF_DODRAW, "TLF_DODRAW", reg->dodraw);
+				log_reg(TLF_SPRITE, "TLF_SPRITE", reg->sprite);
+				log_reg(TLF_PALETTE, "TLF_PALETTE", reg->palette);
+				if (is_parent) {
+					log_reg(TLF_BB_XY_OFFSET, "TLF_BB_XY_OFFSET x", reg->delta.parent[0]);
+					log_reg(TLF_BB_XY_OFFSET, "TLF_BB_XY_OFFSET y", reg->delta.parent[1]);
+					log_reg(TLF_BB_Z_OFFSET, "TLF_BB_Z_OFFSET", reg->delta.parent[2]);
+				} else {
+					log_reg(TLF_CHILD_X_OFFSET, "TLF_CHILD_X_OFFSET", reg->delta.child[0]);
+					log_reg(TLF_CHILD_Y_OFFSET, "TLF_CHILD_Y_OFFSET", reg->delta.child[1]);
+				}
+				if (reg->flags & TLF_SPRITE_VAR10) {
+					seprintf(buffer, lastof(buffer), "  TLF_SPRITE_VAR10 value: %X", reg->sprite_var10);
+					output.print(buffer);
+				}
+				if (reg->flags & TLF_PALETTE_VAR10) {
+					seprintf(buffer, lastof(buffer), "  TLF_PALETTE_VAR10 value: %X", reg->palette_var10);
+					output.print(buffer);
+				}
+			};
+
+			char *b = buffer + seprintf(buffer, lastof(buffer), "  ground: (%X, %X)",
+					dts.ground.sprite, dts.ground.pal);
+			print_reg_info(b, 0, false);
+
+			uint offset = 0; // offset 0 is the ground sprite
+			const DrawTileSeqStruct *element;
+			foreach_draw_tile_seq(element, dts.seq) {
+				offset++;
+				char *b = buffer;
+				if (element->IsParentSprite()) {
+					b += seprintf(buffer, lastof(buffer), "  section: %X, image: (%X, %X), d: (%d, %d, %d), s: (%d, %d, %d)",
+							offset, element->image.sprite, element->image.pal,
+							element->delta_x, element->delta_y, element->delta_z,
+							element->size_x, element->size_y, element->size_z);
+				} else {
+					b += seprintf(buffer, lastof(buffer), "  section: %X, image: (%X, %X), d: (%d, %d)",
+							offset, element->image.sprite, element->image.pal,
+							element->delta_x, element->delta_y);
+				}
+				print_reg_info(b, offset, element->IsParentSprite());
+			}
+		}
 	}
 
 	/* virtual */ void SpriteDump(uint index, DumpSpriteGroupPrinter print) const override
@@ -1698,6 +1835,7 @@ static const NIVariable _nif_roadstops[] = {
 	NIV(0x68, "road stop info of nearby tiles"),
 	NIV(0x69, "information about cargo accepted in the past"),
 	NIV(0x6A, "GRFID of nearby road stop tiles"),
+	NIV(0x6B, "Road info of nearby plain road tiles"),
 	NIV_END(),
 };
 

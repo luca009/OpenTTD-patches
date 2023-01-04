@@ -611,7 +611,7 @@ static int DrawLayoutLine(const ParagraphLayouter::Line &line, int y, int left, 
 		int dpi_left  = dpi->left;
 		int dpi_right = dpi->left + dpi->width - 1;
 
-		draw_shadow = fc->GetDrawGlyphShadow() && (colour & TC_NO_SHADE) == 0 && colour != TC_BLACK;
+		draw_shadow = fc->GetDrawGlyphShadow() && (colour & TC_NO_SHADE) == 0 && (colour & ~TC_FORCED) != TC_BLACK;
 
 		for (int i = 0; i < run.GetGlyphCount(); i++) {
 			GlyphID glyph = run.GetGlyphs()[i];
@@ -957,6 +957,21 @@ Dimension GetStringBoundingBox(StringID strid, FontSize start_fontsize)
 }
 
 /**
+ * Get maximum width of a list of strings.
+ * @param list List of strings, terminated with INVALID_STRING_ID.
+ * @param fontsize Font size to use.
+ * @return Width of longest string within the list.
+ */
+uint GetStringListWidth(const StringID *list, FontSize fontsize)
+{
+	uint width = 0;
+	for (const StringID *str = list; *str != INVALID_STRING_ID; str++) {
+		width = std::max(width, GetStringBoundingBox(*str, fontsize).width);
+	}
+	return width;
+}
+
+/**
  * Get the leading corner of a character in a single-line string relative
  * to the start of the string.
  * @param str String containing the character.
@@ -1266,9 +1281,10 @@ std::unique_ptr<uint32[]> DrawSpriteToRgbaBuffer(SpriteID spriteId, ZoomLevel zo
 	const SpriteID real_sprite = GB(spriteId, 0, SPRITE_WIDTH);
 	const Sprite *sprite = GetSprite(real_sprite, ST_NORMAL);
 	Dimension dim = GetSpriteSize(real_sprite, nullptr, zoom);
-	std::unique_ptr<uint32[]> result(new uint32[dim.width * dim.height]);
+	size_t dim_size = static_cast<size_t>(dim.width) * dim.height;
+	std::unique_ptr<uint32[]> result(new uint32[dim_size]);
 	/* Set buffer to fully transparent. */
-	MemSetT(result.get(), 0, dim.width * dim.height);
+	MemSetT(result.get(), 0, dim_size);
 
 	/* Prepare new DrawPixelInfo - Normally this would be the screen but we want to draw to another buffer here.
 	 * Normally, pitch would be scaled screen width, but in our case our "screen" is only the sprite width wide. */
@@ -1281,11 +1297,13 @@ std::unique_ptr<uint32[]> DrawSpriteToRgbaBuffer(SpriteID spriteId, ZoomLevel zo
 	dpi.height = dim.height;
 	dpi.zoom = zoom;
 
+	dim_size = static_cast<size_t>(dim.width) * dim.height;
+
 	/* If the current blitter is a paletted blitter, we have to render to an extra buffer and resolve the palette later. */
 	std::unique_ptr<byte[]> pal_buffer{};
 	if (blitter->GetScreenDepth() == 8) {
-		pal_buffer.reset(new byte[dim.width * dim.height]);
-		MemSetT(pal_buffer.get(), 0, dim.width * dim.height);
+		pal_buffer.reset(new byte[dim_size]);
+		MemSetT(pal_buffer.get(), 0, dim_size);
 
 		dpi.dst_ptr = pal_buffer.get();
 	}
@@ -1300,7 +1318,7 @@ std::unique_ptr<uint32[]> DrawSpriteToRgbaBuffer(SpriteID spriteId, ZoomLevel zo
 		/* Resolve palette. */
 		uint32 *dst = result.get();
 		const byte *src = pal_buffer.get();
-		for (size_t i = 0; i < dim.height * dim.width; ++i) {
+		for (size_t i = 0; i < dim_size; ++i) {
 			*dst++ = _cur_palette.palette[*src++].data;
 		}
 	}

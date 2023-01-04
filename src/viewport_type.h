@@ -221,4 +221,10 @@ enum ViewportMarkDirtyFlags : byte {
 };
 DECLARE_ENUM_AS_BIT_SET(ViewportMarkDirtyFlags)
 
+enum class ChildScreenSpritePositionMode : uint8 {
+	Relative,
+	NonRelative,
+	Absolute,
+};
+
 #endif /* VIEWPORT_TYPE_H */

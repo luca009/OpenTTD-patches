@@ -3303,6 +3303,10 @@ STR_SPRITE_ALIGNER_PREVIOUS_BUTTON                              :{BLACK}Sprite a
 STR_SPRITE_ALIGNER_PREVIOUS_TOOLTIP                             :{BLACK}Ir ao sprite anterior, ignorando pseudosprites, sprites recoloreados e sprites de fonte, e volvendo a empezar ao chegar ao inicio
 STR_SPRITE_ALIGNER_SPRITE_TOOLTIP                               :{BLACK}Representación do sprite seleccionado. A aliñación ignórase ao debuxar este sprite
 STR_SPRITE_ALIGNER_MOVE_TOOLTIP                                 :{BLACK}Move-lo sprite, cambiando os valores de X e Y. Ctrl+Click para movelo sprite oito unidades de golpe.
+
+###length 2
+
+
 STR_SPRITE_ALIGNER_RESET_BUTTON                                 :Reinicio relativo
 STR_SPRITE_ALIGNER_RESET_TOOLTIP                                :{BLACK}Restablecer a compensación actual
 STR_SPRITE_ALIGNER_OFFSETS_ABS                                  :{BLACK}Compensación eixo X: {NUM}, Compensación eixo Y: {NUM} (Absoluta)
@@ -4473,16 +4477,16 @@ STR_TIMETABLE_STARTING_DATE                                     :{BLACK}Data com
 STR_TIMETABLE_STARTING_DATE_TOOLTIP                             :{BLACK}Selecciona unha data coma punto de inicio para este horario. Ctrl + click distribúe uniformemente tódolos vehículos que compartan esta orde baséandose na súa orde relativa. se a orde está completamente tabulada nos horarios
 
 STR_TIMETABLE_CHANGE_TIME                                       :{BLACK}Cambiar Tempo
-STR_TIMETABLE_WAIT_TIME_TOOLTIP                                 :{BLACK}Cambiar o tempo que debería levar a orde seleccionada
+STR_TIMETABLE_WAIT_TIME_TOOLTIP                                 :{BLACK}Cambiar o tempo que debería levar a orde seleccionada (Ctrl+Click fixa a hora para todas as ordes)
 
 STR_TIMETABLE_CLEAR_TIME                                        :{BLACK}Borrar tempo
-STR_TIMETABLE_CLEAR_TIME_TOOLTIP                                :{BLACK}Borrar o tempo para a orde seleccionada
+STR_TIMETABLE_CLEAR_TIME_TOOLTIP                                :{BLACK}Borrar o tempo para a orde seleccionada (Ctrl+Click despexa a hora para todas as ordes)
 
 STR_TIMETABLE_CHANGE_SPEED                                      :{BLACK}Cambiar o límite de velocidade
-STR_TIMETABLE_CHANGE_SPEED_TOOLTIP                              :{BLACK}Cambiar a velocidade máxima da orde seleccionada
+STR_TIMETABLE_CHANGE_SPEED_TOOLTIP                              :{BLACK}Cambiar a velocidade máxima da orde seleccionada (Ctrl+Click fixa a velocidade para todas as ordes)
 
 STR_TIMETABLE_CLEAR_SPEED                                       :{BLACK}Borrar o límite de velocidade
-STR_TIMETABLE_CLEAR_SPEED_TOOLTIP                               :{BLACK}Borrar a velocidade máxima da orde seleccionada
+STR_TIMETABLE_CLEAR_SPEED_TOOLTIP                               :{BLACK}Borrar a velocidade máxima da orde seleccionada (Ctrl+Click despexa a velocidade para todas as ordes)
 
 STR_TIMETABLE_RESET_LATENESS                                    :{BLACK}Reiniciar atraso
 STR_TIMETABLE_RESET_LATENESS_TOOLTIP                            :{BLACK}Reiniciar o contador de atraso, para que o vehículo vaia en hora
@@ -5635,8 +5639,6 @@ STR_CONFIG_SETTING_CHUNNEL                                      :Permitir a cons
 STR_CONFIG_SETTING_CHUNNEL_HELPTEXT                             :Cando se habilita, pódense construír tunéis baixo masas de auga ao nivel do mar. Isto require que o final do tunel remate polo menos a 3 cadros de distancia da costa.
 STR_CONFIG_SETTING_NO_TRAIN_CRASH_OTHER_COMPANY                 :Os trens das distintas compañías non poden chocar entre si: {STRING}
 STR_CONFIG_SETTING_NO_TRAIN_CRASH_OTHER_COMPANY_HELPTEXT        :Esta opción é básicamente para previr que xogadores que non son de confianza deliberadamente causen accidentes con trens de outras comopañías en multixogador con infraestrutura ferroviaria compartida.
-STR_CONFIG_SETTING_FLIP_DIRECTION_ALL_TRAINS                    :Todos os trens poden cambiar a direción no depósito: {STRING}
-STR_CONFIG_SETTING_FLIP_DIRECTION_ALL_TRAINS_HELPTEXT           :Habilitar o cambio de direción de todos os trens nos depósitos, aínda que non se habilite polos NewGRF.
 STR_CONFIG_SETTING_ROADVEH_ARTICULATED_OVERTAKING               :Os vehículos articulados de estrada poden adiantar: {STRING}
 STR_CONFIG_SETTING_ROADVEH_ARTICULATED_OVERTAKING_HELPTEXT      :Habilitalo permite os vehículos articulados de estrada adiantar a outros vehículos.
 STR_CONFIG_SETTING_ROADVEH_CANT_QUANTUM_TUNNEL                  :Evitar que os vehículos de estrada pasando a través de outros cando están bloqueados: {STRING}
@@ -6669,10 +6671,6 @@ STR_TIMETABLE_MINUTES_LONG                                      :{COMMA}{NBSP}mi
 STR_TIMETABLE_HOURS                                             :{COMMA}{NBSP}hora{P "" s}
 STR_TIMETABLE_HOURS_MINUTES                                     :{COMMA}{NBSP}hora{P "" s} e {COMMA}{NBSP}minuto{P "" s}
 STR_TIMETABLE_LEFTOVER_TICKS                                    :{STRING} + {COMMA} tick{P "" s}
-STR_TIMETABLE_WAIT_TIME_TOOLTIP_EXTRA                           :{BLACK}{STRING} (Ctrl+Click fixa a hora para todas as ordes)
-STR_TIMETABLE_CLEAR_TIME_TOOLTIP_EXTRA                          :{BLACK}{STRING} (Ctrl+Click despexa a hora para todas as ordes)
-STR_TIMETABLE_CHANGE_SPEED_TOOLTIP_EXTRA                        :{BLACK}{STRING} (Ctrl+Click fixa a velocidade para todas as ordes)
-STR_TIMETABLE_CLEAR_SPEED_TOOLTIP_EXTRA                         :{BLACK}{STRING} (Ctrl+Click despexa a velocidade para todas as ordes)
 STR_TIMETABLE_AUTOMATE                                          :{BLACK}Automatizar
 STR_TIMETABLE_AUTOMATE_TOOLTIP                                  :{BLACK}Xestiona os horarios automáticamente actualizando os valores para cada viaxe
 STR_TIMETABLE_AUTO_SEPARATION                                   :{BLACK}Auto Separation
@@ -7249,3 +7247,31 @@ STR_TMPL_ADD_WAGON_REFIT                                        :{BLACK}Engadir 
 STR_TMPL_ADD_VEHICLE_REFIT                                      :{BLACK}Engadir e reaxustar vehículo
 STR_TMPL_ADD_TOOLTIP                                            :{BLACK}Engadir o vehículo destacado ó modelo.
 STR_TMPL_ADD_REFIT_TOOLTIP                                      :{BLACK}Engadir e reaxustar o vehículo destacado ó modelo.
+STR_GAME_OPTIONS_GUI_SCALE_FRAME                                :{BLACK}Tamaño da interface
+STR_GAME_OPTIONS_GUI_SCALE_TOOLTIP                              :{BLACK}Arrastra o deslizante para establecer o tamaño da interface. Mantén Ctrl para axuste continuo
+STR_GAME_OPTIONS_GUI_SCALE_AUTO                                 :{BLACK}Autodetectar tamaño
+STR_GAME_OPTIONS_GUI_SCALE_AUTO_TOOLTIP                         :{BLACK}Marca este cadro para detectar o tamaño da interface automáticamente
+STR_GAME_OPTIONS_GUI_SCALE_BEVELS                               :{BLACK}Escalar biseles
+STR_GAME_OPTIONS_GUI_SCALE_BEVELS_TOOLTIP                       :{BLACK}Marca este cadro para escalar os biseles segundo o tamaño da interface
+STR_GAME_OPTIONS_GUI_SCALE_1X                                   :1x
+STR_GAME_OPTIONS_GUI_SCALE_2X                                   :2x
+STR_GAME_OPTIONS_GUI_SCALE_3X                                   :3x
+STR_GAME_OPTIONS_GUI_SCALE_4X                                   :4x
+STR_GAME_OPTIONS_GUI_SCALE_5X                                   :5x
+STR_CONFIG_SETTING_SHOW_CARGO_IN_LISTS                          :Amosar as cargas que os vehículos poden levar nas fiestras de lista {STRING}
+STR_CONFIG_SETTING_SHOW_CARGO_IN_LISTS_HELPTEXT                 :Se se activa, as cargas transportables de vehículos poden aparecer enriba súa nas listas de vehículos
+STR_SPRITE_ALIGNER_CENTRE_OFFSET                                :{BLACK}Desfase centrado
+STR_SPRITE_ALIGNER_CENTRE_SPRITE                                :{BLACK}Sprite centrado
+STR_SPRITE_ALIGNER_CROSSHAIR                                    :{BLACK}Punto de mira
+STR_DEPARTURES_SHOW_TRAINS_TOOLTIP                              :{BLACK}Amosar próximos trens nos horarios desta estación
+STR_DEPARTURES_SHOW_ROAD_VEHICLES_TOOLTIP                       :{BLACK}Amosar próximos vehículos de estrada nos horarios desta estación
+STR_DEPARTURES_SHOW_SHIPS_TOOLTIP                               :{BLACK}Amosar próximos barcos nos horarios deste porto
+STR_DEPARTURES_SHOW_AIRCRAFT_TOOLTIP                            :{BLACK}Amosar próximos avións nos horarios deste aeroporto
+STR_FINANCES_TOTAL_CAPTION                                      :{WHITE}Total
+STR_FINANCES_PROFIT                                             :{WHITE}Beneficio
+STR_FINANCES_BANK_BALANCE                                       :{WHITE}{CURRENCY_LONG}
+STR_VEHICLE_LIST_CARGO                                          :{TINY_FONT}{BLACK}[{CARGO_LIST}]
+STR_VEHICLE_LIST_NAME_AND_CARGO                                 :{TINY_FONT}{BLACK}{STRING} {STRING}
+STR_ERROR_CAN_T_CLONE_VEHICLE_LIST                              :{WHITE}... non todos os vehículos son idénticos
+STR_ERROR_CAN_T_COPY_ORDER_VEHICLE_LIST                         :{WHITE}... non todos os vehículos teñen as mesmas ordes
+STR_ERROR_CAN_T_SHARE_ORDER_VEHICLE_LIST                        :{WHITE}... non todos os vehículos comparten ordes

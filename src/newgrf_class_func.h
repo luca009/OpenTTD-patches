@@ -96,6 +96,15 @@ DEFINE_NEWGRF_CLASS_METHOD(void)::Assign(Tspec *spec)
 }
 
 /**
+ * Get whether the class ID is valid (for iteration).
+ * @return Whether the class ID is valid.
+ */
+DEFINE_NEWGRF_CLASS_METHOD(bool)::IsClassIDValid(Tid cls_id)
+{
+	return cls_id < Tmax && classes[cls_id].global_id != 0;
+}
+
+/**
  * Get a particular class.
  * @param cls_id The id for the class.
  * @pre cls_id < Tmax
@@ -129,6 +138,18 @@ DEFINE_NEWGRF_CLASS_METHOD(uint)::GetUIClassCount()
 		if (classes[i].GetUISpecCount() > 0) cnt++;
 	}
 	return cnt;
+}
+
+/**
+ * Get whether at least one class is available to the user.
+ * @return Whether at least one class is available to the user.
+ */
+DEFINE_NEWGRF_CLASS_METHOD(bool)::HasUIClass()
+{
+	for (uint i = 0; i < Tmax && classes[i].global_id != 0; i++) {
+		if (classes[i].GetUISpecCount() > 0) return true;
+	}
+	return false;
 }
 
 /**
@@ -220,9 +241,11 @@ DEFINE_NEWGRF_CLASS_METHOD(const Tspec *)::GetByGrf(uint32 grfid, byte local_id,
 	template Tid name::Allocate(uint32 global_id); \
 	template void name::Insert(Tspec *spec); \
 	template void name::Assign(Tspec *spec); \
+	template bool name::IsClassIDValid(Tid cls_id); \
 	template NewGRFClass<Tspec, Tid, Tmax> *name::Get(Tid cls_id); \
 	template uint name::GetClassCount(); \
 	template uint name::GetUIClassCount(); \
+	template bool name::HasUIClass(); \
 	template Tid name::GetUIClass(uint index); \
 	template const Tspec *name::GetSpec(uint index) const; \
 	template int name::GetUIFromIndex(int index) const; \

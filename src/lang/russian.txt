@@ -3045,6 +3045,8 @@ STR_FOUND_TOWN_RANDOM_TOWN_BUTTON                               :{BLACK}Случ
 STR_FOUND_TOWN_RANDOM_TOWN_TOOLTIP                              :{BLACK}Создать город в случайном месте
 STR_FOUND_TOWN_MANY_RANDOM_TOWNS                                :{BLACK}Множество различных городов
 STR_FOUND_TOWN_RANDOM_TOWNS_TOOLTIP                             :{BLACK}Разместить на карте различные города случайным образом
+STR_FOUND_TOWN_EXPAND_ALL_TOWNS                                 :{BLACK}Расширить все города
+STR_FOUND_TOWN_EXPAND_ALL_TOWNS_TOOLTIP                         :{BLACK}Увеличить размер всех городов
 
 STR_FOUND_TOWN_NAME_TITLE                                       :{YELLOW}Название города:
 STR_FOUND_TOWN_NAME_EDITOR_TITLE                                :{BLACK}Введите название города
@@ -3525,6 +3527,13 @@ STR_SPRITE_ALIGNER_PREVIOUS_BUTTON                              :{BLACK}Пред
 STR_SPRITE_ALIGNER_PREVIOUS_TOOLTIP                             :{BLACK}Перейти к предыдущему нормальному спрайту, пропуская изменяющие цвет, шрифтовые, псевдоспрайты. Переход из начала списка к последнему спрайту.
 STR_SPRITE_ALIGNER_SPRITE_TOOLTIP                               :{BLACK}Представление выбранного спрайта. Выравнивание не учитывается при прорисовке этого спрайта.
 STR_SPRITE_ALIGNER_MOVE_TOOLTIP                                 :{BLACK}Двигайте спрайт, изменяя смещение по осям X и Y. С помощью Ctrl+щелчка можно сдвигать спрайты на 8 единиц.
+
+###length 2
+STR_SPRITE_ALIGNER_CENTRE_OFFSET                                :{BLACK}Смещение в центре
+STR_SPRITE_ALIGNER_CENTRE_SPRITE                                :{BLACK}Спрайт в центре
+
+STR_SPRITE_ALIGNER_CROSSHAIR                                    :{BLACK}Перекрестие
+
 STR_SPRITE_ALIGNER_RESET_BUTTON                                 :{BLACK}Сброс смещения
 STR_SPRITE_ALIGNER_RESET_TOOLTIP                                :{BLACK}Сбросить значения относительного смещения
 STR_SPRITE_ALIGNER_OFFSETS_ABS                                  :{BLACK}Смещение X: {NUM}; смещение Y: {NUM} (абсолютное)
@@ -4730,16 +4739,16 @@ STR_TIMETABLE_STARTING_DATE                                     :{BLACK}Нача
 STR_TIMETABLE_STARTING_DATE_TOOLTIP                             :{BLACK}Выберите начальную дату для этого графика. Ctrl+щелчок равномерно распределит все транспортные средства, следующие по этому маршруту, если время движения по нему полностью рассчитано.
 
 STR_TIMETABLE_CHANGE_TIME                                       :{BLACK}Изменить время
-STR_TIMETABLE_WAIT_TIME_TOOLTIP                                 :{BLACK}Изменить время для выделенного задания
+STR_TIMETABLE_WAIT_TIME_TOOLTIP                                 :{BLACK}Изменить время исполнения выделенного задания. Ctrl+щелчок устанавливает время для всех заданий.
 
 STR_TIMETABLE_CLEAR_TIME                                        :{BLACK}Сбросить время
-STR_TIMETABLE_CLEAR_TIME_TOOLTIP                                :{BLACK}Сбросить время в выделенном задании
+STR_TIMETABLE_CLEAR_TIME_TOOLTIP                                :{BLACK}Сбросить время в выделенном задании. Ctrl+щелчок - сбросить время во всех заданиях.
 
 STR_TIMETABLE_CHANGE_SPEED                                      :{BLACK}Изменить огранич. скорости
-STR_TIMETABLE_CHANGE_SPEED_TOOLTIP                              :{BLACK}Изменить ограничение скорости движения для выбранного задания
+STR_TIMETABLE_CHANGE_SPEED_TOOLTIP                              :{BLACK}Изменить ограничение скорости движения для выбранного задания. Ctrl+щелчок устанавливает скорость для всех заданий.
 
 STR_TIMETABLE_CLEAR_SPEED                                       :{BLACK}Сбросить огранич. скорости
-STR_TIMETABLE_CLEAR_SPEED_TOOLTIP                               :{BLACK}Сбросить ограничение скорости движения для выделенного задания
+STR_TIMETABLE_CLEAR_SPEED_TOOLTIP                               :{BLACK}Сбросить ограничение скорости движения для выделенного задания. Ctrl+щелчок - сбросить время для всех заданий.
 
 STR_TIMETABLE_RESET_LATENESS                                    :{BLACK}Сбросить счетчик опозд.
 STR_TIMETABLE_RESET_LATENESS_TOOLTIP                            :{BLACK}Сбросить счётчик отклонения от графика, чтобы транспорт снова считался приходящим вовремя
@@ -5001,6 +5010,7 @@ STR_ERROR_TOO_MANY_INDUSTRIES                                   :{WHITE}... сл
 STR_ERROR_CAN_T_GENERATE_INDUSTRIES                             :{WHITE}Невозможно создать предприятия...
 STR_ERROR_CAN_T_BUILD_HERE                                      :{WHITE}Здесь нельзя создать {STRING}...
 STR_ERROR_CAN_T_CONSTRUCT_THIS_INDUSTRY                         :{WHITE}Построить это предприятие невозможно...
+STR_ERROR_CAN_T_PROSPECT_INDUSTRY                               :{WHITE}Не удалось разведать месторождение...
 STR_ERROR_INDUSTRY_TOO_CLOSE                                    :{WHITE}... слишком близко к другому предприятию
 STR_ERROR_MUST_FOUND_TOWN_FIRST                                 :{WHITE}... сначала постройте город
 STR_ERROR_ONLY_ONE_ALLOWED_PER_TOWN                             :{WHITE}... такой объект уже есть в городе
@@ -5015,6 +5025,8 @@ STR_ERROR_FOREST_CAN_ONLY_BE_PLANTED                            :{WHITE}... ле
 STR_ERROR_CAN_ONLY_BE_BUILT_ABOVE_SNOW_LINE                     :{WHITE}... можно строить только выше снеговой линии
 STR_ERROR_CAN_ONLY_BE_BUILT_BELOW_SNOW_LINE                     :{WHITE}... можно строить только ниже снеговой линии
 
+STR_ERROR_PROSPECTING_WAS_UNLUCKY                               :{WHITE}Геологоразведка не принесла результатов; попробуйте снова.
+STR_ERROR_NO_SUITABLE_PLACES_FOR_PROSPECTING                    :{WHITE}Нет подходящего места для геологоразведки.
 STR_ERROR_NO_SUITABLE_PLACES_FOR_INDUSTRIES                     :{WHITE}Нет подходящего места для {STRING.gen}
 STR_ERROR_NO_SUITABLE_PLACES_FOR_INDUSTRIES_EXPLANATION         :{WHITE}Измените настройки создания карты для получения более подходящей карты
 

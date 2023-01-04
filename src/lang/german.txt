@@ -1453,9 +1453,6 @@ STR_CONFIG_SETTING_CHUNNEL_HELPTEXT                             :Wenn aktiviert,
 STR_CONFIG_SETTING_NO_TRAIN_CRASH_OTHER_COMPANY                 :Züge verschiedener Firmen stoßen nicht mehr zusammen: {STRING}
 STR_CONFIG_SETTING_NO_TRAIN_CRASH_OTHER_COMPANY_HELPTEXT        :Diese Einstellung ist in erster Linie dafür da um zu verhindern, dass Spielern denen man nicht vertraut bewusst Zusammenstöße mit Zügen anderer Firmen in Multiplayer-Spielen mit Infrastructure Sharing provozieren.
 
-STR_CONFIG_SETTING_FLIP_DIRECTION_ALL_TRAINS                    :Erlaube Richtungswechsel aller Züge in Depots: {STRING}
-STR_CONFIG_SETTING_FLIP_DIRECTION_ALL_TRAINS_HELPTEXT           :Aktiviert die Umkehr der Fahrtrichtung aller Züge in Depots, selbst wenn dies nicht durch das NewGRF aktiviert ist.
-
 STR_CONFIG_SETTING_ROADVEH_ARTICULATED_OVERTAKING               :Erlaube Überholen durch mehrgliedrige Straßenfahrzeuge: {STRING}
 STR_CONFIG_SETTING_ROADVEH_ARTICULATED_OVERTAKING_HELPTEXT      :Aktiviert das Überholen von Straßenfahrzeugen durch mehrgliedrige Straßenfahrzeuge.
 
@@ -3339,13 +3336,13 @@ STR_TRACE_RESTRICT_TRAIN_STATUS_REQUIRES_SERVICE                :benötigt Wartu
 STR_TRACE_RESTRICT_REVERSE_SIG                                  :Wende nach Signal
 STR_TRACE_RESTRICT_REVERSE_SIG_CANCEL                           :Breche Wenden ab
 STR_TRACE_RESTRICT_SET_SPEED_RESTRICTION                        :Beschränke Fahrtgeschwindigkeit auf: {VELOCITY}
-STR_TRACE_RESTRICT_REMOVE_SPEED_RESTRICTION                     :Hebe Beschränkung der Fahrtgeschwindig auf
+STR_TRACE_RESTRICT_REMOVE_SPEED_RESTRICTION                     :Freie Fahrt für freie Tfs
 STR_TRACE_RESTRICT_TRAIN_NOT_STUCK                              :Zug kommt voran, zeige keine Nachrichten zu an diesem Pfadsignal wartenden Zügen
 STR_TRACE_RESTRICT_TRAIN_NOT_STUCK_CANCEL                       :Hebe Zug kommt voran auf, zeige Nachrichten zu an diesem Pfadsignal wartenden Zügen
 STR_TRACE_RESTRICT_TRAIN_NOT_STUCK_SHORT                        :Zug kommt voran...
 STR_TRACE_RESTRICT_TRAIN_NOT_STUCK_CANCEL_SHORT                 :Hebe Zug kommt voran auf...
 STR_TRACE_RESTRICT_NO_PBS_BACK_PENALTY                          :Wende die Strafe beim passieren des Pfadsignals von der Rückseite nicht an.
-STR_TRACE_RESTRICT_NO_PBS_BACK_PENALTY_CANCEL                   :Hebe die Nichtanwendung der Strafe beim passieren des Pfadsignals vion der Rückseite auf.
+STR_TRACE_RESTRICT_NO_PBS_BACK_PENALTY_CANCEL                   :Hebe die Nichtanwendung der Strafe beim passieren des Pfadsignals von der Rückseite auf.
 STR_TRACE_RESTRICT_NO_PBS_BACK_PENALTY_SHORT                    :Keine Strafe beim passieren des Pfadsignals von der Rückseite
 STR_TRACE_RESTRICT_NO_PBS_BACK_PENALTY_CANCEL_SHORT             :Aufheben der Straffreiheit beim passieren des Pfadsignals von der Rückseite
 STR_TRACE_RESTRICT_MAKE_TRAIN_SPEED_ADAPTATION_EXEMPT           :Nehme den Zug von der automatischen Geschwindigkeitsanpassung aus.
@@ -4263,6 +4260,10 @@ STR_SPRITE_ALIGNER_PREVIOUS_BUTTON                              :{BLACK}Vorherig
 STR_SPRITE_ALIGNER_PREVIOUS_TOOLTIP                             :{BLACK}Gehe zum vorherigen normalen Sprite und überspringe alle Pseudo-, Recolour- und Schriftsprites (springt ggf. vom letzten bis zum ersten Sprite)
 STR_SPRITE_ALIGNER_SPRITE_TOOLTIP                               :{BLACK}Darstellung des aktuellen Sprites. Die Ausrichtung wird beim Zeichnen des Sprites ignoriert
 STR_SPRITE_ALIGNER_MOVE_TOOLTIP                                 :{BLACK}Bewege die Sprites und ändere dadurch die X- und Y-Offsets. Strg+Klick um die Sprites 8 Blöcke weit zu bewegen.
+
+###length 2
+
+
 STR_SPRITE_ALIGNER_RESET_BUTTON                                 :{BLACK}Setze zurück
 STR_SPRITE_ALIGNER_RESET_TOOLTIP                                :{BLACK}Setze die aktuellen relativen Versätze zurück
 STR_SPRITE_ALIGNER_OFFSETS_ABS                                  :{BLACK}X-Versatz: {NUM}, Y-Versatz: {NUM} (Absolut)
@@ -5353,7 +5354,7 @@ STR_VEHICLE_LOAD_THROUGH_ABORTED_INSUFFICIENT_TRACK             :{WHITE}{VEHICLE
 STR_VEHICLE_LOAD_THROUGH_ABORTED_DEPOT                          :{WHITE}{VEHICLE}: durchgehendes Laden aufgrund Depot bei {STATION} abgebrochen
 
 STR_RUNNING                                                     :{LTBLUE}Funktioniert
-STR_NEED_REPAIR                                                 :{ORANGE}Der Fahrzeuge ist reparaturbedürftig - die Höchstgeschwindigkeit ist auf {VELOCITY} reduziert
+STR_NEED_REPAIR                                                 :{ORANGE}Das Fahrzeug ist reparaturbedürftig - die Höchstgeschwindigkeit ist auf {VELOCITY} reduziert
 STR_CURRENT_STATUS                                              :{BLACK}Momentaner Status: {STRING}
 
 # The next two need to stay in this order
@@ -5784,20 +5785,16 @@ STR_TIMETABLE_STARTING_DATE                                     :{BLACK}Anfangsd
 STR_TIMETABLE_STARTING_DATE_TOOLTIP                             :{BLACK}Wähle ein Anfangsdatum für diesen Fahrplan aus. Mit Strg+Klick wird bei allen Fahrzeugen, die nach demselben Fahrplan unterwegs sind, ein zeitlich versetztes Anfangsdatum gesetzt, so dass die Abstände zwischen den einzelnen Fahrzeugen immer gleich sind. Dazu muss der Fahrplan erst komplett erfasst worden sein.
 
 STR_TIMETABLE_CHANGE_TIME                                       :{BLACK}Zeit ändern
-STR_TIMETABLE_WAIT_TIME_TOOLTIP                                 :{BLACK}Zeitrahmen für den markierten Auftrag ändern
-STR_TIMETABLE_WAIT_TIME_TOOLTIP_EXTRA                           :{BLACK}{STRING} (Strg+Klick setzt die Zeit für alle Aufträge)
+STR_TIMETABLE_WAIT_TIME_TOOLTIP                                 :{BLACK}Zeitrahmen für den markierten Auftrag ändern (Strg+Klick setzt die Zeit für alle Aufträge)
 
 STR_TIMETABLE_CLEAR_TIME                                        :{BLACK}Zeit löschen
-STR_TIMETABLE_CLEAR_TIME_TOOLTIP                                :{BLACK}Zeitrahmen für den markierten Auftrag löschen
-STR_TIMETABLE_CLEAR_TIME_TOOLTIP_EXTRA                          :{BLACK}{STRING} (Strg+Klick löscht die Zeit für alle Aufträge)
+STR_TIMETABLE_CLEAR_TIME_TOOLTIP                                :{BLACK}Zeitrahmen für den markierten Auftrag löschen (Strg+Klick löscht die Zeit für alle Aufträge)
 
 STR_TIMETABLE_CHANGE_SPEED                                      :{BLACK}Tempolimit ändern
-STR_TIMETABLE_CHANGE_SPEED_TOOLTIP                              :{BLACK}Tempolimit beim Ausführen des ausgewählten Auftrags ändern
-STR_TIMETABLE_CHANGE_SPEED_TOOLTIP_EXTRA                        :{BLACK}{STRING} (Strg+Klick setzt das Tempolimit für alle Aufträge)
+STR_TIMETABLE_CHANGE_SPEED_TOOLTIP                              :{BLACK}Tempolimit beim Ausführen des ausgewählten Auftrags ändern (Strg+Klick setzt das Tempolimit für alle Aufträge)
 
 STR_TIMETABLE_CLEAR_SPEED                                       :{BLACK}Tempolimit löschen
-STR_TIMETABLE_CLEAR_SPEED_TOOLTIP                               :{BLACK}Tempolimit für das Ausführen des ausgewählten Auftrags löschen
-STR_TIMETABLE_CLEAR_SPEED_TOOLTIP_EXTRA                         :{BLACK}{STRING} (Strg+Klick löscht das Tempolimit für alle Aufträge)
+STR_TIMETABLE_CLEAR_SPEED_TOOLTIP                               :{BLACK}Tempolimit für das Ausführen des ausgewählten Auftrags löschen (Strg+Klick löscht das Tempolimit für alle Aufträge)
 
 STR_TIMETABLE_RESET_LATENESS                                    :{BLACK}Verspätung löschen
 STR_TIMETABLE_RESET_LATENESS_TOOLTIP                            :{BLACK}Verspätungsmelder zurücksetzen (das Fahrzeug gilt dann als pünktlich).
