@@ -6605,6 +6605,7 @@ static bool TrainLocoHandler(Train *v, bool mode)
  */
 Money Train::GetRunningCost() const
 {
+	Money actual_cost = 0;
 	Money cost = 0;
 	const Train *v = this;
 
@@ -6622,13 +6623,16 @@ Money Train::GetRunningCost() const
 	} while ((v = v->GetNextVehicle()) != nullptr);
 
 	if (this->cur_speed == 0) {
-		if (this->IsInDepot()) {
+		if (this->IsInDepot() && _settings_game.difficulty.vehicle_costs_in_depot > 0) {
 			/* running costs if in depot */
-			cost = CeilDivT<Money>(cost, _settings_game.difficulty.vehicle_costs_in_depot);
-		} else {
-			/* running costs if stopped */
-			cost = CeilDivT<Money>(cost, _settings_game.difficulty.vehicle_costs_when_stopped);
+			actual_cost = CeilDivT<Money>(cost, _settings_game.difficulty.vehicle_costs_in_depot);
 		}
+		else if (_settings_game.difficulty.vehicle_costs_when_stopped > 0) {
+			/* running costs if stopped */
+			actual_cost = CeilDivT<Money>(cost, _settings_game.difficulty.vehicle_costs_when_stopped);
+		}
+
+		return actual_cost;
 	}
 
 	return cost;
