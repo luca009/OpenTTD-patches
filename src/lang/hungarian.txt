@@ -268,6 +268,7 @@ STR_UNITS_POWER_IMPERIAL                                        :{COMMA}{NBSP}LE
 STR_UNITS_POWER_METRIC                                          :{COMMA}{NBSP}LE
 STR_UNITS_POWER_SI                                              :{COMMA}{NBSP}kW
 
+
 STR_UNITS_WEIGHT_SHORT_IMPERIAL                                 :{COMMA}{NBSP}t
 STR_UNITS_WEIGHT_SHORT_METRIC                                   :{COMMA}{NBSP}t
 STR_UNITS_WEIGHT_SHORT_SI                                       :{COMMA}{NBSP}kg
@@ -460,10 +461,9 @@ STR_SCENEDIT_FILE_MENU_SEPARATOR                                :
 STR_SCENEDIT_FILE_MENU_QUIT                                     :Kilépés
 
 # Settings menu
-###length 14
+###length 15
 STR_SETTINGS_MENU_GAME_OPTIONS                                  :Alapbeállítások
 STR_SETTINGS_MENU_CONFIG_SETTINGS_TREE                          :Beállítások
-STR_SETTINGS_MENU_SCRIPT_SETTINGS                               :MI / Játékszkript beállítások
 STR_SETTINGS_MENU_NEWGRF_SETTINGS                               :NewGRF beállítások
 STR_SETTINGS_MENU_TRANSPARENCY_OPTIONS                          :Átlátszósági beállítások
 STR_SETTINGS_MENU_TOWN_NAMES_DISPLAYED                          :Városnevek mutatása
@@ -1073,21 +1073,8 @@ STR_GAME_OPTIONS_VIDEO_VSYNC_TOOLTIP                            :{BLACK}Jelöld 
 
 STR_GAME_OPTIONS_VIDEO_DRIVER_INFO                              :{BLACK}Jelenlegi meghajtó: {STRING}
 
-STR_GAME_OPTIONS_GUI_ZOOM_FRAME                                 :{BLACK}Felület mérete
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_TOOLTIP                      :{BLACK}Használni kívánt felületméret kiválasztása
 
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_AUTO                         :(automatikus)
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_NORMAL                       :Normál
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_2X_ZOOM                      :Dupla méret
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_4X_ZOOM                      :Négyszeres méret
 
-STR_GAME_OPTIONS_FONT_ZOOM                                      :{BLACK}Betűméret
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_TOOLTIP                     :{BLACK}Használni kívánt betűméret kiválasztása
-
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_AUTO                        :(automatikus)
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_NORMAL                      :Normál
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_2X_ZOOM                     :Dupla méret
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_4X_ZOOM                     :Négyszeres méret
 
 STR_GAME_OPTIONS_GRAPHICS                                       :{BLACK}Grafika
 
@@ -2134,7 +2121,6 @@ STR_INTRO_HIGHSCORE                                             :{BLACK}Rekord t
 STR_INTRO_CONFIG_SETTINGS_TREE                                  :{BLACK}Beállítások
 STR_INTRO_NEWGRF_SETTINGS                                       :{BLACK}NewGRF beállítások
 STR_INTRO_ONLINE_CONTENT                                        :{BLACK}Letölthető tartalmak
-STR_INTRO_SCRIPT_SETTINGS                                       :{BLACK}MI / Játékszkript beállítások
 STR_INTRO_QUIT                                                  :{BLACK}Kilépés
 
 STR_INTRO_TOOLTIP_NEW_GAME                                      :{BLACK}Új játék kezdése. Ctrl+kattintással átugorhatod a térkép beállításokat
@@ -2154,7 +2140,6 @@ STR_INTRO_TOOLTIP_HIGHSCORE                                     :{BLACK}Rekord t
 STR_INTRO_TOOLTIP_CONFIG_SETTINGS_TREE                          :{BLACK}A beállítások megjelenítése
 STR_INTRO_TOOLTIP_NEWGRF_SETTINGS                               :{BLACK}NewGRF beállítások megjelenítése
 STR_INTRO_TOOLTIP_ONLINE_CONTENT                                :{BLACK}Új és frissített tartalmak megtekintése és letöltése
-STR_INTRO_TOOLTIP_SCRIPT_SETTINGS                               :{BLACK}MI és játékszkript beállítások megjelenítése
 STR_INTRO_TOOLTIP_QUIT                                          :{BLACK}Kilépés az OpenTTD-ből
 
 STR_INTRO_BASESET                                               :{BLACK}A jelenleg kiválasztott grafikus alapcsomagból {NUM} sprite hiányzik. Frissítsd a grafikus alapcsomagot!
@@ -2670,6 +2655,7 @@ STR_LINKGRAPH_STATS_TOOLTIP                                     :{BLACK}{CARGO_L
 STR_LINKGRAPH_STATS_TOOLTIP_RETURN_EXTENSION                    :{}{CARGO_LONG} visszaszállításra ({COMMA}% elszállítva)
 STR_LINKGRAPH_STATS_TOOLTIP_TIME_EXTENSION                      :{}Átlagos utazási idő: {NUM}{NBSP}nap{P "" s}
 STR_LINKGRAPH_STATS_TOOLTIP_TIME_EXTENSION_GENERAL              :{}Átlagos utazási idő: {STRING}
+STR_LINKGRAPH_STATS_TOOLTIP_CAPACITY                            :{}Kapacitás: {CARGO_LONG}
 
 # Base for station construction window(s)
 STR_STATION_BUILD_COVERAGE_AREA_TITLE                           :{BLACK}Lefedett terület mutatása:
@@ -3387,6 +3373,10 @@ STR_SPRITE_ALIGNER_PREVIOUS_BUTTON                              :{BLACK}Előző 
 STR_SPRITE_ALIGNER_PREVIOUS_TOOLTIP                             :{BLACK}Továbbhaladás az előző normál spritera, kihagyva bármilyen ál/átszínező/betű spriteokat, az elején folytatva az utolsóval
 STR_SPRITE_ALIGNER_SPRITE_TOOLTIP                               :{BLACK}A jelenleg kiválasztott sprite ábrázolása. Az elhelyezkedés kikapcsolt sprite-rajzolás közben
 STR_SPRITE_ALIGNER_MOVE_TOOLTIP                                 :{BLACK}Sprite elmozdítása, módosítva az X és Y offszeteket. Ctrl+kattintással a spriteot nyolc egységgel mozgatja
+
+###length 2
+
+
 STR_SPRITE_ALIGNER_RESET_BUTTON                                 :{BLACK}Eltolás visszaállítása
 STR_SPRITE_ALIGNER_RESET_TOOLTIP                                :{BLACK}A jelenlegi relatív eltolás visszaállítása
 STR_SPRITE_ALIGNER_OFFSETS_ABS                                  :{BLACK}X eltolás: {NUM}, Y eltolás: {NUM} (Abszolút)
@@ -3727,7 +3717,6 @@ STR_FINANCES_SECTION_OTHER                                      :{GOLD}Egyéb
 STR_FINANCES_NEGATIVE_INCOME                                    :-{CURRENCY_LONG}
 STR_FINANCES_ZERO_INCOME                                        :{CURRENCY_LONG}
 STR_FINANCES_POSITIVE_INCOME                                    :+{CURRENCY_LONG}
-STR_FINANCES_NET_PROFIT                                         :{WHITE}Nettó Profit
 STR_FINANCES_BANK_BALANCE_TITLE                                 :{WHITE}Banki egyenleg
 STR_FINANCES_OWN_FUNDS_TITLE                                    :{WHITE}Saját források
 STR_FINANCES_LOAN_TITLE                                         :{WHITE}Kölcsön
@@ -3955,6 +3944,8 @@ STR_PURCHASE_INFO_ALL_BUT                                       :Mindenre, kivé
 STR_PURCHASE_INFO_MAX_TE                                        :{BLACK}Maximális vonóerő: {GOLD}{FORCE}
 STR_PURCHASE_INFO_AIRCRAFT_RANGE                                :{BLACK}Hatótávolság: {GOLD}{COMMA} mező
 STR_PURCHASE_INFO_AIRCRAFT_TYPE                                 :{BLACK}Típus: {GOLD}{STRING}
+
+###length 3
 
 ###length VEHICLE_TYPES
 STR_BUY_VEHICLE_TRAIN_LIST_TOOLTIP                              :{BLACK}Vasúti jármű kiválasztása - kattints egy járműre az adataihoz. Ctrl+kattintással a járműtípus elrejthető/felfedhető
@@ -4616,7 +4607,6 @@ STR_ERROR_AI_PLEASE_REPORT_CRASH                                :{WHITE}Az egyik
 STR_ERROR_AI_DEBUG_SERVER_ONLY                                  :{YELLOW}Az MI / Játékszkript nyomkövetés ablak csak a szerver számára elérhető
 
 # AI configuration window
-STR_AI_CONFIG_CAPTION                                           :{WHITE}MI / Játékszkript beállítások
 STR_AI_CONFIG_GAMELIST_TOOLTIP                                  :{BLACK}A következő játékban betöltődő játékszkript
 STR_AI_CONFIG_AILIST_TOOLTIP                                    :{BLACK}A következő játékban betöltődő MI-k
 STR_AI_CONFIG_HUMAN_PLAYER                                      :Játékos
@@ -4632,8 +4622,6 @@ STR_AI_CONFIG_MOVE_DOWN_TOOLTIP                                 :{BLACK}Kiválas
 STR_AI_CONFIG_GAMESCRIPT                                        :{SILVER}Játékszkript
 STR_AI_CONFIG_AI                                                :{SILVER}MI-k
 
-STR_AI_CONFIG_CHANGE                                            :{BLACK}{STRING} kiválasztása
-STR_AI_CONFIG_CHANGE_NONE                                       :
 STR_AI_CONFIG_CHANGE_AI                                         :MI
 STR_AI_CONFIG_CHANGE_GAMESCRIPT                                 :Játékszkript
 STR_AI_CONFIG_CHANGE_TOOLTIP                                    :{BLACK}Másik szkript betöltése
@@ -4664,9 +4652,7 @@ STR_SCREENSHOT_HEIGHTMAP_SCREENSHOT                             :{BLACK}Magassá
 STR_SCREENSHOT_MINIMAP_SCREENSHOT                               :{BLACK}Minitérkép mentése
 
 # AI Parameters
-STR_AI_SETTINGS_CAPTION                                         :{WHITE}{STRING} Paraméterek
 STR_AI_SETTINGS_CAPTION_AI                                      :MI
-STR_AI_SETTINGS_CAPTION_GAMESCRIPT                              :Játékszkript
 STR_AI_SETTINGS_CLOSE                                           :{BLACK}Bezárás
 STR_AI_SETTINGS_RESET                                           :{BLACK}Visszaállítás
 STR_AI_SETTINGS_SETTING                                         :{STRING}: {ORANGE}{STRING}
@@ -5083,6 +5069,7 @@ STR_ERROR_TOO_MANY_VEHICLES_IN_GAME                             :{WHITE}Túl sok
 STR_ERROR_CAN_T_CHANGE_SERVICING                                :{WHITE}Nem változtathatod meg a javítási időközt...
 
 STR_ERROR_VEHICLE_IS_DESTROYED                                  :{WHITE}... jármű megsemmisült
+
 
 STR_ERROR_NO_VEHICLES_AVAILABLE_AT_ALL                          :{WHITE}Egyáltalán nincsenek elérhető járművek
 STR_ERROR_NO_VEHICLES_AVAILABLE_AT_ALL_EXPLANATION              :{WHITE}Változtasd meg a NewGRF konfigurációdat!

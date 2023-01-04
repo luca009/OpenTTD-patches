@@ -1260,6 +1260,21 @@ bool Train::ConsistNeedsRepair() const
 	return false;
 }
 
+int Train::GetCursorImageOffset() const
+{
+	if (this->gcache.cached_veh_length != 8 && HasBit(this->flags, VRF_REVERSE_DIRECTION) && !HasBit(EngInfo(this->engine_type)->misc_flags, EF_RAIL_FLIPS)) {
+		int reference_width = TRAININFO_DEFAULT_VEHICLE_WIDTH;
+
+		const Engine *e = this->GetEngine();
+		if (e->GetGRF() != nullptr && is_custom_sprite(e->u.rail.image_index)) {
+			reference_width = e->GetGRF()->traininfo_vehicle_width;
+		}
+
+		return ScaleSpriteTrad((this->gcache.cached_veh_length - (int)VEHICLE_LENGTH) * reference_width / (int)VEHICLE_LENGTH);
+	}
+	return 0;
+}
+
 /**
  * Get the width of a train vehicle image in the GUI.
  * @param offset Additional offset for positioning the sprite; set to nullptr if not needed
@@ -1277,10 +1292,14 @@ int Train::GetDisplayImageWidth(Point *offset) const
 	}
 
 	if (offset != nullptr) {
-		offset->x = ScaleGUITrad(reference_width) / 2;
-		offset->y = ScaleGUITrad(vehicle_pitch);
+		if (HasBit(this->flags, VRF_REVERSE_DIRECTION) && !HasBit(EngInfo(this->engine_type)->misc_flags, EF_RAIL_FLIPS)) {
+			offset->x = ScaleSpriteTrad((this->gcache.cached_veh_length - VEHICLE_LENGTH / 2) * reference_width / VEHICLE_LENGTH);
+		} else {
+			offset->x = ScaleSpriteTrad(reference_width) / 2;
+		}
+		offset->y = ScaleSpriteTrad(vehicle_pitch);
 	}
-	return ScaleGUITrad(this->gcache.cached_veh_length * reference_width / VEHICLE_LENGTH);
+	return ScaleSpriteTrad(this->gcache.cached_veh_length * reference_width / VEHICLE_LENGTH);
 }
 
 static SpriteID GetDefaultTrainSprite(uint8 spritenum, Direction direction)
@@ -1326,7 +1345,7 @@ static void GetRailIcon(EngineID engine, bool rear_head, int &y, EngineImageType
 		GetCustomVehicleIcon(engine, dir, image_type, result);
 		if (result->IsValid()) {
 			if (e->GetGRF() != nullptr) {
-				y += ScaleGUITrad(e->GetGRF()->traininfo_vehicle_pitch);
+				y += ScaleSpriteTrad(e->GetGRF()->traininfo_vehicle_pitch);
 			}
 			return;
 		}
@@ -1353,11 +1372,11 @@ void DrawTrainEngine(int left, int right, int preferred_x, int y, EngineID engin
 		Rect16 rectr = seqr.GetBounds();
 
 		preferred_x = SoftClamp(preferred_x,
-				left - UnScaleGUI(rectf.left) + ScaleGUITrad(14),
-				right - UnScaleGUI(rectr.right) - ScaleGUITrad(15));
+				left - UnScaleGUI(rectf.left) + ScaleSpriteTrad(14),
+				right - UnScaleGUI(rectr.right) - ScaleSpriteTrad(15));
 
-		seqf.Draw(preferred_x - ScaleGUITrad(14), yf, pal, pal == PALETTE_CRASH);
-		seqr.Draw(preferred_x + ScaleGUITrad(15), yr, pal, pal == PALETTE_CRASH);
+		seqf.Draw(preferred_x - ScaleSpriteTrad(14), yf, pal, pal == PALETTE_CRASH);
+		seqr.Draw(preferred_x + ScaleSpriteTrad(15), yr, pal, pal == PALETTE_CRASH);
 	} else {
 		VehicleSpriteSeq seq;
 		GetRailIcon(engine, false, y, image_type, &seq);
@@ -1387,21 +1406,21 @@ void GetTrainSpriteSize(EngineID engine, uint &width, uint &height, int &xoffs, 
 	VehicleSpriteSeq seq;
 	GetRailIcon(engine, false, y, image_type, &seq);
 
-	Rect16 rect = seq.GetBounds();
+	Rect rect = ConvertRect<Rect16, Rect>(seq.GetBounds());
 
-	width  = UnScaleGUI(rect.right - rect.left + 1);
-	height = UnScaleGUI(rect.bottom - rect.top + 1);
+	width  = UnScaleGUI(rect.Width());
+	height = UnScaleGUI(rect.Height());
 	xoffs  = UnScaleGUI(rect.left);
 	yoffs  = UnScaleGUI(rect.top);
 
 	if (RailVehInfo(engine)->railveh_type == RAILVEH_MULTIHEAD) {
 		GetRailIcon(engine, true, y, image_type, &seq);
-		rect = seq.GetBounds();
+		rect = ConvertRect<Rect16, Rect>(seq.GetBounds());
 
 		/* Calculate values relative to an imaginary center between the two sprites. */
-		width = ScaleGUITrad(TRAININFO_DEFAULT_VEHICLE_WIDTH) + UnScaleGUI(rect.right) - xoffs;
-		height = std::max<uint>(height, UnScaleGUI(rect.bottom - rect.top + 1));
-		xoffs  = xoffs - ScaleGUITrad(TRAININFO_DEFAULT_VEHICLE_WIDTH) / 2;
+		width = ScaleSpriteTrad(TRAININFO_DEFAULT_VEHICLE_WIDTH) + UnScaleGUI(rect.right) - xoffs;
+		height = std::max<uint>(height, UnScaleGUI(rect.Height()));
+		xoffs  = xoffs - ScaleSpriteTrad(TRAININFO_DEFAULT_VEHICLE_WIDTH) / 2;
 		yoffs  = std::min(yoffs, UnScaleGUI(rect.top));
 	}
 }
@@ -2355,7 +2374,15 @@ void Train::UpdateDeltaXY()
 	this->x_bb_offs =  0;
 	this->y_bb_offs =  0;
 
-	if (!IsDiagonalDirection(this->direction)) {
+	/* Set if flipped and engine is NOT flagged with custom flip handling. */
+	int flipped = HasBit(this->flags, VRF_REVERSE_DIRECTION) && !HasBit(EngInfo(this->engine_type)->misc_flags, EF_RAIL_FLIPS);
+	/* If flipped and vehicle length is odd, we need to adjust the bounding box offset slightly. */
+	int flip_offs = flipped && (this->gcache.cached_veh_length & 1);
+
+	Direction dir = this->direction;
+	if (flipped) dir = ReverseDir(dir);
+
+	if (!IsDiagonalDirection(dir)) {
 		static const int _sign_table[] =
 		{
 			/* x, y */
@@ -2365,25 +2392,25 @@ void Train::UpdateDeltaXY()
 			 1, -1, // DIR_W
 		};
 
-		int half_shorten = (VEHICLE_LENGTH - this->gcache.cached_veh_length) / 2;
+		int half_shorten = (VEHICLE_LENGTH - this->gcache.cached_veh_length + flipped) / 2;
 
 		/* For all straight directions, move the bound box to the centre of the vehicle, but keep the size. */
-		this->x_offs -= half_shorten * _sign_table[this->direction];
-		this->y_offs -= half_shorten * _sign_table[this->direction + 1];
-		this->x_extent += this->x_bb_offs = half_shorten * _sign_table[direction];
-		this->y_extent += this->y_bb_offs = half_shorten * _sign_table[direction + 1];
+		this->x_offs -= half_shorten * _sign_table[dir];
+		this->y_offs -= half_shorten * _sign_table[dir + 1];
+		this->x_extent += this->x_bb_offs = half_shorten * _sign_table[dir];
+		this->y_extent += this->y_bb_offs = half_shorten * _sign_table[dir + 1];
 	} else {
-		switch (this->direction) {
+		switch (dir) {
 				/* Shorten southern corner of the bounding box according the vehicle length
 				 * and center the bounding box on the vehicle. */
 			case DIR_NE:
-				this->x_offs    = 1 - (this->gcache.cached_veh_length + 1) / 2;
+				this->x_offs    = 1 - (this->gcache.cached_veh_length + 1) / 2 + flip_offs;
 				this->x_extent  = this->gcache.cached_veh_length - 1;
 				this->x_bb_offs = -1;
 				break;
 
 			case DIR_NW:
-				this->y_offs    = 1 - (this->gcache.cached_veh_length + 1) / 2;
+				this->y_offs    = 1 - (this->gcache.cached_veh_length + 1) / 2 + flip_offs;
 				this->y_extent  = this->gcache.cached_veh_length - 1;
 				this->y_bb_offs = -1;
 				break;
@@ -2391,13 +2418,13 @@ void Train::UpdateDeltaXY()
 				/* Move northern corner of the bounding box down according to vehicle length
 				 * and center the bounding box on the vehicle. */
 			case DIR_SW:
-				this->x_offs    = 1 + (this->gcache.cached_veh_length + 1) / 2 - VEHICLE_LENGTH;
+				this->x_offs    = 1 + (this->gcache.cached_veh_length + 1) / 2 - VEHICLE_LENGTH - flip_offs;
 				this->x_extent  = VEHICLE_LENGTH - 1;
 				this->x_bb_offs = VEHICLE_LENGTH - this->gcache.cached_veh_length - 1;
 				break;
 
 			case DIR_SE:
-				this->y_offs    = 1 + (this->gcache.cached_veh_length + 1) / 2 - VEHICLE_LENGTH;
+				this->y_offs    = 1 + (this->gcache.cached_veh_length + 1) / 2 - VEHICLE_LENGTH - flip_offs;
 				this->y_extent  = VEHICLE_LENGTH - 1;
 				this->y_bb_offs = VEHICLE_LENGTH - this->gcache.cached_veh_length - 1;
 				break;
@@ -3066,7 +3093,6 @@ CommandCost CmdReverseTrainDirection(TileIndex tile, DoCommandFlag flags, uint32
 		if (v->IsMultiheaded() || HasBit(EngInfo(v->engine_type)->callback_mask, CBM_VEHICLE_ARTIC_ENGINE)) {
 			return_cmd_error(STR_ERROR_CAN_T_REVERSE_DIRECTION_RAIL_VEHICLE_MULTIPLE_UNITS);
 		}
-		if (!HasBit(EngInfo(v->engine_type)->misc_flags, EF_RAIL_FLIPS) && !_settings_game.vehicle.flip_direction_all_trains) return CMD_ERROR;
 
 		Train *front = v->First();
 		/* make sure the vehicle is stopped in the depot */
@@ -3199,7 +3225,7 @@ bool Train::FindClosestDepot(TileIndex *location, DestinationID *destination, bo
 }
 
 /** Play a sound for a train leaving the station. */
-void Train::PlayLeaveStationSound() const
+void Train::PlayLeaveStationSound(bool force) const
 {
 	static const SoundFx sfx[] = {
 		SND_04_DEPARTURE_STEAM,
@@ -3209,10 +3235,9 @@ void Train::PlayLeaveStationSound() const
 		SND_41_DEPARTURE_MAGLEV
 	};
 
-	if (PlayVehicleSound(this, VSE_START)) return;
+	if (PlayVehicleSound(this, VSE_START, force)) return;
 
-	EngineID engtype = this->engine_type;
-	SndPlayVehicleFx(sfx[RailVehInfo(engtype)->engclass], this);
+	SndPlayVehicleFx(sfx[RailVehInfo(this->engine_type)->engclass], this);
 }
 
 /**
@@ -6842,27 +6867,6 @@ void DeleteVisibleTrain(Train *v)
 	UpdateSignalsInBuffer();
 }
 
-/* Get the pixel-width of the image that is used for the train vehicle
- * @return:	the image width number in pixel
- */
-int GetDisplayImageWidth(Train *t, Point *offset)
-{
-	int reference_width = TRAININFO_DEFAULT_VEHICLE_WIDTH;
-	int vehicle_pitch = 0;
-
-	const Engine *e = Engine::Get(t->engine_type);
-	if (e->grf_prop.grffile != nullptr && is_custom_sprite(e->u.rail.image_index)) {
-		reference_width = e->grf_prop.grffile->traininfo_vehicle_width;
-		vehicle_pitch = e->grf_prop.grffile->traininfo_vehicle_pitch;
-	}
-
-	if (offset != nullptr) {
-		offset->x = reference_width / 2;
-		offset->y = vehicle_pitch;
-	}
-	return t->gcache.cached_veh_length * reference_width / VEHICLE_LENGTH;
-}
-
 Train* CmdBuildVirtualRailWagon(const Engine *e, uint32 user, bool no_consist_change)
 {
 	const RailVehicleInfo *rvi = &e->u.rail;
@@ -7413,4 +7417,21 @@ void ApplySignalTrainAdaptationSpeed(Train *v, TileIndex tile, uint16 track)
 	} else {
 		v->signal_speed_restriction = 0;
 	}
+}
+
+uint16 Train::GetMaxWeight() const
+{
+	uint16 weight = CargoSpec::Get(this->cargo_type)->WeightOfNUnitsInTrain(this->GetEngine()->DetermineCapacity(this));
+
+	/* Vehicle weight is not added for articulated parts. */
+	if (!this->IsArticulatedPart()) {
+		weight += GetVehicleProperty(this, PROP_TRAIN_WEIGHT, RailVehInfo(this->engine_type)->weight);
+	}
+
+	/* Powered wagons have extra weight added. */
+	if (HasBit(this->flags, VRF_POWEREDWAGON)) {
+		weight += RailVehInfo(this->gcache.first_engine)->pow_wag_weight;
+	}
+
+	return weight;
 }

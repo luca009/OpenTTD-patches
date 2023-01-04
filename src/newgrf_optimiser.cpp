@@ -14,6 +14,7 @@
 #include "debug_settings.h"
 #include "core/y_combinator.hpp"
 #include "scope.h"
+#include "newgrf_station.h"
 
 #include <tuple>
 
@@ -30,6 +31,20 @@ static bool IsExpensiveVehicleVariable(uint16 variable)
 		case 0x63:
 		case 0xFE:
 		case 0xFF:
+			return true;
+
+		default:
+			return false;
+	}
+}
+
+static bool IsExpensiveStationVariable(uint16 variable)
+{
+	switch (variable) {
+		case 0x66:
+		case 0x67:
+		case 0x68:
+		case 0x6A:
 			return true;
 
 		default:
@@ -69,11 +84,30 @@ static bool IsExpensiveObjectVariable(uint16 variable)
 	}
 }
 
+static bool IsExpensiveRoadStopsVariable(uint16 variable)
+{
+	switch (variable) {
+		case 0x45:
+		case 0x46:
+		case 0x66:
+		case 0x67:
+		case 0x68:
+		case 0x6A:
+		case 0x6B:
+			return true;
+
+		default:
+			return false;
+	}
+}
+
 static bool IsExpensiveVariable(uint16 variable, GrfSpecFeature feature, VarSpriteGroupScope var_scope)
 {
 	if ((feature >= GSF_TRAINS && feature <= GSF_AIRCRAFT) && IsExpensiveVehicleVariable(variable)) return true;
+	if (feature == GSF_STATIONS && var_scope == VSG_SCOPE_SELF && IsExpensiveStationVariable(variable)) return true;
 	if (feature == GSF_INDUSTRYTILES && var_scope == VSG_SCOPE_SELF && IsExpensiveIndustryTileVariable(variable)) return true;
 	if (feature == GSF_OBJECTS && var_scope == VSG_SCOPE_SELF && IsExpensiveObjectVariable(variable)) return true;
+	if (feature == GSF_ROADSTOPS && var_scope == VSG_SCOPE_SELF && IsExpensiveRoadStopsVariable(variable)) return true;
 	return false;
 }
 
@@ -91,7 +125,7 @@ static bool IsVariableVeryCheap(uint16 variable, GrfSpecFeature feature)
 
 static bool IsFeatureUsableForDSE(GrfSpecFeature feature)
 {
-	return (feature != GSF_STATIONS);
+	return true;
 }
 
 static bool IsFeatureUsableForCBQuickExit(GrfSpecFeature feature)
@@ -2411,6 +2445,36 @@ static void OptimiseVarAction2CheckInliningCandidate(DeterministicSpriteGroup *g
 	*(_cur.GetInlinableGroupAdjusts(group, true)) = std::move(saved_adjusts);
 }
 
+static void PopulateRegistersUsedByNewGRFSpriteLayout(const NewGRFSpriteLayout &dts, std::bitset<256> &bits)
+{
+	const TileLayoutRegisters *registers = dts.registers;
+
+	auto process_registers = [&](uint i, bool is_parent) {
+		const TileLayoutRegisters *reg = registers + i;
+		if (reg->flags & TLF_DODRAW) bits.set(reg->dodraw, true);
+		if (reg->flags & TLF_SPRITE) bits.set(reg->sprite, true);
+		if (reg->flags & TLF_PALETTE) bits.set(reg->palette, true);
+		if (is_parent) {
+			if (reg->flags & TLF_BB_XY_OFFSET) {
+				bits.set(reg->delta.parent[0], true);
+				bits.set(reg->delta.parent[1], true);
+			}
+			if (reg->flags & TLF_BB_Z_OFFSET) bits.set(reg->delta.parent[2], true);
+		} else {
+			if (reg->flags & TLF_CHILD_X_OFFSET) bits.set(reg->delta.child[0], true);
+			if (reg->flags & TLF_CHILD_Y_OFFSET) bits.set(reg->delta.child[1], true);
+		}
+	};
+	process_registers(0, false);
+
+	uint offset = 0; // offset 0 is the ground sprite
+	const DrawTileSeqStruct *element;
+	foreach_draw_tile_seq(element, dts.seq) {
+		offset++;
+		process_registers(offset, element->IsParentSprite());
+	}
+}
+
 void OptimiseVarAction2DeterministicSpriteGroup(VarAction2OptimiseState &state, const GrfSpecFeature feature, const byte varsize, DeterministicSpriteGroup *group, std::vector<DeterministicSpriteGroupAdjust> &saved_adjusts)
 {
 	if (unlikely(HasGrfOptimiserFlag(NGOF_NO_OPT_VARACT2))) return;
@@ -2453,10 +2517,11 @@ void OptimiseVarAction2DeterministicSpriteGroup(VarAction2OptimiseState &state, 
 	bool seen_req_var1C = false;
 	if (!group->calculated_result) {
 		bool is_cb_switch = false;
-		if (possible_callback_handler && group->adjusts.size() == 1 && !group->calculated_result &&
+		if (possible_callback_handler && group->adjusts.size() > 0 && !group->calculated_result &&
 				IsFeatureUsableForCBQuickExit(group->feature) && !HasGrfOptimiserFlag(NGOF_NO_OPT_VARACT2_CB_QUICK_EXIT)) {
-			const auto &adjust = group->adjusts[0];
-			if (adjust.variable == 0xC && (adjust.operation == DSGA_OP_ADD || adjust.operation == DSGA_OP_RST) &&
+			size_t idx = group->adjusts.size() - 1;
+			const auto &adjust = group->adjusts[idx];
+			if (adjust.variable == 0xC && ((adjust.operation == DSGA_OP_ADD && idx == 0) || adjust.operation == DSGA_OP_RST) &&
 					adjust.shift_num == 0 && (adjust.and_mask & 0xFF) == 0xFF && adjust.type == DSGA_TYPE_NONE) {
 				is_cb_switch = true;
 			}
@@ -2481,6 +2546,10 @@ void OptimiseVarAction2DeterministicSpriteGroup(VarAction2OptimiseState &state, 
 					group->dsg_flags |= DSGF_CB_HANDLER;
 					state.have_cb_handler = true;
 				}
+				if ((dsg->dsg_flags & DSGF_CB_RESULT) && !state.ignore_cb_handler) {
+					group->dsg_flags |= DSGF_CB_RESULT;
+					state.have_cb_handler = true;
+				}
 			}
 			if (sg != nullptr && sg->type == SGT_RANDOMIZED) {
 				const RandomizedSpriteGroup *rsg = (const RandomizedSpriteGroup*)sg;
@@ -2491,32 +2560,7 @@ void OptimiseVarAction2DeterministicSpriteGroup(VarAction2OptimiseState &state, 
 			if (sg != nullptr && sg->type == SGT_TILELAYOUT) {
 				const TileLayoutSpriteGroup *tlsg = (const TileLayoutSpriteGroup*)sg;
 				if (tlsg->dts.registers != nullptr) {
-					const TileLayoutRegisters *registers = tlsg->dts.registers;
-
-					auto process_registers = [&](uint i, bool is_parent) {
-						const TileLayoutRegisters *reg = registers + i;
-						if (reg->flags & TLF_DODRAW) bits.set(reg->dodraw, true);
-						if (reg->flags & TLF_SPRITE) bits.set(reg->sprite, true);
-						if (reg->flags & TLF_PALETTE) bits.set(reg->palette, true);
-						if (is_parent) {
-							if (reg->flags & TLF_BB_XY_OFFSET) {
-								bits.set(reg->delta.parent[0], true);
-								bits.set(reg->delta.parent[1], true);
-							}
-							if (reg->flags & TLF_BB_Z_OFFSET) bits.set(reg->delta.parent[2], true);
-						} else {
-							if (reg->flags & TLF_CHILD_X_OFFSET) bits.set(reg->delta.child[0], true);
-							if (reg->flags & TLF_CHILD_Y_OFFSET) bits.set(reg->delta.child[1], true);
-						}
-					};
-					process_registers(0, false);
-
-					uint offset = 0; // offset 0 is the ground sprite
-					const DrawTileSeqStruct *element;
-					foreach_draw_tile_seq(element, tlsg->dts.seq) {
-						offset++;
-						process_registers(offset, element->IsParentSprite());
-					}
+					PopulateRegistersUsedByNewGRFSpriteLayout(tlsg->dts, bits);
 				}
 			}
 			if (sg != nullptr && sg->type == SGT_INDUSTRY_PRODUCTION) {
@@ -2529,6 +2573,12 @@ void OptimiseVarAction2DeterministicSpriteGroup(VarAction2OptimiseState &state, 
 						if (ipsg->add_output[i] < 0x100) bits.set(ipsg->add_output[i], true);
 					}
 					bits.set(ipsg->again, true);
+				}
+			}
+			if (sg != nullptr && sg->type == SGT_CALLBACK) {
+				if (!state.ignore_cb_handler) {
+					group->dsg_flags |= DSGF_CB_RESULT;
+					state.have_cb_handler = true;
 				}
 			}
 		});
@@ -2545,9 +2595,11 @@ void OptimiseVarAction2DeterministicSpriteGroup(VarAction2OptimiseState &state, 
 		if (!default_group_state.have_cb_handler && is_cb_switch) {
 			bool found_zero_value = false;
 			bool found_non_zero_value = false;
+			bool found_random_cb_value = false;
 			for (const auto &range : group->ranges) {
 				if (range.low == 0) found_zero_value = true;
 				if (range.high > 0) found_non_zero_value = true;
+				if (range.low <= 1 && range.high >= 1) found_random_cb_value = true;
 			}
 			if (!found_non_zero_value) {
 				/* Group looks at var C but has no branches for non-zero cases, so don't consider it a callback handler.
@@ -2555,8 +2607,8 @@ void OptimiseVarAction2DeterministicSpriteGroup(VarAction2OptimiseState &state, 
 				 */
 				possible_callback_handler = false;
 			}
-			if (!found_zero_value) {
-				group->ranges.insert(group->ranges.begin(), { group->default_group, 0, 0 });
+			if (!found_zero_value && !found_random_cb_value) {
+				group->ranges.insert(group->ranges.begin(), { group->default_group, 0, 1 });
 				extern const CallbackResultSpriteGroup *NewCallbackResultSpriteGroupNoTransform(uint16 result);
 				group->default_group = NewCallbackResultSpriteGroupNoTransform(CALLBACK_FAILED);
 			}
@@ -2570,6 +2622,8 @@ void OptimiseVarAction2DeterministicSpriteGroup(VarAction2OptimiseState &state, 
 			}
 			state.GetVarTracking(group)->in |= in_bits;
 		}
+	} else {
+		group->dsg_flags |= DSGF_CB_RESULT;
 	}
 	if (possible_callback_handler) group->dsg_flags |= DSGF_CB_HANDLER;
 
@@ -2932,9 +2986,39 @@ static std::bitset<256> HandleVarAction2DeadStoreElimination(DeterministicSprite
 	return propagate_bits;
 }
 
+static void PopulateRailStationAdvancedLayoutVariableUsage()
+{
+	for (uint i = 0; StationClass::IsClassIDValid((StationClassID)i); i++) {
+		StationClass *stclass = StationClass::Get((StationClassID)i);
+
+		for (uint j = 0; j < stclass->GetSpecCount(); j++) {
+			const StationSpec *statspec = stclass->GetSpec(j);
+			if (statspec == nullptr) continue;
+
+			std::bitset<256> bits;
+			for (const NewGRFSpriteLayout &dts : statspec->renderdata) {
+				if (dts.registers != nullptr) {
+					PopulateRegistersUsedByNewGRFSpriteLayout(dts, bits);
+				}
+			}
+			if (bits.any()) {
+				/* Simulate a procedure call on each of the root sprite groups which requires the bits used in the tile layouts */
+				CheckDeterministicSpriteGroupOutputVarBitsProcedureHandler proc_handler(bits);
+				for (uint k = 0; k < NUM_CARGO + 3; k++) {
+					if (statspec->grf_prop.spritegroup[k] != nullptr) {
+						proc_handler.ProcessGroup(statspec->grf_prop.spritegroup[k], nullptr, true);
+					}
+				}
+			}
+		}
+	}
+}
+
 void HandleVarAction2OptimisationPasses()
 {
 	if (unlikely(HasGrfOptimiserFlag(NGOF_NO_OPT_VARACT2))) return;
+
+	PopulateRailStationAdvancedLayoutVariableUsage();
 
 	for (DeterministicSpriteGroup *group : _cur.dead_store_elimination_candidates) {
 		VarAction2GroupVariableTracking *var_tracking = _cur.GetVarAction2GroupVariableTracking(group, false);

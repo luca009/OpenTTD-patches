@@ -485,10 +485,9 @@ static void ShutdownGame()
 	_game_load_date_fract = 0;
 	_game_load_tick_skip_counter = 0;
 	_game_load_time = 0;
-	_extra_station_names_used = 0;
-	_extra_station_names_probability = 0;
 	_extra_aspects = 0;
 	_aspect_cfg_hash = 0;
+	InitGRFGlobalVars();
 	_loadgame_DBGL_data.clear();
 	_loadgame_DBGC_data.clear();
 }
@@ -939,7 +938,9 @@ int openttd_main(int argc, char *argv[])
 
 	/* Initialize the zoom level of the screen to normal */
 	_screen.zoom = ZOOM_LVL_NORMAL;
-	UpdateGUIZoom();
+
+	/* The video driver is now selected, now initialise GUI zoom */
+	AdjustGUIZoom(AGZM_STARTUP);
 
 	NetworkStartUp(); // initialize network-core
 
@@ -1951,8 +1952,8 @@ void StateGameLoop()
 
 		BasePersistentStorageArray::SwitchMode(PSM_ENTER_GAMELOOP);
 		_tick_skip_counter++;
-		_scaled_tick_counter++; // This must update in lock-step with _tick_skip_counter, such that it always matches what SetScaledTickVariables would return.
-		_scaled_date_ticks++;   // "
+		_scaled_tick_counter++;
+		_scaled_date_ticks++;   // This must update in lock-step with _tick_skip_counter, such that it always matches what SetScaledTickVariables would return.
 
 		if (_settings_client.gui.autosave == 6 && !(_game_mode == GM_MENU || _game_mode == GM_BOOTSTRAP) &&
 				(_scaled_date_ticks % (_settings_client.gui.autosave_custom_minutes * (60000 / MILLISECONDS_PER_TICK))) == 0) {

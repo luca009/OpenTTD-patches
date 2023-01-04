@@ -101,12 +101,9 @@ static void GfxMainBlitter(const GfxBlitterCtx &ctx, const Sprite *sprite, int x
 
 static ReusableBuffer<uint8> _cursor_backup;
 
-ZoomLevel _gui_zoom; ///< GUI Zoom level
-ZoomLevel _font_zoom; ///< Font Zoom level
-
-int8 _gui_zoom_cfg;  ///< GUI zoom level in config.
-int8 _font_zoom_cfg; ///< Font zoom level in config.
-
+ZoomLevel _gui_zoom = ZOOM_LVL_OUT_4X;     ///< GUI Zoom level
+int _gui_scale      = MIN_INTERFACE_SCALE; ///< GUI scale, 100 is 100%.
+int _gui_scale_cfg;                        ///< GUI scale in config.
 
 /**
  * The rect for repaint.
@@ -598,6 +595,8 @@ static int DrawLayoutLine(const ParagraphLayouter::Line &line, int y, int left, 
 
 	GfxBlitterCtx ctx(_cur_dpi);
 
+	const uint shadow_offset = ScaleGUITrad(1);
+
 	TextColour colour = TC_BLACK;
 	bool draw_shadow = false;
 	for (int run_index = 0; run_index < line.CountRuns(); run_index++) {
@@ -612,7 +611,7 @@ static int DrawLayoutLine(const ParagraphLayouter::Line &line, int y, int left, 
 		int dpi_left  = dpi->left;
 		int dpi_right = dpi->left + dpi->width - 1;
 
-		draw_shadow = fc->GetDrawGlyphShadow() && (colour & TC_NO_SHADE) == 0 && colour != TC_BLACK;
+		draw_shadow = fc->GetDrawGlyphShadow() && (colour & TC_NO_SHADE) == 0 && (colour & ~TC_FORCED) != TC_BLACK;
 
 		for (int i = 0; i < run.GetGlyphCount(); i++) {
 			GlyphID glyph = run.GetGlyphs()[i];
@@ -633,7 +632,7 @@ static int DrawLayoutLine(const ParagraphLayouter::Line &line, int y, int left, 
 
 			if (draw_shadow && (glyph & SPRITE_GLYPH) == 0) {
 				ctx.SetColourRemap(TC_BLACK);
-				GfxMainBlitter(ctx, sprite, begin_x + 1, top + 1, BM_COLOUR_REMAP);
+				GfxMainBlitter(ctx, sprite, begin_x + shadow_offset, top + shadow_offset, BM_COLOUR_REMAP);
 				ctx.SetColourRemap(colour);
 			}
 			GfxMainBlitter(ctx, sprite, begin_x, top, BM_COLOUR_REMAP);
@@ -645,7 +644,7 @@ static int DrawLayoutLine(const ParagraphLayouter::Line &line, int y, int left, 
 		for (int i = 0; i < 3; i++, x += dot_width) {
 			if (draw_shadow) {
 				ctx.SetColourRemap(TC_BLACK);
-				GfxMainBlitter(ctx, dot_sprite, x + 1, y + 1, BM_COLOUR_REMAP);
+				GfxMainBlitter(ctx, dot_sprite, x + shadow_offset, y + shadow_offset, BM_COLOUR_REMAP);
 				ctx.SetColourRemap(colour);
 			}
 			GfxMainBlitter(ctx, dot_sprite, x, y, BM_COLOUR_REMAP);
@@ -958,6 +957,21 @@ Dimension GetStringBoundingBox(StringID strid, FontSize start_fontsize)
 }
 
 /**
+ * Get maximum width of a list of strings.
+ * @param list List of strings, terminated with INVALID_STRING_ID.
+ * @param fontsize Font size to use.
+ * @return Width of longest string within the list.
+ */
+uint GetStringListWidth(const StringID *list, FontSize fontsize)
+{
+	uint width = 0;
+	for (const StringID *str = list; *str != INVALID_STRING_ID; str++) {
+		width = std::max(width, GetStringBoundingBox(*str, fontsize).width);
+	}
+	return width;
+}
+
+/**
  * Get the leading corner of a character in a single-line string relative
  * to the start of the string.
  * @param str String containing the character.
@@ -1267,9 +1281,10 @@ std::unique_ptr<uint32[]> DrawSpriteToRgbaBuffer(SpriteID spriteId, ZoomLevel zo
 	const SpriteID real_sprite = GB(spriteId, 0, SPRITE_WIDTH);
 	const Sprite *sprite = GetSprite(real_sprite, ST_NORMAL);
 	Dimension dim = GetSpriteSize(real_sprite, nullptr, zoom);
-	std::unique_ptr<uint32[]> result(new uint32[dim.width * dim.height]);
+	size_t dim_size = static_cast<size_t>(dim.width) * dim.height;
+	std::unique_ptr<uint32[]> result(new uint32[dim_size]);
 	/* Set buffer to fully transparent. */
-	MemSetT(result.get(), 0, dim.width * dim.height);
+	MemSetT(result.get(), 0, dim_size);
 
 	/* Prepare new DrawPixelInfo - Normally this would be the screen but we want to draw to another buffer here.
 	 * Normally, pitch would be scaled screen width, but in our case our "screen" is only the sprite width wide. */
@@ -1282,11 +1297,13 @@ std::unique_ptr<uint32[]> DrawSpriteToRgbaBuffer(SpriteID spriteId, ZoomLevel zo
 	dpi.height = dim.height;
 	dpi.zoom = zoom;
 
+	dim_size = static_cast<size_t>(dim.width) * dim.height;
+
 	/* If the current blitter is a paletted blitter, we have to render to an extra buffer and resolve the palette later. */
 	std::unique_ptr<byte[]> pal_buffer{};
 	if (blitter->GetScreenDepth() == 8) {
-		pal_buffer.reset(new byte[dim.width * dim.height]);
-		MemSetT(pal_buffer.get(), 0, dim.width * dim.height);
+		pal_buffer.reset(new byte[dim_size]);
+		MemSetT(pal_buffer.get(), 0, dim_size);
 
 		dpi.dst_ptr = pal_buffer.get();
 	}
@@ -1301,7 +1318,7 @@ std::unique_ptr<uint32[]> DrawSpriteToRgbaBuffer(SpriteID spriteId, ZoomLevel zo
 		/* Resolve palette. */
 		uint32 *dst = result.get();
 		const byte *src = pal_buffer.get();
-		for (size_t i = 0; i < dim.height * dim.width; ++i) {
+		for (size_t i = 0; i < dim_size; ++i) {
 			*dst++ = _cur_palette.palette[*src++].data;
 		}
 	}
@@ -2336,57 +2353,66 @@ void SortResolutions()
  */
 void UpdateGUIZoom()
 {
+	int old_scale = _gui_scale;
+
 	/* Determine real GUI zoom to use. */
-	if (_gui_zoom_cfg == ZOOM_LVL_CFG_AUTO) {
-		_gui_zoom = static_cast<ZoomLevel>(Clamp(VideoDriver::GetInstance()->GetSuggestedUIZoom(), _settings_client.gui.zoom_min, _settings_client.gui.zoom_max));
+	if (_gui_scale_cfg == -1) {
+		_gui_scale = VideoDriver::GetInstance()->GetSuggestedUIScale();
 	} else {
-		/* Ensure the gui_zoom is clamped between min/max. Change the
-		 * _gui_zoom_cfg if it isn't, as this is used to visually show the
-		 * selection in the Game Options. */
-		_gui_zoom_cfg = Clamp(_gui_zoom_cfg, _settings_client.gui.zoom_min, _settings_client.gui.zoom_max);
-		_gui_zoom = static_cast<ZoomLevel>(_gui_zoom_cfg);
+		_gui_scale = Clamp(_gui_scale_cfg, MIN_INTERFACE_SCALE, MAX_INTERFACE_SCALE);
 	}
 
-	ZoomLevel old_font_zoom = _font_zoom;
+	int8 new_zoom = ScaleGUITrad(1) <= 1 ? ZOOM_LVL_OUT_4X : ScaleGUITrad(1) >= 4 ? ZOOM_LVL_MIN : ZOOM_LVL_OUT_2X;
+	/* Ensure the gui_zoom is clamped between min/max. */
+	new_zoom = Clamp(new_zoom, _settings_client.gui.zoom_min, _settings_client.gui.zoom_max);
+	_gui_zoom = static_cast<ZoomLevel>(new_zoom);
 
-	/* Determine real font zoom to use. */
-	if (_font_zoom_cfg == ZOOM_LVL_CFG_AUTO) {
-		_font_zoom = static_cast<ZoomLevel>(VideoDriver::GetInstance()->GetSuggestedUIZoom());
-	} else {
-		_font_zoom = static_cast<ZoomLevel>(_font_zoom_cfg);
-	}
-
-	if (old_font_zoom != _font_zoom) {
+	if (old_scale != _gui_scale) {
 		ClearFontCache();
 	}
-
 	UpdateFontHeightCache();
 }
 
 /**
  * Resolve GUI zoom level and adjust GUI to new zoom, if auto-suggestion is requested.
+ * @param automatic Set if the change is occuring due to OS DPI scaling being changed.
  * @returns true when the zoom level has changed, caller must call ReInitAllWindows(true)
  * after resizing the application's window/buffer.
  */
-bool AdjustGUIZoom()
+bool AdjustGUIZoom(AdjustGUIZoomMode mode)
 {
-	auto old_zoom = _gui_zoom;
+	ZoomLevel old_zoom = _gui_zoom;
+	int old_scale = _gui_scale;
 	UpdateGUIZoom();
-	if (old_zoom == _gui_zoom) return false;
-	GfxClearSpriteCache();
-	VideoDriver::GetInstance()->ClearSystemSprites();
+	if (old_scale == _gui_scale) return false;
+
+	/* Reload sprites if sprite zoom level has changed. */
+	if (old_zoom != _gui_zoom) {
+		GfxClearSpriteCache();
+		VideoDriver::GetInstance()->ClearSystemSprites();
+		UpdateCursorSize();
+		if (mode != AGZM_STARTUP) UpdateRouteStepSpriteSize();
+	}
+
 	ClearFontCache();
-	GfxClearSpriteCache();
+	UpdateFontHeightCache();
+	LoadStringWidthTable();
 	UpdateAllVirtCoords();
+	if (mode != AGZM_STARTUP) FixTitleGameZoom();
+
+	extern void FlushDeparturesWindowTextCaches();
+	FlushDeparturesWindowTextCaches();
 
 	/* Adjust all window sizes to match the new zoom level, so that they don't appear
 	   to move around when the application is moved to a screen with different DPI. */
 	auto zoom_shift = old_zoom - _gui_zoom;
 	for (Window *w : Window::IterateFromBack()) {
-		w->left = AdjustByZoom(w->left, zoom_shift);
-		w->top = AdjustByZoom(w->top, zoom_shift);
-		w->width = AdjustByZoom(w->width, zoom_shift);
-		w->height = AdjustByZoom(w->height, zoom_shift);
+		if (mode == AGZM_AUTOMATIC) {
+			w->left   = (w->left   * _gui_scale) / old_scale;
+			w->top    = (w->top    * _gui_scale) / old_scale;
+			w->width  = (w->width  * _gui_scale) / old_scale;
+			w->height = (w->height * _gui_scale) / old_scale;
+		}
 		if (w->viewport != nullptr) {
 			w->viewport->zoom = Clamp(ZoomLevel(w->viewport->zoom - zoom_shift), _settings_client.gui.zoom_min, _settings_client.gui.zoom_max);
 		}

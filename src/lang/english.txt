@@ -205,6 +205,16 @@ STR_UNITS_POWER_IMPERIAL                                        :{COMMA}{NBSP}hp
 STR_UNITS_POWER_METRIC                                          :{COMMA}{NBSP}hp
 STR_UNITS_POWER_SI                                              :{COMMA}{NBSP}kW
 
+STR_UNITS_POWER_IMPERIAL_TO_WEIGHT_IMPERIAL                     :{DECIMAL}{NBSP}hp/t
+STR_UNITS_POWER_IMPERIAL_TO_WEIGHT_METRIC                       :{DECIMAL}{NBSP}hp/t
+STR_UNITS_POWER_IMPERIAL_TO_WEIGHT_SI                           :{DECIMAL}{NBSP}hp/Mg
+STR_UNITS_POWER_METRIC_TO_WEIGHT_IMPERIAL                       :{DECIMAL}{NBSP}hp/t
+STR_UNITS_POWER_METRIC_TO_WEIGHT_METRIC                         :{DECIMAL}{NBSP}hp/t
+STR_UNITS_POWER_METRIC_TO_WEIGHT_SI                             :{DECIMAL}{NBSP}hp/Mg
+STR_UNITS_POWER_SI_TO_WEIGHT_IMPERIAL                           :{DECIMAL}{NBSP}kW/t
+STR_UNITS_POWER_SI_TO_WEIGHT_METRIC                             :{DECIMAL}{NBSP}kW/t
+STR_UNITS_POWER_SI_TO_WEIGHT_SI                                 :{DECIMAL}{NBSP}W/kg
+
 STR_UNITS_WEIGHT_SHORT_IMPERIAL                                 :{COMMA}{NBSP}t
 STR_UNITS_WEIGHT_SHORT_METRIC                                   :{COMMA}{NBSP}t
 STR_UNITS_WEIGHT_SHORT_SI                                       :{COMMA}{NBSP}kg
@@ -408,7 +418,8 @@ STR_SCENEDIT_FILE_MENU_QUIT                                     :Exit
 ###length 15
 STR_SETTINGS_MENU_GAME_OPTIONS                                  :Game options
 STR_SETTINGS_MENU_CONFIG_SETTINGS_TREE                          :Settings
-STR_SETTINGS_MENU_SCRIPT_SETTINGS                               :AI/Game script settings
+STR_SETTINGS_MENU_AI_SETTINGS                                   :AI settings
+STR_SETTINGS_MENU_GAMESCRIPT_SETTINGS                           :Game script settings
 STR_SETTINGS_MENU_NEWGRF_SETTINGS                               :NewGRF settings
 STR_SETTINGS_MENU_TRANSPARENCY_OPTIONS                          :Transparency options
 STR_SETTINGS_MENU_ZONING                                        :Zoning
@@ -1046,21 +1057,19 @@ STR_GAME_OPTIONS_VIDEO_VSYNC_TOOLTIP                            :{BLACK}Check th
 
 STR_GAME_OPTIONS_VIDEO_DRIVER_INFO                              :{BLACK}Current driver: {RAW_STRING}
 
-STR_GAME_OPTIONS_GUI_ZOOM_FRAME                                 :{BLACK}Interface size
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_TOOLTIP                      :{BLACK}Select the interface element size to use
+STR_GAME_OPTIONS_GUI_SCALE_FRAME                                :{BLACK}Interface size
+STR_GAME_OPTIONS_GUI_SCALE_TOOLTIP                              :{BLACK}Drag slider to set interface size. Hold Ctrl for continuous adjustment
+STR_GAME_OPTIONS_GUI_SCALE_AUTO                                 :{BLACK}Auto-detect size
+STR_GAME_OPTIONS_GUI_SCALE_AUTO_TOOLTIP                         :{BLACK}Check this box to detect interface size automatically
 
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_AUTO                         :(auto-detect)
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_NORMAL                       :Normal
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_2X_ZOOM                      :Double size
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_4X_ZOOM                      :Quad size
+STR_GAME_OPTIONS_GUI_SCALE_BEVELS                               :{BLACK}Scale bevels
+STR_GAME_OPTIONS_GUI_SCALE_BEVELS_TOOLTIP                       :{BLACK}Check this box to scale bevels by interface size
 
-STR_GAME_OPTIONS_FONT_ZOOM                                      :{BLACK}Font size
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_TOOLTIP                     :{BLACK}Select the interface font size to use
-
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_AUTO                        :(auto-detect)
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_NORMAL                      :Normal
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_2X_ZOOM                     :Double size
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_4X_ZOOM                     :Quad size
+STR_GAME_OPTIONS_GUI_SCALE_1X                                   :1x
+STR_GAME_OPTIONS_GUI_SCALE_2X                                   :2x
+STR_GAME_OPTIONS_GUI_SCALE_3X                                   :3x
+STR_GAME_OPTIONS_GUI_SCALE_4X                                   :4x
+STR_GAME_OPTIONS_GUI_SCALE_5X                                   :5x
 
 STR_GAME_OPTIONS_GRAPHICS                                       :{BLACK}Graphics
 
@@ -1469,9 +1478,6 @@ STR_CONFIG_SETTING_CHUNNEL_HELPTEXT                             :When enabled, t
 STR_CONFIG_SETTING_NO_TRAIN_CRASH_OTHER_COMPANY                 :Trains from different companies may not crash into each other: {STRING2}
 STR_CONFIG_SETTING_NO_TRAIN_CRASH_OTHER_COMPANY_HELPTEXT        :This setting is primarily to prevent untrusted players deliberately causing crashes involving other companies' trains in multi-player rail infrastructure sharing games.
 
-STR_CONFIG_SETTING_FLIP_DIRECTION_ALL_TRAINS                    :All train vehicles may be direction flipped in depot: {STRING2}
-STR_CONFIG_SETTING_FLIP_DIRECTION_ALL_TRAINS_HELPTEXT           :Enable flipping the direction of all train vehicles in depots, even if it is not enabled by the NewGRF.
-
 STR_CONFIG_SETTING_ROADVEH_ARTICULATED_OVERTAKING               :Articulated road vehicles may overtake: {STRING2}
 STR_CONFIG_SETTING_ROADVEH_ARTICULATED_OVERTAKING_HELPTEXT      :Enable articulated road vehicles to overtake other road vehicles.
 
@@ -1541,6 +1547,10 @@ STR_CONFIG_SETTING_GRAPH_LINE_THICKNESS_HELPTEXT                :Width of the li
 
 STR_CONFIG_SETTING_SHOW_NEWGRF_NAME                             :Show the NewGRF's name in the build vehicle window: {STRING2}
 STR_CONFIG_SETTING_SHOW_NEWGRF_NAME_HELPTEXT                    :Add a line to the build vehicle window, showing which NewGRF the selected vehicle comes from.
+
+STR_CONFIG_SETTING_SHOW_CARGO_IN_LISTS                          :Show the cargoes the vehicles can carry in the list windows {STRING2}
+STR_CONFIG_SETTING_SHOW_CARGO_IN_LISTS_HELPTEXT                 :If enabled, the vehicle's transportable load will appear above it in the vehicle lists
+
 STR_CONFIG_SETTING_SHOW_WAGON_INTRO_YEAR                        :Show wagon introduction year in the build vehicle window: {STRING2}
 STR_CONFIG_SETTING_SHOW_WAGON_INTRO_YEAR_HELPTEXT               :Add a line to the build vehicle window, showing the introduction year for train wagons.
 STR_CONFIG_SETTING_SHOW_TRAIN_LENGTH_IN_DETAILS                 :Show train length in details: {STRING2}
@@ -1600,6 +1610,9 @@ STR_CONFIG_SETTING_DEMOLISH_CONFIRM_MODE_ALL                    :Industries and 
 
 STR_CONFIG_SETTING_DUAL_PANE_TRAIN_PURCHASE_WINDOW              :Separate locomotives and wagons in train purchase window: {STRING2}
 STR_CONFIG_SETTING_DUAL_PANE_TRAIN_PURCHASE_WINDOW_HELPTEXT     :When enabled, the train purchase window shows locomotives and wagons in separate side-by-side lists.
+
+STR_CONFIG_SETTING_DUAL_PANE_TRAIN_PURCHASE_WINDOW_DUAL_BUTTONS :Show separate button sets in train purchase window: {STRING2}
+STR_CONFIG_SETTING_DUAL_PANE_TRAIN_PURCHASE_WINDOW_DUAL_BUTTONS_HELPTEXT:When enabled, the locomotive and wagon lists in the train purchase window each have their own set of buttons.
 
 STR_CONFIG_SETTING_ALLOW_HIDE_WAYPOINT_LABEL                    :Allow hiding waypoint viewport labels: {STRING2}
 STR_CONFIG_SETTING_ALLOW_HIDE_WAYPOINT_LABEL_HELPTEXT           :When enabled, waypoints can have their viewport labels individually hidden.{}This is useful when waypoints are used decoratively or when minor waypoints do not require a label.
@@ -2590,7 +2603,8 @@ STR_INTRO_HIGHSCORE                                             :{BLACK}Highscor
 STR_INTRO_CONFIG_SETTINGS_TREE                                  :{BLACK}Settings
 STR_INTRO_NEWGRF_SETTINGS                                       :{BLACK}NewGRF Settings
 STR_INTRO_ONLINE_CONTENT                                        :{BLACK}Check Online Content
-STR_INTRO_SCRIPT_SETTINGS                                       :{BLACK}AI/Game Script Settings
+STR_INTRO_AI_SETTINGS                                           :{BLACK}AI Settings
+STR_INTRO_GAMESCRIPT_SETTINGS                                   :{BLACK}Game Script Settings
 STR_INTRO_QUIT                                                  :{BLACK}Exit
 
 STR_INTRO_TOOLTIP_NEW_GAME                                      :{BLACK}Start a new game. Ctrl+Click skips map configuration
@@ -2610,7 +2624,8 @@ STR_INTRO_TOOLTIP_HIGHSCORE                                     :{BLACK}Display 
 STR_INTRO_TOOLTIP_CONFIG_SETTINGS_TREE                          :{BLACK}Display settings
 STR_INTRO_TOOLTIP_NEWGRF_SETTINGS                               :{BLACK}Display NewGRF settings
 STR_INTRO_TOOLTIP_ONLINE_CONTENT                                :{BLACK}Check for new and updated content to download
-STR_INTRO_TOOLTIP_SCRIPT_SETTINGS                               :{BLACK}Display AI/Game script settings
+STR_INTRO_TOOLTIP_AI_SETTINGS                                   :{BLACK}Display AI settings
+STR_INTRO_TOOLTIP_GAMESCRIPT_SETTINGS                           :{BLACK}Display Game script settings
 STR_INTRO_TOOLTIP_QUIT                                          :{BLACK}Exit 'OpenTTD'
 
 STR_INTRO_BASESET                                               :{BLACK}The currently selected base graphics set is missing {NUM} sprite{P "" s}. Please check for updates for the baseset.
@@ -3137,6 +3152,7 @@ STR_LINKGRAPH_STATS_TOOLTIP                                     :{BLACK}{CARGO_L
 STR_LINKGRAPH_STATS_TOOLTIP_RETURN_EXTENSION                    :{}{CARGO_LONG} to be transported back ({COMMA}% of capacity)
 STR_LINKGRAPH_STATS_TOOLTIP_TIME_EXTENSION                      :{}Average travel time: {NUM}{NBSP}day{P "" s}
 STR_LINKGRAPH_STATS_TOOLTIP_TIME_EXTENSION_GENERAL              :{}Average travel time: {STRING1}
+STR_LINKGRAPH_STATS_TOOLTIP_CAPACITY                            :{}Capacity: {CARGO_LONG}
 
 # Base for station construction window(s)
 STR_STATION_BUILD_COVERAGE_AREA_TITLE                           :{BLACK}Coverage area highlight
@@ -3796,6 +3812,8 @@ STR_FOUND_TOWN_RANDOM_TOWN_BUTTON                               :{BLACK}Random T
 STR_FOUND_TOWN_RANDOM_TOWN_TOOLTIP                              :{BLACK}Found town in random location
 STR_FOUND_TOWN_MANY_RANDOM_TOWNS                                :{BLACK}Many random towns
 STR_FOUND_TOWN_RANDOM_TOWNS_TOOLTIP                             :{BLACK}Cover the map with randomly placed towns
+STR_FOUND_TOWN_EXPAND_ALL_TOWNS                                 :{BLACK}Expand all towns
+STR_FOUND_TOWN_EXPAND_ALL_TOWNS_TOOLTIP                         :{BLACK}Make all towns grow slightly
 
 STR_FOUND_TOWN_NAME_TITLE                                       :{YELLOW}Town name:
 STR_FOUND_TOWN_NAME_EDITOR_TITLE                                :{BLACK}Enter town name
@@ -4131,6 +4149,12 @@ STR_MAPGEN_QUANTITY_OF_RIVERS                                   :{BLACK}Rivers:
 STR_MAPGEN_SMOOTHNESS                                           :{BLACK}Smoothness:
 STR_MAPGEN_VARIETY                                              :{BLACK}Variety distribution:
 STR_MAPGEN_GENERATE                                             :{WHITE}Generate
+STR_MAPGEN_NEWGRF_SETTINGS                                      :{BLACK}NewGRF Settings
+STR_MAPGEN_NEWGRF_SETTINGS_TOOLTIP                              :{BLACK}Display NewGRF settings
+STR_MAPGEN_AI_SETTINGS                                          :{BLACK}AI Settings
+STR_MAPGEN_AI_SETTINGS_TOOLTIP                                  :{BLACK}Display AI settings
+STR_MAPGEN_GS_SETTINGS                                          :{BLACK}Game Script Settings
+STR_MAPGEN_GS_SETTINGS_TOOLTIP                                  :{BLACK}Display game script settings
 
 ###length 21
 STR_MAPGEN_TOWN_NAME_ORIGINAL_ENGLISH                           :English (Original)
@@ -4318,6 +4342,13 @@ STR_SPRITE_ALIGNER_PREVIOUS_BUTTON                              :{BLACK}Previous
 STR_SPRITE_ALIGNER_PREVIOUS_TOOLTIP                             :{BLACK}Proceed to the previous normal sprite, skipping any pseudo/recolour/font sprites and wrapping around from the first sprite to the last
 STR_SPRITE_ALIGNER_SPRITE_TOOLTIP                               :{BLACK}Representation of the currently selected sprite. The alignment is ignored when drawing this sprite
 STR_SPRITE_ALIGNER_MOVE_TOOLTIP                                 :{BLACK}Move the sprite around, changing the X and Y offsets. Ctrl+Click to move the sprite eight units at a time
+
+###length 2
+STR_SPRITE_ALIGNER_CENTRE_OFFSET                                :{BLACK}Offset centred
+STR_SPRITE_ALIGNER_CENTRE_SPRITE                                :{BLACK}Sprite centred
+
+STR_SPRITE_ALIGNER_CROSSHAIR                                    :{BLACK}Crosshair
+
 STR_SPRITE_ALIGNER_RESET_BUTTON                                 :{BLACK}Reset relative
 STR_SPRITE_ALIGNER_RESET_TOOLTIP                                :{BLACK}Reset the current relative offsets
 STR_SPRITE_ALIGNER_OFFSETS_ABS                                  :{BLACK}X offset: {NUM}, Y offset: {NUM} (Absolute)
@@ -4491,11 +4522,12 @@ STR_LOCAL_AUTHORITY_ACTION_TOOLTIP_NEW_BUILDINGS                :{YELLOW}Fund th
 STR_LOCAL_AUTHORITY_ACTION_TOOLTIP_EXCLUSIVE_TRANSPORT          :{YELLOW}Buy 1 year's exclusive transport rights in town.{}Town authority will not allow passengers and cargo to use your competitors' stations.{}Cost: {CURRENCY_LONG}
 STR_LOCAL_AUTHORITY_ACTION_TOOLTIP_BRIBE                        :{YELLOW}Bribe the local authority to increase your rating, at the risk of a severe penalty if caught.{}Cost: {CURRENCY_LONG}
 
-###length 4
+###length 5
 STR_LOCAL_AUTHORITY_SETTING_OVERRIDE_ALLOW_ROADS                :Allowed to build roads
-STR_LOCAL_AUTHORITY_SETTING_OVERRIDE_ALLOW_LEVEL_CROSSINGS      :Allowed to level crossings
+STR_LOCAL_AUTHORITY_SETTING_OVERRIDE_ALLOW_LEVEL_CROSSINGS      :Allowed to build level crossings
 STR_LOCAL_AUTHORITY_SETTING_OVERRIDE_TUNNELS                    :Allowed to build tunnels
 STR_LOCAL_AUTHORITY_SETTING_OVERRIDE_MAX_ROAD_SLOPE             :Limit building continuous inclined roads
+STR_LOCAL_AUTHORITY_SETTING_OVERRIDE_TOWN_GROWTH                :Town growth speed
 
 STR_LOCAL_AUTHORITY_SETTING_OVERRIDE_DEFAULT                    :Default ({STRING1})
 STR_LOCAL_AUTHORITY_SETTING_OVERRIDE_STR                        :{STRING}: {PUSH_COLOUR}{YELLOW}{STRING2}{POP_COLOUR}
@@ -4640,7 +4672,6 @@ STR_STATION_VIEW_SCHEDULED_TRAINS_TOOLTIP                       :{BLACK}Show all
 STR_STATION_VIEW_SCHEDULED_ROAD_VEHICLES_TOOLTIP                :{BLACK}Show all road vehicles which have this station on their schedule
 STR_STATION_VIEW_SCHEDULED_AIRCRAFT_TOOLTIP                     :{BLACK}Show all aircraft which have this station on their schedule
 STR_STATION_VIEW_SCHEDULED_SHIPS_TOOLTIP                        :{BLACK}Show all ships which have this station on their schedule
-STR_STATION_VIEW_SCHEDULED_TOOLTIP_CTRL_SUFFIX                  :{BLACK}{STRING}. Ctrl+Click to show exclusively.
 
 STR_STATION_VIEW_RENAME_STATION_CAPTION                         :Rename station/loading area
 STR_STATION_VIEW_CLOSE_AIRPORT                                  :{BLACK}Close airport
@@ -4654,11 +4685,16 @@ STR_DEPARTURES_FREIGHT                                          :{BLACK}{TINY_FO
 STR_DEPARTURES_DEPARTURES                                       :{BLACK}{TINY_FONT}D
 STR_DEPARTURES_ARRIVALS                                         :{BLACK}{TINY_FONT}A
 STR_DEPARTURES_VIA_BUTTON                                       :{BLACK}{TINY_FONT}via
-STR_DEPARTURES_PAX_TOOLTIP                                      :{BLACK}Show passenger departures
-STR_DEPARTURES_FREIGHT_TOOLTIP                                  :{BLACK}Show freight departures
+STR_DEPARTURES_PAX_TOOLTIP                                      :{BLACK}Show passenger arrivals/departures
+STR_DEPARTURES_FREIGHT_TOOLTIP                                  :{BLACK}Show freight arrivals/departures
 STR_DEPARTURES_DEPARTURES_TOOLTIP                               :{BLACK}Show timetabled departures
 STR_DEPARTURES_ARRIVALS_TOOLTIP                                 :{BLACK}Show timetabled arrivals
 STR_DEPARTURES_VIA_TOOLTIP                                      :{BLACK}Show timetabled vehicles that do not stop here
+STR_DEPARTURES_SHOW_TRAINS_TOOLTIP                              :{BLACK}Show upcoming trains on this station's timetable
+STR_DEPARTURES_SHOW_ROAD_VEHICLES_TOOLTIP                       :{BLACK}Show upcoming road vehicles on this station's timetable
+STR_DEPARTURES_SHOW_SHIPS_TOOLTIP                               :{BLACK}Show upcoming ships on this station's timetable
+STR_DEPARTURES_SHOW_AIRCRAFT_TOOLTIP                            :{BLACK}Show upcoming aircraft on this station's timetable
+STR_DEPARTURES_SHOW_TYPE_TOOLTIP_CTRL_SUFFIX                    :{BLACK}{STRING}. Ctrl+Click to show exclusively.
 STR_DEPARTURES_EMPTY                                            :{ORANGE}No vehicles are currently timetabled for this station.
 STR_DEPARTURES_NONE_SELECTED                                    :{ORANGE}No timetable information has been requested.
 STR_DEPARTURES_TIME                                             :{ORANGE}{DATE_WALLCLOCK_TINY}
@@ -4707,20 +4743,20 @@ STR_DEPARTURES_CANCELLED                                        :{RED}Cancelled
 
 ############ config settings
 STR_CONFIG_SETTING_DEPARTUREBOARDS                              :{ORANGE}Departure boards
-STR_CONFIG_MAX_DEPARTURES                                       :Show at most {STRING2} departures at each station
-STR_CONFIG_MAX_DEPARTURES_HELPTEXT                              :The maximum number of departures to show on a departure board
-STR_CONFIG_MAX_DEPARTURE_TIME                                   :Show departures at most {STRING2} days in advance
-STR_CONFIG_MAX_DEPARTURE_TIME_HELPTEXT                          :How far in advance to show departures, in days
-STR_CONFIG_DEPARTURE_CALC_FREQUENCY                             :Calculate departures every {STRING2} ticks
-STR_CONFIG_DEPARTURE_CALC_FREQUENCY_HELPTEXT                    :How frequently to refresh a list of departures, in ticks
-STR_CONFIG_DEPARTURE_VEHICLE_NAME                               :Show vehicle name with departures: {STRING2}
-STR_CONFIG_DEPARTURE_VEHICLE_NAME_HELPTEXT                      :Whether to show vehicle names next to their departures
-STR_CONFIG_DEPARTURE_GROUP_NAME                                 :Show group name with departures: {STRING2}
-STR_CONFIG_DEPARTURE_GROUP_NAME_HELPTEXT                        :Whether to show names of groups that a vehicle belongs to next to its departures
-STR_CONFIG_DEPARTURE_COMPANY_NAME                               :Show company name with departures: {STRING2}
-STR_CONFIG_DEPARTURE_COMPANY_NAME_HELPTEXT                      :Whether to show a company's name next to its vehicles' departures
-STR_CONFIG_DEPARTURE_VEHICLE_TYPE                               :Show vehicle type icon with departures: {STRING2}
-STR_CONFIG_DEPARTURE_VEHICLE_TYPE_HELPTEXT                      :Whether to show a vehicle's type as an icon next to its departures
+STR_CONFIG_MAX_DEPARTURES                                       :Show at most {STRING2} departure board entries for each station
+STR_CONFIG_MAX_DEPARTURES_HELPTEXT                              :The maximum number of entries to show on a departure board
+STR_CONFIG_MAX_DEPARTURE_TIME                                   :Show arrivals/departures at most {STRING2} days in advance
+STR_CONFIG_MAX_DEPARTURE_TIME_HELPTEXT                          :How far in advance to show arrivals and departures, in days
+STR_CONFIG_DEPARTURE_CALC_FREQUENCY                             :Calculate departure board entries every {STRING2} ticks
+STR_CONFIG_DEPARTURE_CALC_FREQUENCY_HELPTEXT                    :How frequently to refresh a list of arrivals/departures, in ticks
+STR_CONFIG_DEPARTURE_VEHICLE_NAME                               :Show vehicle name in entries: {STRING2}
+STR_CONFIG_DEPARTURE_VEHICLE_NAME_HELPTEXT                      :Whether to show vehicle names in their departure board entries
+STR_CONFIG_DEPARTURE_GROUP_NAME                                 :Show group name in entries: {STRING2}
+STR_CONFIG_DEPARTURE_GROUP_NAME_HELPTEXT                        :Whether to show names of groups that a vehicle belongs to in its departure board entries
+STR_CONFIG_DEPARTURE_COMPANY_NAME                               :Show company name in entries: {STRING2}
+STR_CONFIG_DEPARTURE_COMPANY_NAME_HELPTEXT                      :Whether to show a company's name in its vehicles' departure board entries
+STR_CONFIG_DEPARTURE_VEHICLE_TYPE                               :Show vehicle type icon in entries: {STRING2}
+STR_CONFIG_DEPARTURE_VEHICLE_TYPE_HELPTEXT                      :Whether to show a vehicle's type as an icon in its departure board entries
 STR_CONFIG_DEPARTURE_VEHICLE_COLOR                              :Show vehicle type icon in silver: {STRING2}
 STR_CONFIG_DEPARTURE_VEHICLE_COLOR_HELPTEXT                     :Whether to show vehicle type icons in silver
 STR_CONFIG_DEPARTURE_LARGER_FONT                                :Use larger font for stations called at on departure boards: {STRING2}
@@ -4728,20 +4764,20 @@ STR_CONFIG_DEPARTURE_LARGER_FONT_HELPTEXT                       :Whether to use 
 STR_CONFIG_DEPARTURE_DESTINATION_TYPE                           :Show icons for destinations that are docks or airports: {STRING2}
 STR_CONFIG_DEPARTURE_DESTINATION_TYPE_HELPTEXT                  :Whether to show icons next to destinations that are docks or airports
 STR_CONFIG_DEPARTURE_SHOW_BOTH                                  :Show arrival and departure times on the same line: {STRING2}
-STR_CONFIG_DEPARTURE_SHOW_BOTH_HELPTEXT                         :Whether to show both arrival and departure times next to departures
-STR_CONFIG_DEPARTURE_ONLY_PASSENGERS                            :Only show departures for vehicles that can carry passengers: {STRING2}
-STR_CONFIG_DEPARTURE_ONLY_PASSENGERS_HELPTEXT                   :Whether to only show departures of vehicles that can carry passengers
+STR_CONFIG_DEPARTURE_SHOW_BOTH_HELPTEXT                         :Whether arrival and departure times for a vehicle are combined into a single entry instead of being listed separately
+STR_CONFIG_DEPARTURE_ONLY_PASSENGERS                            :Only show entries for vehicles that can carry passengers: {STRING2}
+STR_CONFIG_DEPARTURE_ONLY_PASSENGERS_HELPTEXT                   :Whether to only show arrivals and departures of vehicles that can carry passengers
 STR_CONFIG_DEPARTURE_SMART_TERMINUS                             :Don't show termini that can be reached sooner on a later vehicle: {STRING2}
 STR_CONFIG_DEPARTURE_SMART_TERMINUS_HELPTEXT                    :Whether to show termini that can be reached sooner on another vehicle that departs later
 STR_CONFIG_DEPARTURE_CONDITIONALS                               :Handle conditional order jumps by: {STRING2}
-STR_CONFIG_DEPARTURE_CONDITIONALS_HELPTEXT                      :How conditional orders should be dealt with when calculating departures
+STR_CONFIG_DEPARTURE_CONDITIONALS_HELPTEXT                      :How conditional orders should be dealt with when calculating departure board entries
 STR_CONFIG_DEPARTURE_CONDITIONALS_1                             :giving up
 STR_CONFIG_DEPARTURE_CONDITIONALS_2                             :assuming they will be taken
 STR_CONFIG_DEPARTURE_CONDITIONALS_3                             :assuming they will not be taken
 STR_CONFIG_DEPARTURE_SHOW_ALL_STOPS                             :Show all stations called at regardless of loading/unloading: {STRING2}
 STR_CONFIG_DEPARTURE_SHOW_ALL_STOPS_HELPTEXT                    :Whether stations that a vehicle only loads from will be shown in the calling at list
-STR_CONFIG_DEPARTURE_MERGE_IDENTICAL                            :Merge identical departures: {STRING2}
-STR_CONFIG_DEPARTURE_MERGE_IDENTICAL_HELPTEXT                   :Whether identical departures should be merged into a single departure
+STR_CONFIG_DEPARTURE_MERGE_IDENTICAL                            :Merge identical entries: {STRING2}
+STR_CONFIG_DEPARTURE_MERGE_IDENTICAL_HELPTEXT                   :Whether identical departure board entries should be merged into a single one
 
 # Waypoint/buoy view window
 STR_WAYPOINT_VIEW_CAPTION                                       :{WHITE}{WAYPOINT}
@@ -4781,16 +4817,18 @@ STR_FINANCES_SECTION_OTHER                                      :{GOLD}Other
 STR_FINANCES_SECTION_INFRASTRUCTURE_COSTS                       :{GOLD}Infrastructure Sharing
 STR_FINANCES_SECTION_INFRASTRUCTURE_INCOME                      :{GOLD}Infrastructure Sharing
 
+STR_FINANCES_TOTAL_CAPTION                                      :{WHITE}Total
 STR_FINANCES_NEGATIVE_INCOME                                    :-{CURRENCY_LONG}
 STR_FINANCES_ZERO_INCOME                                        :{CURRENCY_LONG}
 STR_FINANCES_POSITIVE_INCOME                                    :+{CURRENCY_LONG}
-STR_FINANCES_NET_PROFIT                                         :{WHITE}Net Profit
+STR_FINANCES_PROFIT                                             :{WHITE}Profit
 STR_FINANCES_BANK_BALANCE_TITLE                                 :{WHITE}Bank Balance
 STR_FINANCES_OWN_FUNDS_TITLE                                    :{WHITE}Own Funds
 STR_FINANCES_LOAN_TITLE                                         :{WHITE}Loan
 STR_FINANCES_INTEREST_RATE                                      :{WHITE}Loan Interest: {BLACK}{NUM}%
 STR_FINANCES_MAX_LOAN                                           :{WHITE}Maximum Loan: {BLACK}{CURRENCY_LONG}
 STR_FINANCES_TOTAL_CURRENCY                                     :{BLACK}{CURRENCY_LONG}
+STR_FINANCES_BANK_BALANCE                                       :{WHITE}{CURRENCY_LONG}
 STR_FINANCES_BORROW_BUTTON                                      :{BLACK}Borrow {CURRENCY_LONG}
 STR_FINANCES_BORROW_TOOLTIP                                     :{BLACK}Increase size of loan. Ctrl+Click borrows as much as possible
 STR_FINANCES_REPAY_BUTTON                                       :{BLACK}Repay {CURRENCY_LONG}
@@ -4922,7 +4960,7 @@ STR_VEHICLE_LIST_AIRCRAFT_TOOLTIP                               :{BLACK}Aircraft
 
 STR_VEHICLE_LIST_AGE                                            :{STRING2}, Age: {COMMA} year{P "" s} ({COMMA})
 STR_VEHICLE_LIST_AGE_RED                                        :{STRING2}, Age: {RED}{COMMA} {BLACK}year{P "" s} ({COMMA})
-STR_VEHICLE_LIST_CARGO                                          :{STRING2}, Cargoes: {CARGO_LIST}
+STR_VEHICLE_LIST_CARGO_LIST                                     :{STRING2}, Cargoes: {CARGO_LIST}
 STR_VEHICLE_LIST_RELIABILITY                                    :{STRING2}, Reliability: {COMMA}%
 STR_VEHICLE_LIST_RELIABILITY_RED                                :{STRING2}, Reliability: {RED}{COMMA}%
 STR_VEHICLE_LIST_MAX_SPEED                                      :{STRING2}, Max. speed: {VELOCITY}
@@ -4950,6 +4988,8 @@ STR_VEHICLE_LIST_SEND_FOR_SERVICING                             :Send for Servic
 STR_VEHICLE_LIST_PROFIT_THIS_YEAR_LAST_YEAR                     :{TINY_FONT}{BLACK}Profit this year: {CURRENCY_LONG} (last year: {CURRENCY_LONG})
 STR_VEHICLE_LIST_PROFIT_THIS_YEAR_LAST_YEAR_LIFETIME            :{STRING2} (lifetime: {CURRENCY_LONG})
 STR_VEHICLE_LIST_CANCEL_DEPOT_SERVICE                           :Cancel Servicing/Send to
+STR_VEHICLE_LIST_CARGO                                          :{TINY_FONT}{BLACK}[{CARGO_LIST}]
+STR_VEHICLE_LIST_NAME_AND_CARGO                                 :{TINY_FONT}{BLACK}{STRING1} {STRING1}
 
 STR_VEHICLE_LIST_SEND_TRAIN_TO_DEPOT                            :Send to Depot
 STR_VEHICLE_LIST_SEND_ROAD_VEHICLE_TO_DEPOT                     :Send to Depot
@@ -5061,7 +5101,10 @@ STR_PURCHASE_INFO_MAX_TE                                        :{BLACK}Max. Tra
 STR_PURCHASE_INFO_AIRCRAFT_RANGE                                :{BLACK}Range: {GOLD}{COMMA} tiles
 STR_PURCHASE_INFO_AIRCRAFT_TYPE                                 :{BLACK}Aircraft type: {GOLD}{STRING}
 
-STR_CARGO_TYPE_FREIGHT                                          :Freight
+###length 3
+STR_CARGO_TYPE_FILTER_ALL                                       :All cargo types
+STR_CARGO_TYPE_FILTER_FREIGHT                                   :Freight
+STR_CARGO_TYPE_FILTER_NONE                                      :None
 
 ###length VEHICLE_TYPES
 STR_BUY_VEHICLE_TRAIN_LIST_TOOLTIP                              :{BLACK}Train vehicle selection list. Click on vehicle for information. Ctrl+Click for toggling hiding of the vehicle type
@@ -5445,6 +5488,8 @@ STR_VEHICLE_INFO_MAX_SPEED_LOADED                               :{BLACK}Max. spe
 
 STR_VEHICLE_INFO_PROFIT_THIS_YEAR_LAST_YEAR                     :{BLACK}Profit this year: {LTBLUE}{CURRENCY_LONG} (last year: {CURRENCY_LONG})
 STR_VEHICLE_INFO_PROFIT_THIS_YEAR_LAST_YEAR_LIFETIME            :{STRING2} (lifetime: {CURRENCY_LONG})
+STR_VEHICLE_INFO_PROFIT_THIS_YEAR_LAST_YEAR_MIN_PERFORMANCE     :{BLACK}Profit this year: {LTBLUE}{CURRENCY_LONG} (last year: {CURRENCY_LONG}) {BLACK}Min. performance: {LTBLUE}{POWER_TO_WEIGHT}
+
 STR_VEHICLE_INFO_RELIABILITY_BREAKDOWNS                         :{BLACK}Reliability: {LTBLUE}{COMMA}%  {BLACK}Breakdowns since last service: {LTBLUE}{COMMA}
 
 STR_VEHICLE_INFO_GROUP                                          :{BLACK}Group: {LTBLUE}{GROUP}
@@ -5864,26 +5909,22 @@ STR_TIMETABLE_STARTING_DATE                                     :{BLACK}Start da
 STR_TIMETABLE_STARTING_DATE_TOOLTIP                             :{BLACK}Select a date as starting point of this timetable. Ctrl+Click distributes all vehicles sharing this order evenly from the given date based on their relative order, if the order is completely timetabled
 
 STR_TIMETABLE_CHANGE_TIME                                       :{BLACK}Change Time
-STR_TIMETABLE_WAIT_TIME_TOOLTIP                                 :{BLACK}Change the amount of time that the highlighted order should take
-STR_TIMETABLE_WAIT_TIME_TOOLTIP_EXTRA                           :{BLACK}{STRING} (Ctrl+Click sets the time for all orders)
+STR_TIMETABLE_WAIT_TIME_TOOLTIP                                 :{BLACK}Change the amount of time that the highlighted order should take. Ctrl+Click sets the time for all orders
 
 STR_TIMETABLE_CLEAR_TIME                                        :{BLACK}Clear Time
-STR_TIMETABLE_CLEAR_TIME_TOOLTIP                                :{BLACK}Clear the amount of time for the highlighted order
-STR_TIMETABLE_CLEAR_TIME_TOOLTIP_EXTRA                          :{BLACK}{STRING} (Ctrl+Click clears the time for all orders)
+STR_TIMETABLE_CLEAR_TIME_TOOLTIP                                :{BLACK}Clear the amount of time for the highlighted order. Ctrl+Click clears the time for all orders
 
 STR_TIMETABLE_CHANGE_SPEED                                      :{BLACK}Change Speed Limit
-STR_TIMETABLE_CHANGE_SPEED_TOOLTIP                              :{BLACK}Change the maximum travel speed of the highlighted order
-STR_TIMETABLE_CHANGE_SPEED_TOOLTIP_EXTRA                        :{BLACK}{STRING} (Ctrl+Click sets the speed for all orders)
+STR_TIMETABLE_CHANGE_SPEED_TOOLTIP                              :{BLACK}Change the maximum travel speed of the highlighted order. Ctrl+Click sets the speed for all orders
 
 STR_TIMETABLE_CLEAR_SPEED                                       :{BLACK}Clear Speed Limit
-STR_TIMETABLE_CLEAR_SPEED_TOOLTIP                               :{BLACK}Clear the maximum travel speed of the highlighted order
-STR_TIMETABLE_CLEAR_SPEED_TOOLTIP_EXTRA                         :{BLACK}{STRING} (Ctrl+Click clears the speed for all orders)
+STR_TIMETABLE_CLEAR_SPEED_TOOLTIP                               :{BLACK}Clear the maximum travel speed of the highlighted order. Ctrl+Click clears the speed for all orders
 
 STR_TIMETABLE_RESET_LATENESS                                    :{BLACK}Reset Late Counter
 STR_TIMETABLE_RESET_LATENESS_TOOLTIP                            :{BLACK}Reset the lateness counter, so the vehicle will be on time
 
 STR_TIMETABLE_AUTOFILL                                          :{BLACK}Autofill
-STR_TIMETABLE_AUTOFILL_TOOLTIP                                  :{BLACK}Fill the timetable automatically with the values from the next journey (Ctrl+Click to try to keep waiting times)
+STR_TIMETABLE_AUTOFILL_TOOLTIP                                  :{BLACK}Fill the timetable automatically with the values from the next journey. Ctrl+Click to try to keep waiting times
 
 STR_TIMETABLE_AUTOMATE                                          :{BLACK}Automate
 STR_TIMETABLE_AUTOMATE_TOOLTIP                                  :{BLACK}Manage the timetables automatically by updating the values for each journey
@@ -5988,7 +6029,8 @@ STR_ERROR_AI_PLEASE_REPORT_CRASH                                :{WHITE}One of t
 STR_ERROR_AI_DEBUG_SERVER_ONLY                                  :{YELLOW}AI/Game Script Debug window is only available for the server
 
 # AI configuration window
-STR_AI_CONFIG_CAPTION                                           :{WHITE}AI/Game Script Configuration
+STR_AI_CONFIG_CAPTION_AI                                        :{WHITE}AI Configuration
+STR_AI_CONFIG_CAPTION_GAMESCRIPT                                :{WHITE}Game Script Configuration
 STR_AI_CONFIG_GAMELIST_TOOLTIP                                  :{BLACK}The Game Script that will be loaded in the next game
 STR_AI_CONFIG_AILIST_TOOLTIP                                    :{BLACK}The AIs that will be loaded in the next game
 STR_AI_CONFIG_HUMAN_PLAYER                                      :Human player
@@ -6002,12 +6044,11 @@ STR_AI_CONFIG_MOVE_DOWN                                         :{BLACK}Move Dow
 STR_AI_CONFIG_MOVE_DOWN_TOOLTIP                                 :{BLACK}Move selected AI down in the list
 
 STR_AI_CONFIG_GAMESCRIPT                                        :{SILVER}Game Script
+STR_AI_CONFIG_GAMESCRIPT_PARAM                                  :{SILVER}Parameters
 STR_AI_CONFIG_AI                                                :{SILVER}AIs
 
-STR_AI_CONFIG_CHANGE                                            :{BLACK}Select {STRING}
-STR_AI_CONFIG_CHANGE_NONE                                       :
-STR_AI_CONFIG_CHANGE_AI                                         :AI
-STR_AI_CONFIG_CHANGE_GAMESCRIPT                                 :Game Script
+STR_AI_CONFIG_CHANGE_AI                                         :{BLACK}Select AI
+STR_AI_CONFIG_CHANGE_GAMESCRIPT                                 :{BLACK}Select Game Script
 STR_AI_CONFIG_CHANGE_TOOLTIP                                    :{BLACK}Load another script
 STR_AI_CONFIG_CONFIGURE                                         :{BLACK}Configure
 STR_AI_CONFIG_CONFIGURE_TOOLTIP                                 :{BLACK}Configure the parameters of the Script
@@ -6039,9 +6080,7 @@ STR_SCREENSHOT_TOPOGRAPHY_SCREENSHOT                            :{BLACK}Topograp
 STR_SCREENSHOT_INDUSTRY_SCREENSHOT                              :{BLACK}Industries screenshot
 
 # AI Parameters
-STR_AI_SETTINGS_CAPTION                                         :{WHITE}{STRING} Parameters
-STR_AI_SETTINGS_CAPTION_AI                                      :AI
-STR_AI_SETTINGS_CAPTION_GAMESCRIPT                              :Game Script
+STR_AI_SETTINGS_CAPTION_AI                                      :{WHITE}AI Parameters
 STR_AI_SETTINGS_CLOSE                                           :{BLACK}Close
 STR_AI_SETTINGS_RESET                                           :{BLACK}Reset
 STR_AI_SETTINGS_SETTING                                         :{RAW_STRING}: {ORANGE}{STRING1}
@@ -6251,6 +6290,7 @@ STR_ERROR_TOO_MANY_INDUSTRIES                                   :{WHITE}... too 
 STR_ERROR_CAN_T_GENERATE_INDUSTRIES                             :{WHITE}Can't generate industries...
 STR_ERROR_CAN_T_BUILD_HERE                                      :{WHITE}Can't build {STRING} here...
 STR_ERROR_CAN_T_CONSTRUCT_THIS_INDUSTRY                         :{WHITE}Can't construct this industry type here...
+STR_ERROR_CAN_T_PROSPECT_INDUSTRY                               :{WHITE}Can't prospect industry...
 STR_ERROR_INDUSTRY_TOO_CLOSE                                    :{WHITE}... too close to another industry
 STR_ERROR_MUST_FOUND_TOWN_FIRST                                 :{WHITE}... must found town first
 STR_ERROR_ONLY_ONE_ALLOWED_PER_TOWN                             :{WHITE}... only one allowed per town
@@ -6265,6 +6305,8 @@ STR_ERROR_FOREST_CAN_ONLY_BE_PLANTED                            :{WHITE}... fore
 STR_ERROR_CAN_ONLY_BE_BUILT_ABOVE_SNOW_LINE                     :{WHITE}... can only be built above the snow-line
 STR_ERROR_CAN_ONLY_BE_BUILT_BELOW_SNOW_LINE                     :{WHITE}... can only be built below the snow-line
 
+STR_ERROR_PROSPECTING_WAS_UNLUCKY                               :{WHITE}The funding failed to prospect due to bad luck; try again
+STR_ERROR_NO_SUITABLE_PLACES_FOR_PROSPECTING                    :{WHITE}There were no suitable places to prospect for this industry
 STR_ERROR_NO_SUITABLE_PLACES_FOR_INDUSTRIES                     :{WHITE}There were no suitable places for '{STRING}' industries
 STR_ERROR_NO_SUITABLE_PLACES_FOR_INDUSTRIES_EXPLANATION         :{WHITE}Change the map generation parameters to get a better map
 
@@ -6521,6 +6563,8 @@ STR_ERROR_CAN_T_CHANGE_SERVICING                                :{WHITE}Can't ch
 
 STR_ERROR_VEHICLE_IS_DESTROYED                                  :{WHITE}... vehicle is destroyed
 
+STR_ERROR_CAN_T_CLONE_VEHICLE_LIST                              :{WHITE}... not all vehicles are identical
+
 STR_ERROR_NO_VEHICLES_AVAILABLE_AT_ALL                          :{WHITE}No vehicles will be available at all
 STR_ERROR_NO_VEHICLES_AVAILABLE_AT_ALL_EXPLANATION              :{WHITE}Change your NewGRF configuration
 STR_ERROR_NO_VEHICLES_AVAILABLE_YET                             :{WHITE}No vehicles are available yet
@@ -6552,6 +6596,8 @@ STR_ERROR_CAN_T_SKIP_TO_ORDER                                   :{WHITE}Can't sk
 STR_ERROR_CAN_T_COPY_SHARE_ORDER                                :{WHITE}... vehicle can't go to all stations
 STR_ERROR_CAN_T_ADD_ORDER                                       :{WHITE}... vehicle can't go to that station
 STR_ERROR_CAN_T_ADD_ORDER_SHARED                                :{WHITE}... a vehicle sharing this order can't go to that station
+STR_ERROR_CAN_T_COPY_ORDER_VEHICLE_LIST                         :{WHITE}... not all vehicles have the same orders
+STR_ERROR_CAN_T_SHARE_ORDER_VEHICLE_LIST                        :{WHITE}... not all vehicles are sharing orders
 
 STR_ERROR_CAN_T_SHARE_ORDER_LIST                                :{WHITE}Can't share order list...
 STR_ERROR_CAN_T_STOP_SHARING_ORDER_LIST                         :{WHITE}Can't stop sharing order list...
@@ -7282,6 +7328,15 @@ STR_TMPL_GROUP_NUM_TRAINS                                       :{BLACK}{NUM}
 STR_TMPL_CREATEGUI_TITLE                                        :{WHITE}Create/Edit Template Vehicle
 STR_TMPL_MAINGUI_DEFINEDGROUPS                                  :{BLACK}Defined Groups for Company
 STR_TMPL_TMPLRPL_EX_DIFF_RAILTYPE                               :Uses Template of different rail type
+
+STR_TMPL_ADD_LOCOMOTIVE                                         :{BLACK}Add locomotive
+STR_TMPL_ADD_WAGON                                              :{BLACK}Add wagon
+STR_TMPL_ADD_VEHICLE                                            :{BLACK}Add vehicle
+STR_TMPL_ADD_LOCOMOTIVE_REFIT                                   :{BLACK}Add and refit locomotive
+STR_TMPL_ADD_WAGON_REFIT                                        :{BLACK}Add and refit wagon
+STR_TMPL_ADD_VEHICLE_REFIT                                      :{BLACK}Add and refit vehicle
+STR_TMPL_ADD_TOOLTIP                                            :{BLACK}Add the highlighted vehicle to the template.
+STR_TMPL_ADD_REFIT_TOOLTIP                                      :{BLACK}Add and refit the highlighted vehicle to the template.
 
 STR_TMPL_SET_USEDEPOT                                           :{BLACK}Use vehicles in depot
 STR_TMPL_SET_USEDEPOT_TIP                                       :{BLACK}Use vehicles inside the depot that are in a neutral and idle state to compose trains on template replacement in order to reduce buying costs

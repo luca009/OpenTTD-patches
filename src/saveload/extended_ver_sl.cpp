@@ -97,7 +97,7 @@ const SlxiSubChunkInfo _sl_xv_sub_chunk_infos[] = {
 	{ XSLFI_VEHICLE_REPAIR_COST,    XSCF_NULL,                2,   2, "vehicle_repair_cost",       nullptr, nullptr, nullptr        },
 	{ XSLFI_ENH_VIEWPORT_PLANS,     XSCF_IGNORABLE_ALL,       4,   4, "enh_viewport_plans",        nullptr, nullptr, "PLAN"      },
 	{ XSLFI_INFRA_SHARING,          XSCF_NULL,                2,   2, "infra_sharing",             nullptr, nullptr, "CPDP"      },
-	{ XSLFI_VARIABLE_DAY_LENGTH,    XSCF_NULL,                2,   2, "variable_day_length",       nullptr, nullptr, nullptr        },
+	{ XSLFI_VARIABLE_DAY_LENGTH,    XSCF_NULL,                3,   3, "variable_day_length",       nullptr, nullptr, nullptr        },
 	{ XSLFI_ORDER_OCCUPANCY,        XSCF_NULL,                2,   2, "order_occupancy",           nullptr, nullptr, nullptr        },
 	{ XSLFI_MORE_COND_ORDERS,       XSCF_NULL,               13,  13, "more_cond_orders",          nullptr, nullptr, nullptr        },
 	{ XSLFI_EXTRA_LARGE_MAP,        XSCF_NULL,                0,   1, "extra_large_map",           nullptr, nullptr, nullptr        },
@@ -171,15 +171,17 @@ const SlxiSubChunkInfo _sl_xv_sub_chunk_infos[] = {
 	{ XSLFI_ROAD_WAYPOINTS,         XSCF_NULL,                1,   1, "road_waypoints",            nullptr, nullptr, nullptr        },
 	{ XSLFI_MORE_STATION_TYPES,     XSCF_NULL,                1,   1, "more_station_types",        nullptr, nullptr, nullptr        },
 	{ XSLFI_RV_ORDER_EXTRA_FLAGS,   XSCF_IGNORABLE_UNKNOWN,   1,   1, "rv_order_extra_flags",      nullptr, nullptr, nullptr        },
-	{ XSLFI_GRF_ROADSTOPS,          XSCF_NULL,                1,   1, "grf_road_stops",            nullptr, nullptr, nullptr        },
+	{ XSLFI_GRF_ROADSTOPS,          XSCF_NULL,                2,   2, "grf_road_stops",            nullptr, nullptr, nullptr        },
 	{ XSLFI_INDUSTRY_ANIM_MASK,     XSCF_IGNORABLE_ALL,       1,   1, "industry_anim_mask",        nullptr, nullptr, nullptr        },
 	{ XSLFI_NEW_SIGNAL_STYLES,      XSCF_NULL,                2,   2, "new_signal_styles",         nullptr, nullptr, "XBST,NSID"    },
 	{ XSLFI_NO_TREE_COUNTER,        XSCF_IGNORABLE_ALL,       1,   1, "no_tree_counter",           nullptr, nullptr, nullptr        },
 	{ XSLFI_TOWN_SETTING_OVERRIDE,  XSCF_NULL,                1,   1, "town_setting_override",     nullptr, nullptr, nullptr        },
+	{ XSLFI_LINKGRAPH_SPARSE_EDGES, XSCF_NULL,                1,   1, "linkgraph_sparse_edges",    nullptr, nullptr, nullptr        },
 	{ XSLFI_SCRIPT_INT64,           XSCF_NULL,                1,   1, "script_int64",              nullptr, nullptr, nullptr        },
 	{ XSLFI_U64_TICK_COUNTER,       XSCF_NULL,                1,   1, "u64_tick_counter",          nullptr, nullptr, nullptr        },
 	{ XSLFI_LINKGRAPH_TRAVEL_TIME,  XSCF_NULL,                1,   1, "linkgraph_travel_time",     nullptr, nullptr, nullptr        },
-	{ XSLFI_LAST_LOADING_TICK,      XSCF_NULL,                1,   1, "last_loading_tick",         nullptr, nullptr, nullptr        },
+	{ XSLFI_LAST_LOADING_TICK,      XSCF_NULL,                2,   2, "last_loading_tick",         nullptr, nullptr, nullptr        },
+	{ XSLFI_SCRIPT_LEAGUE_TABLES,   XSCF_NULL,                1,   1, "script_league_tables",      nullptr, nullptr, "LEAE,LEAT"    },
 	{ XSLFI_NULL, XSCF_NULL, 0, 0, nullptr, nullptr, nullptr, nullptr },// This is the end marker
 };
 

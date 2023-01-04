@@ -108,7 +108,8 @@ struct GRFLabel {
 	byte label;
 	uint32 nfo_line;
 	size_t pos;
-	struct GRFLabel *next;
+
+	GRFLabel(byte label, uint32 nfo_line, size_t pos) : label(label), nfo_line(nfo_line), pos(pos) {}
 };
 
 enum GRFPropertyMapFallbackMode {
@@ -286,8 +287,9 @@ enum NewSignalAction3ID {
 
 /** New landscape control flags. */
 enum NewLandscapeCtrlFlags {
-	NLCF_ROCKS_SET              = 0,                          ///< Custom landscape rocks sprites group set.
-	NLCF_ROCKS_RECOLOUR_ENABLED = 1,                          ///< Recolour sprites enabled for rocks
+	NLCF_ROCKS_SET                = 0,                        ///< Custom landscape rocks sprites group set.
+	NLCF_ROCKS_RECOLOUR_ENABLED   = 1,                        ///< Recolour sprites enabled for rocks
+	NLCF_ROCKS_DRAW_SNOWY_ENABLED = 2,                        ///< Enable drawing rock tiles on snow
 };
 
 /** New landscape action 3 IDs. */
@@ -329,7 +331,7 @@ struct GRFFile : ZeroedMemoryAllocator {
 	uint32 param[0x80];
 	uint param_end;  ///< one more than the highest set parameter
 
-	GRFLabel *label; ///< Pointer to the first label. This is a linked list, not an array.
+	std::vector<GRFLabel> labels;                   ///< List of labels
 
 	std::vector<CargoLabel> cargo_list;             ///< Cargo translation table (local ID -> label)
 	uint8 cargo_map[NUM_CARGO];                     ///< Inverse cargo translation table (CargoID -> local ID)
@@ -440,5 +442,7 @@ struct GrfSpecFeatureRef {
 
 const char *GetFeatureString(GrfSpecFeatureRef feature);
 const char *GetFeatureString(GrfSpecFeature feature);
+
+void InitGRFGlobalVars();
 
 #endif /* NEWGRF_H */

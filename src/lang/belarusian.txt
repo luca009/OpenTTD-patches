@@ -515,6 +515,7 @@ STR_UNITS_POWER_IMPERIAL                                        :{COMMA}{NBSP}к
 STR_UNITS_POWER_METRIC                                          :{COMMA}{NBSP}к.с.
 STR_UNITS_POWER_SI                                              :{COMMA}{NBSP}кВт
 
+
 STR_UNITS_WEIGHT_SHORT_IMPERIAL                                 :{COMMA}{NBSP}т
 STR_UNITS_WEIGHT_SHORT_METRIC                                   :{COMMA}{NBSP}т
 STR_UNITS_WEIGHT_SHORT_SI                                       :{COMMA}{NBSP}кг
@@ -696,10 +697,9 @@ STR_SCENEDIT_FILE_MENU_SEPARATOR                                :
 STR_SCENEDIT_FILE_MENU_QUIT                                     :Выхад
 
 # Settings menu
-###length 14
+###length 15
 STR_SETTINGS_MENU_GAME_OPTIONS                                  :Наладкі гульні
 STR_SETTINGS_MENU_CONFIG_SETTINGS_TREE                          :Наладкі
-STR_SETTINGS_MENU_SCRIPT_SETTINGS                               :Наладкі ШІ / скрыпту
 STR_SETTINGS_MENU_NEWGRF_SETTINGS                               :Наладкі NewGRF
 STR_SETTINGS_MENU_TRANSPARENCY_OPTIONS                          :Наладкі празрыстасьці
 STR_SETTINGS_MENU_TOWN_NAMES_DISPLAYED                          :Паказваць назвы гарадоў
@@ -1289,18 +1289,8 @@ STR_GAME_OPTIONS_RESOLUTION_OTHER                               :Iншае
 
 
 
-STR_GAME_OPTIONS_GUI_ZOOM_FRAME                                 :{BLACK}Памер элементаў інтэрфейсу
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_TOOLTIP                      :{BLACK}Выберыце памер элементаў інтэрфейсу
 
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_NORMAL                       :Звычайны
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_2X_ZOOM                      :Падвоены
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_4X_ZOOM                      :Пачацвяроны
 
-STR_GAME_OPTIONS_FONT_ZOOM                                      :{BLACK}Памер шрыфта
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_TOOLTIP                     :{BLACK}Абярыце памер шрыфта, выкарыстоўванага ў гульні
-
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_NORMAL                      :Звычайны
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_2X_ZOOM                     :Падвоены
 
 
 STR_GAME_OPTIONS_REFRESH_RATE                                   :{BLACK}Чашчыня абнаўлення экрана
@@ -2285,7 +2275,6 @@ STR_INTRO_HIGHSCORE                                             :{BLACK}Табл
 STR_INTRO_CONFIG_SETTINGS_TREE                                  :{BLACK}Наладкі
 STR_INTRO_NEWGRF_SETTINGS                                       :{BLACK}Наладкi NewGRF
 STR_INTRO_ONLINE_CONTENT                                        :{BLACK}Праверыць анлайн-кантэнт
-STR_INTRO_SCRIPT_SETTINGS                                       :{BLACK}Наладкі ШІ / скрыпту
 STR_INTRO_QUIT                                                  :{BLACK}Выхад
 
 STR_INTRO_TOOLTIP_NEW_GAME                                      :{BLACK}Пачаць новую гульню. Ctrl+клік прапускае этап наладак мапы
@@ -2305,7 +2294,6 @@ STR_INTRO_TOOLTIP_HIGHSCORE                                     :{BLACK}Пака
 STR_INTRO_TOOLTIP_CONFIG_SETTINGS_TREE                          :{BLACK}Акно наладак
 STR_INTRO_TOOLTIP_NEWGRF_SETTINGS                               :{BLACK}Паказаць наладкі NewGRF
 STR_INTRO_TOOLTIP_ONLINE_CONTENT                                :{BLACK}Праверыць новы й абноўлены кантэнт, каб спампаваць
-STR_INTRO_TOOLTIP_SCRIPT_SETTINGS                               :{BLACK}Зьмяніць наладкі ШІ ды гульнёвага скрыпту
 STR_INTRO_TOOLTIP_QUIT                                          :{BLACK}Выйсьці з OpenTTD
 
 STR_INTRO_BASESET                                               :{BLACK}У абраным наборы базавай графікі адсутнічае {NUM} спрайт{P "" а аў}. Калі ласка, абнавіце набор графікі.
@@ -3432,6 +3420,10 @@ STR_SPRITE_ALIGNER_PREVIOUS_BUTTON                              :{BLACK}Папя
 STR_SPRITE_ALIGNER_PREVIOUS_TOOLTIP                             :{BLACK}Перайсьці да папярэдняга звычайнага спрайта, прапускаючы змяняючыя колер, шрыфтавыя, псэўдаспрайты. Пераход з пачатку сьпісу да апошняга спрайта.
 STR_SPRITE_ALIGNER_SPRITE_TOOLTIP                               :{BLACK}Прадстаўленьне выбранага спрайта. Выраўноўваньне не ўлічваецца пры прарысоўцы гэтага спрайта.
 STR_SPRITE_ALIGNER_MOVE_TOOLTIP                                 :{BLACK}Рухайце спрайт, зьмяняючы зрушэньне па X і па Y. Ctrl+пстрычка, каб зрушыць спрайт на восем адзінак за раз
+
+###length 2
+
+
 STR_SPRITE_ALIGNER_RESET_BUTTON                                 :{BLACK}Скід зрушэння
 STR_SPRITE_ALIGNER_RESET_TOOLTIP                                :{BLACK}Скінуць значэнні адноснага зрушэння
 STR_SPRITE_ALIGNER_OFFSETS_ABS                                  :{BLACK}Зрушэнне X: {NUM}; зрушэнне Y: {NUM} (абсалютнае)
@@ -3971,6 +3963,8 @@ STR_PURCHASE_INFO_ALL_BUT                                       :Усё, акр�
 STR_PURCHASE_INFO_MAX_TE                                        :{BLACK}Макс. цягавае намаганьне: {GOLD}{FORCE}
 STR_PURCHASE_INFO_AIRCRAFT_RANGE                                :{BLACK}Далёкасьць: {GOLD}{COMMA} клет{P ка кi ак}
 STR_PURCHASE_INFO_AIRCRAFT_TYPE                                 :{BLACK}Тып паветр. судна: {GOLD}{STRING}
+
+###length 3
 
 ###length VEHICLE_TYPES
 STR_BUY_VEHICLE_TRAIN_LIST_TOOLTIP                              :{BLACK}Сьпіс лакаматываў і вагонаў - пстрыкніце для атрыманьня інфармацыі. Ctrl+пстрычка схавае/пакажа ТС.
@@ -4632,7 +4626,6 @@ STR_ERROR_AI_PLEASE_REPORT_CRASH                                :{WHITE}Адзі
 STR_ERROR_AI_DEBUG_SERVER_ONLY                                  :{YELLOW}Вакно адладкі ШІ / скрыпту даступна толькі для сэрвэра
 
 # AI configuration window
-STR_AI_CONFIG_CAPTION                                           :{WHITE}Канфігурацыя ШІ / скрыпту
 STR_AI_CONFIG_GAMELIST_TOOLTIP                                  :{BLACK}Гульнёвы скрыпт, які будзе загружаны ў наступнай гульні
 STR_AI_CONFIG_AILIST_TOOLTIP                                    :{BLACK}Модулі ШІ, якія будуць загружаны ў наступнай гульні
 STR_AI_CONFIG_HUMAN_PLAYER                                      :Чалавек
@@ -4648,8 +4641,6 @@ STR_AI_CONFIG_MOVE_DOWN_TOOLTIP                                 :{BLACK}Пера
 STR_AI_CONFIG_GAMESCRIPT                                        :{SILVER}Гульнёвы скрыпт
 STR_AI_CONFIG_AI                                                :{SILVER}ШI
 
-STR_AI_CONFIG_CHANGE                                            :{BLACK}Выбраць {STRING}
-STR_AI_CONFIG_CHANGE_NONE                                       :
 STR_AI_CONFIG_CHANGE_AI                                         :ШI
 STR_AI_CONFIG_CHANGE_GAMESCRIPT                                 :Гульнёвы скрыпт
 STR_AI_CONFIG_CHANGE_TOOLTIP                                    :{BLACK}Загрузіць іншы скрыпт
@@ -4674,9 +4665,7 @@ STR_AI_LIST_CANCEL_TOOLTIP                                      :{BLACK}Не з�
 STR_SCREENSHOT_ZOOMIN_SCREENSHOT                                :{BLACK}Бачная вобласць у максімальным набліжэнні
 
 # AI Parameters
-STR_AI_SETTINGS_CAPTION                                         :{WHITE}Параметры {STRING}
 STR_AI_SETTINGS_CAPTION_AI                                      :ШI
-STR_AI_SETTINGS_CAPTION_GAMESCRIPT                              :Гульнёвы скрыпт
 STR_AI_SETTINGS_CLOSE                                           :{BLACK}Закрыць
 STR_AI_SETTINGS_RESET                                           :{BLACK}Ськід
 STR_AI_SETTINGS_SETTING                                         :{STRING}: {ORANGE}{STRING}
@@ -5083,6 +5072,7 @@ STR_ERROR_TOO_MANY_VEHICLES_IN_GAME                             :{WHITE}Зана
 STR_ERROR_CAN_T_CHANGE_SERVICING                                :{WHITE}Не атрымалася зьмяніць інтэрвал абслугоўваньня...
 
 STR_ERROR_VEHICLE_IS_DESTROYED                                  :{WHITE}... транспартны сродак зьнішчаны
+
 
 STR_ERROR_NO_VEHICLES_AVAILABLE_AT_ALL                          :{WHITE}Усе транспартныя сродкі будуць недаступныя
 STR_ERROR_NO_VEHICLES_AVAILABLE_AT_ALL_EXPLANATION              :{WHITE}Зьмяніце канфігурацыю модуля NewGRF

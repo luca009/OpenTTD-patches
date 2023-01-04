@@ -13,6 +13,7 @@
 #include "../newgrf_roadstop.h"
 #include "../newgrf_cargo.h"
 #include "../newgrf_newsignals.h"
+#include "../newgrf_newlandscape.h"
 #include "../date_func.h"
 #include "../timetable.h"
 #include "../ship.h"
@@ -22,6 +23,7 @@
 #include "../string_func_extra.h"
 #include "../newgrf_extension.h"
 #include "../animated_tile.h"
+#include "../clear_map.h"
 
 /* Helper for filling property tables */
 #define NIP(prop, base, variable, type, name) { name, (ptrdiff_t)cpp_offsetof(base, variable), cpp_sizeof(base, variable), prop, type }
@@ -168,6 +170,9 @@ class NIHVehicle : public NIHelper {
 		}
 		if (BaseStation::IsValidID(v->last_loading_station)) {
 			seprintf(buffer, lastof(buffer), "  V Last loading station: %u, %s", v->last_loading_station, BaseStation::Get(v->last_loading_station)->GetCachedName());
+			output.print(buffer);
+			seprintf(buffer, lastof(buffer), "  V Last loading tick: " OTTD_PRINTF64 " (" OTTD_PRINTF64 ", " OTTD_PRINTF64 " mins ago)",
+					v->last_loading_tick, _scaled_tick_counter - v->last_loading_tick, (_scaled_tick_counter - v->last_loading_tick) / _settings_time.ticks_per_minute);
 			output.print(buffer);
 		}
 		if (v->IsGroundVehicle()) {
@@ -357,9 +362,13 @@ class NIHVehicle : public NIHelper {
 		}
 
 		if (show_engine) {
-			seprintf(buffer, lastof(buffer), "  Engine: %u", v->engine_type);
-			output.print(buffer);
 			const Engine *e = Engine::GetIfValid(v->engine_type);
+			char *b = buffer + seprintf(buffer, lastof(buffer), "  Engine: %u", v->engine_type);
+			if (e->info.variant_id != INVALID_ENGINE) {
+				b += seprintf(b, lastof(buffer), ", variant of: %u", e->info.variant_id);
+			}
+			output.print(buffer);
+
 			if (e != nullptr) {
 				seprintf(buffer, lastof(buffer), "    Callbacks: 0x%X, CB36 Properties: 0x" OTTD_PRINTFHEX64,
 						e->callbacks_used, e->cb36_properties_used);
@@ -406,8 +415,11 @@ class NIHVehicle : public NIHelper {
 				}
 				YearMonthDay ymd;
 				ConvertDateToYMD(e->intro_date, &ymd);
-				seprintf(buffer, lastof(buffer), "    Intro: %4i-%02i-%02i, Age: %u, Base life: %u, Durations: %u %u %u (sum: %u)",
-						ymd.year, ymd.month + 1, ymd.day, e->age, e->info.base_life, e->duration_phase_1, e->duration_phase_2, e->duration_phase_3,
+				YearMonthDay base_ymd;
+				ConvertDateToYMD(e->info.base_intro, &base_ymd);
+				seprintf(buffer, lastof(buffer), "    Intro: %4i-%02i-%02i (base: %4i-%02i-%02i), Age: %u, Base life: %u, Durations: %u %u %u (sum: %u)",
+						ymd.year, ymd.month + 1, ymd.day, base_ymd.year, base_ymd.month + 1, base_ymd.day,
+						e->age, e->info.base_life, e->duration_phase_1, e->duration_phase_2, e->duration_phase_3,
 						e->duration_phase_1 + e->duration_phase_2 + e->duration_phase_3);
 				output.print(buffer);
 				seprintf(buffer, lastof(buffer), "    Cargo type: %u, Refit mask: 0x" OTTD_PRINTFHEX64 ", Cargo age period: %u",
@@ -425,11 +437,65 @@ class NIHVehicle : public NIHelper {
 					};
 					seprintf(buffer, lastof(buffer), "    Rail veh type: %s, power: %u", engine_types[e->u.rail.railveh_type], e->u.rail.power);
 					output.print(buffer);
+
+					output.register_next_line_click_flag_toggle(2);
+					if (output.flags & 2) {
+						seprintf(buffer, lastof(buffer), "    [-] Engine Misc Flags:\n");
+						output.print(buffer);
+						auto print_bit = [&](int bit, const char *name) {
+							if (HasBit(e->info.misc_flags, bit)) {
+								seprintf(buffer, lastof(buffer), "      %s\n", name);
+								output.print(buffer);
+							}
+						};
+						print_bit(EF_RAIL_TILTS,                  "EF_RAIL_TILTS");
+						print_bit(EF_USES_2CC,                    "EF_USES_2CC");
+						print_bit(EF_RAIL_IS_MU,                  "EF_RAIL_IS_MU");
+						print_bit(EF_RAIL_FLIPS,                  "EF_RAIL_FLIPS");
+						print_bit(EF_AUTO_REFIT,                  "EF_AUTO_REFIT");
+						print_bit(EF_NO_DEFAULT_CARGO_MULTIPLIER, "EF_NO_DEFAULT_CARGO_MULTIPLIER");
+						print_bit(EF_NO_BREAKDOWN_SMOKE,          "EF_NO_BREAKDOWN_SMOKE");
+						print_bit(EF_SPRITE_STACK,                "EF_SPRITE_STACK");
+					} else {
+						seprintf(buffer, lastof(buffer), "    [+] Engine Misc Flags: %c%c%c%c%c%c%c%c",
+								HasBit(e->info.misc_flags, EF_RAIL_TILTS)                  ? 't' : '-',
+								HasBit(e->info.misc_flags, EF_USES_2CC)                    ? '2' : '-',
+								HasBit(e->info.misc_flags, EF_RAIL_IS_MU)                  ? 'm' : '-',
+								HasBit(e->info.misc_flags, EF_RAIL_FLIPS)                  ? 'f' : '-',
+								HasBit(e->info.misc_flags, EF_AUTO_REFIT)                  ? 'r' : '-',
+								HasBit(e->info.misc_flags, EF_NO_DEFAULT_CARGO_MULTIPLIER) ? 'c' : '-',
+								HasBit(e->info.misc_flags, EF_NO_BREAKDOWN_SMOKE)          ? 'b' : '-',
+								HasBit(e->info.misc_flags, EF_SPRITE_STACK)                ? 's' : '-');
+						output.print(buffer);
+					}
 				}
 				if (e->type == VEH_ROAD) {
 					const RoadTypeInfo* rti = GetRoadTypeInfo(e->u.road.roadtype);
 					seprintf(buffer, lastof(buffer), "    Roadtype: %u (0x" OTTD_PRINTFHEX64 "), Powered: 0x" OTTD_PRINTFHEX64,
 							e->u.road.roadtype, (static_cast<RoadTypes>(1) << e->u.road.roadtype), rti->powered_roadtypes);
+					output.print(buffer);
+				}
+
+				output.register_next_line_click_flag_toggle(4);
+				if (output.flags & 4) {
+					seprintf(buffer, lastof(buffer), "    [-] Extra Engine Flags:\n");
+					output.print(buffer);
+					auto print_bit = [&](ExtraEngineFlags flag, const char *name) {
+						if ((e->info.extra_flags & flag) != ExtraEngineFlags::None) {
+							seprintf(buffer, lastof(buffer), "      %s\n", name);
+							output.print(buffer);
+						}
+					};
+					print_bit(ExtraEngineFlags::NoNews,          "NoNews");
+					print_bit(ExtraEngineFlags::NoPreview,       "NoPreview");
+					print_bit(ExtraEngineFlags::JoinPreview,     "JoinPreview");
+					print_bit(ExtraEngineFlags::SyncReliability, "SyncReliability");
+				} else {
+					seprintf(buffer, lastof(buffer), "    [+] Extra Engine Flags: %c%c%c%c",
+							(e->info.extra_flags & ExtraEngineFlags::NoNews)          != ExtraEngineFlags::None ? 'n' : '-',
+							(e->info.extra_flags & ExtraEngineFlags::NoPreview)       != ExtraEngineFlags::None ? 'p' : '-',
+							(e->info.extra_flags & ExtraEngineFlags::JoinPreview)     != ExtraEngineFlags::None ? 'j' : '-',
+							(e->info.extra_flags & ExtraEngineFlags::SyncReliability) != ExtraEngineFlags::None ? 's' : '-');
 					output.print(buffer);
 				}
 			}
@@ -508,6 +574,82 @@ class NIHStation : public NIHelper {
 	{
 		StationResolverObject ro(GetStationSpec(index), Station::GetByTile(index), index, INVALID_RAILTYPE);
 		return ro.GetScope(VSG_SCOPE_SELF)->GetVariable(var, param, extra);
+	}
+
+	/* virtual */ void ExtraInfo(uint index, NIExtraInfoOutput &output) const override
+	{
+		char buffer[1024];
+
+		const StationSpec *statspec = GetStationSpec(index);
+		if (statspec == nullptr) return;
+
+		for (size_t i = 0; i < statspec->renderdata.size(); i++) {
+			seprintf(buffer, lastof(buffer), "Tile Layout %u:", (uint)i);
+			output.print(buffer);
+			const NewGRFSpriteLayout &dts = statspec->renderdata[i];
+
+			const TileLayoutRegisters *registers = dts.registers;
+			auto print_reg_info = [&](char *b, uint i, bool is_parent) {
+				if (registers == nullptr) {
+					output.print(buffer);
+					return;
+				}
+				const TileLayoutRegisters *reg = registers + i;
+				if (reg->flags == 0) {
+					output.print(buffer);
+					return;
+				}
+				seprintf(b, lastof(buffer), ", register flags: %X", reg->flags);
+				output.print(buffer);
+				auto log_reg = [&](TileLayoutFlags flag, const char *name, uint8 flag_reg) {
+					if (reg->flags & flag) {
+						seprintf(buffer, lastof(buffer), "  %s reg: %X", name, flag_reg);
+						output.print(buffer);
+					}
+				};
+				log_reg(TLF_DODRAW, "TLF_DODRAW", reg->dodraw);
+				log_reg(TLF_SPRITE, "TLF_SPRITE", reg->sprite);
+				log_reg(TLF_PALETTE, "TLF_PALETTE", reg->palette);
+				if (is_parent) {
+					log_reg(TLF_BB_XY_OFFSET, "TLF_BB_XY_OFFSET x", reg->delta.parent[0]);
+					log_reg(TLF_BB_XY_OFFSET, "TLF_BB_XY_OFFSET y", reg->delta.parent[1]);
+					log_reg(TLF_BB_Z_OFFSET, "TLF_BB_Z_OFFSET", reg->delta.parent[2]);
+				} else {
+					log_reg(TLF_CHILD_X_OFFSET, "TLF_CHILD_X_OFFSET", reg->delta.child[0]);
+					log_reg(TLF_CHILD_Y_OFFSET, "TLF_CHILD_Y_OFFSET", reg->delta.child[1]);
+				}
+				if (reg->flags & TLF_SPRITE_VAR10) {
+					seprintf(buffer, lastof(buffer), "  TLF_SPRITE_VAR10 value: %X", reg->sprite_var10);
+					output.print(buffer);
+				}
+				if (reg->flags & TLF_PALETTE_VAR10) {
+					seprintf(buffer, lastof(buffer), "  TLF_PALETTE_VAR10 value: %X", reg->palette_var10);
+					output.print(buffer);
+				}
+			};
+
+			char *b = buffer + seprintf(buffer, lastof(buffer), "  ground: (%X, %X)",
+					dts.ground.sprite, dts.ground.pal);
+			print_reg_info(b, 0, false);
+
+			uint offset = 0; // offset 0 is the ground sprite
+			const DrawTileSeqStruct *element;
+			foreach_draw_tile_seq(element, dts.seq) {
+				offset++;
+				char *b = buffer;
+				if (element->IsParentSprite()) {
+					b += seprintf(buffer, lastof(buffer), "  section: %X, image: (%X, %X), d: (%d, %d, %d), s: (%d, %d, %d)",
+							offset, element->image.sprite, element->image.pal,
+							element->delta_x, element->delta_y, element->delta_z,
+							element->size_x, element->size_y, element->size_z);
+				} else {
+					b += seprintf(buffer, lastof(buffer), "  section: %X, image: (%X, %X), d: (%d, %d)",
+							offset, element->image.sprite, element->image.pal,
+							element->delta_x, element->delta_y);
+				}
+				print_reg_info(b, offset, element->IsParentSprite());
+			}
+		}
 	}
 
 	/* virtual */ void SpriteDump(uint index, DumpSpriteGroupPrinter print) const override
@@ -592,7 +734,7 @@ class NIHHouse : public NIHelper {
 		const HouseSpec *hs = HouseSpec::Get(GetHouseType(index));
 		seprintf(buffer, lastof(buffer), "  building_flags: 0x%X", hs->building_flags);
 		output.print(buffer);
-		seprintf(buffer, lastof(buffer), "  extra_flags: 0x%X", hs->extra_flags);
+		seprintf(buffer, lastof(buffer), "  extra_flags: 0x%X, ctrl_flags: 0x%X", hs->extra_flags, hs->ctrl_flags);
 		output.print(buffer);
 		seprintf(buffer, lastof(buffer), "  remove_rating_decrease: %u, minimum_life: %u", hs->remove_rating_decrease, hs->minimum_life);
 		output.print(buffer);
@@ -967,7 +1109,7 @@ class NIHCargo : public NIHelper {
 				spec->label >> 24, spec->label >> 16, spec->label >> 8, spec->label,
 				spec->callback_mask);
 		output.print(buffer);
-		char *b = buffer + seprintf(buffer, lastof(buffer), "  Cargo class: %s%s%s%s%s%s%s%s%s%s%s",
+		int written = seprintf(buffer, lastof(buffer), "  Cargo class: %s%s%s%s%s%s%s%s%s%s%s",
 				(spec->classes & CC_PASSENGERS)   != 0 ? "passenger, " : "",
 				(spec->classes & CC_MAIL)         != 0 ? "mail, " : "",
 				(spec->classes & CC_EXPRESS)      != 0 ? "express, " : "",
@@ -979,7 +1121,7 @@ class NIHCargo : public NIHelper {
 				(spec->classes & CC_HAZARDOUS)    != 0 ? "hazardous, " : "",
 				(spec->classes & CC_COVERED)      != 0 ? "covered/sheltered, " : "",
 				(spec->classes & CC_SPECIAL)      != 0 ? "special, " : "");
-		if (b[-2] == ',') b[-2] = 0;
+		if (written >= 2 && buffer[written - 2] == ',') buffer[written - 2] = 0;
 		output.print(buffer);
 
 		seprintf(buffer, lastof(buffer), "  Weight: %u, Capacity multiplier: %u", spec->weight, spec->multiplier);
@@ -1693,6 +1835,7 @@ static const NIVariable _nif_roadstops[] = {
 	NIV(0x68, "road stop info of nearby tiles"),
 	NIV(0x69, "information about cargo accepted in the past"),
 	NIV(0x6A, "GRFID of nearby road stop tiles"),
+	NIV(0x6B, "Road info of nearby plain road tiles"),
 	NIV_END(),
 };
 
@@ -1751,6 +1894,68 @@ static const NIFeature _nif_roadstop = {
 	new NIHRoadStop(),
 };
 
+static const NIVariable _niv_newlandscape[] = {
+	NIV(0x40, "terrain type"),
+	NIV(0x41, "tile slope"),
+	NIV(0x42, "tile height"),
+	NIV(0x43, "tile hash"),
+	NIV(0x44, "landscape type"),
+	NIV(0x45, "ground info"),
+	NIV(0x60, "land info of nearby tiles"),
+	NIV_END(),
+};
+
+class NIHNewLandscape : public NIHelper {
+	bool IsInspectable(uint index) const override        { return true; }
+	bool ShowExtraInfoOnly(uint index) const override    { return _new_landscape_rocks_grfs.empty(); }
+	bool ShowSpriteDumpButton(uint index) const override { return true; }
+	uint GetParent(uint index) const override            { return UINT32_MAX; }
+	const void *GetInstance(uint index)const override    { return nullptr; }
+	const void *GetSpec(uint index) const override       { return nullptr; }
+	void SetStringParameters(uint index) const override  { this->SetObjectAtStringParameters(STR_LAI_CLEAR_DESCRIPTION_ROCKS, INVALID_STRING_ID, index); }
+	uint32 GetGRFID(uint index) const override           { return 0; }
+
+	uint Resolve(uint index, uint var, uint param, GetVariableExtra *extra) const override
+	{
+		if (!IsTileType(index, MP_CLEAR)) return 0;
+
+		TileInfo ti;
+		ti.x = TileX(index);
+		ti.y = TileY(index);
+		ti.tileh = GetTilePixelSlope(index, &ti.z);
+		ti.tile = index;
+
+		NewLandscapeResolverObject ro(nullptr, &ti, NEW_LANDSCAPE_ROCKS);
+		return ro.GetScope(VSG_SCOPE_SELF)->GetVariable(var, param, extra);
+	}
+
+	void ExtraInfo(uint index, NIExtraInfoOutput &output) const override
+	{
+		char buffer[1024];
+		output.print("New Landscape GRFs:");
+		for (const GRFFile *grf : _new_landscape_rocks_grfs) {
+			seprintf(buffer, lastof(buffer), "  GRF: %08X", BSWAP32(grf->grfid));
+			output.print(buffer);
+			seprintf(buffer, lastof(buffer), "    Enable rocks recolour: %d, Enable drawing snowy rocks: %d",
+					HasBit(grf->new_landscape_ctrl_flags, NLCF_ROCKS_RECOLOUR_ENABLED), HasBit(grf->new_landscape_ctrl_flags, NLCF_ROCKS_DRAW_SNOWY_ENABLED));
+			output.print(buffer);
+		}
+	}
+
+	/* virtual */ void SpriteDump(uint index, DumpSpriteGroupPrinter print) const override
+	{
+		extern void DumpNewLandscapeRocksSpriteGroups(DumpSpriteGroupPrinter print);
+		DumpNewLandscapeRocksSpriteGroups(std::move(print));
+	}
+};
+
+static const NIFeature _nif_newlandscape = {
+	nullptr,
+	nullptr,
+	_niv_newlandscape,
+	new NIHNewLandscape(),
+};
+
 /** Table with all NIFeatures. */
 static const NIFeature * const _nifeatures[] = {
 	&_nif_vehicle,      // GSF_TRAINS
@@ -1774,7 +1979,7 @@ static const NIFeature * const _nifeatures[] = {
 	&_nif_roadtype,     // GSF_ROADTYPES
 	&_nif_roadtype,     // GSF_TRAMTYPES
 	&_nif_roadstop,     // GSF_ROADSTOPS
-	nullptr,            // GSF_NEWLANDSCAPE
+	&_nif_newlandscape, // GSF_NEWLANDSCAPE
 	&_nif_town,         // GSF_FAKE_TOWNS
 	&_nif_station_struct,  // GSF_FAKE_STATION_STRUCT
 };

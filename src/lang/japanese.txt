@@ -204,6 +204,7 @@ STR_UNITS_POWER_IMPERIAL                                        :{COMMA}英馬�
 STR_UNITS_POWER_METRIC                                          :{COMMA}仏馬力
 STR_UNITS_POWER_SI                                              :{COMMA}kW
 
+
 STR_UNITS_WEIGHT_SHORT_IMPERIAL                                 :{COMMA}t
 STR_UNITS_WEIGHT_SHORT_METRIC                                   :{COMMA}t.
 STR_UNITS_WEIGHT_SHORT_SI                                       :{COMMA}kg
@@ -396,10 +397,9 @@ STR_SCENEDIT_FILE_MENU_SEPARATOR                                :―――――
 STR_SCENEDIT_FILE_MENU_QUIT                                     :OpenTTDを終了
 
 # Settings menu
-###length 14
+###length 15
 STR_SETTINGS_MENU_GAME_OPTIONS                                  :ゲームオプション設定
 STR_SETTINGS_MENU_CONFIG_SETTINGS_TREE                          :設定
-STR_SETTINGS_MENU_SCRIPT_SETTINGS                               :AI/ゲームスクリプト設定
 STR_SETTINGS_MENU_NEWGRF_SETTINGS                               :NewGRFの設定
 STR_SETTINGS_MENU_TRANSPARENCY_OPTIONS                          :透過表示設定
 STR_SETTINGS_MENU_TOWN_NAMES_DISPLAYED                          :街名を表示
@@ -1008,21 +1008,8 @@ STR_GAME_OPTIONS_VIDEO_VSYNC                                    :{BLACK} 垂直�
 STR_GAME_OPTIONS_VIDEO_VSYNC_TOOLTIP                            :{BLACK}ここをチェックして垂直同期を有効にします。設定はゲームを再起動した後に適用されます。ハードウェアアクセラレーションが有効な環境でしか機能しません。
 
 
-STR_GAME_OPTIONS_GUI_ZOOM_FRAME                                 :{BLACK}インターフェイスのサイズ
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_TOOLTIP                      :{BLACK}インターフェイス上の単位サイズを指定します
 
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_AUTO                         :（自動検出）
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_NORMAL                       :ノーマル
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_2X_ZOOM                      :2倍
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_4X_ZOOM                      :4倍
 
-STR_GAME_OPTIONS_FONT_ZOOM                                      :{BLACK}フォントサイズ
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_TOOLTIP                     :{BLACK}使用するインターフェースのフォントサイズを選択します
-
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_AUTO                        :（自動検出）
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_NORMAL                      :ノーマル
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_2X_ZOOM                     :ダブルサイズ
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_4X_ZOOM                     :4倍
 
 STR_GAME_OPTIONS_GRAPHICS                                       :{BLACK}グラフィクス
 
@@ -2066,7 +2053,6 @@ STR_INTRO_HIGHSCORE                                             :{BLACK}ハイ�
 STR_INTRO_CONFIG_SETTINGS_TREE                                  :{BLACK}設定
 STR_INTRO_NEWGRF_SETTINGS                                       :{BLACK}NewGRFの設定
 STR_INTRO_ONLINE_CONTENT                                        :{BLACK}オンラインコンテンツの確認
-STR_INTRO_SCRIPT_SETTINGS                                       :{BLACK}AI/ゲームスクリプトの設定
 STR_INTRO_QUIT                                                  :{BLACK}終了
 
 STR_INTRO_TOOLTIP_NEW_GAME                                      :{BLACK}新規ゲームを開始します。Ctrl＋クリックで地形生成設定をスキップします
@@ -2086,7 +2072,6 @@ STR_INTRO_TOOLTIP_HIGHSCORE                                     :{BLACK}ハイ�
 STR_INTRO_TOOLTIP_CONFIG_SETTINGS_TREE                          :{BLACK}設定を表示
 STR_INTRO_TOOLTIP_NEWGRF_SETTINGS                               :{BLACK}NewGRFの有効/無効化、各パラメータの設定ができます
 STR_INTRO_TOOLTIP_ONLINE_CONTENT                                :{BLACK}公式オンラインコンテンツのデータベースからデータの確認・追加・更新ができます
-STR_INTRO_TOOLTIP_SCRIPT_SETTINGS                               :{BLACK}AI/ゲームスクリプトの設定を行います
 STR_INTRO_TOOLTIP_QUIT                                          :{BLACK}OpenTTD を終了します
 
 STR_INTRO_BASESET                                               :現在選択されているグラフィックのベースセットは {NUM} つのスプライトが欠けています。ベースセットの更新を確認してみてください。
@@ -3314,6 +3299,10 @@ STR_SPRITE_ALIGNER_PREVIOUS_BUTTON                              :{BLACK}前の�
 STR_SPRITE_ALIGNER_PREVIOUS_TOOLTIP                             :{BLACK}前のノーマルスプライトに戻ります。始端と終端は連続しているものとみなし、疑似/リカラー/フォントスプライトはスキップします
 STR_SPRITE_ALIGNER_SPRITE_TOOLTIP                               :{BLACK}現在選択されているスプライトの代表絵を示します。この配列はスプライトを描画するときには無視されます
 STR_SPRITE_ALIGNER_MOVE_TOOLTIP                                 :{BLACK}X・Yオフセットを変更し、スプライトを移動します
+
+###length 2
+
+
 STR_SPRITE_ALIGNER_RESET_BUTTON                                 :{BLACK} 相対値リセット
 STR_SPRITE_ALIGNER_RESET_TOOLTIP                                :{BLACK} 現在の相対オフセットをリセットします。
 STR_SPRITE_ALIGNER_OFFSETS_ABS                                  :{BLACK}Xオフセット : {NUM},Yオフセット : {NUM} (絶対値)
@@ -3948,6 +3937,8 @@ STR_PURCHASE_INFO_ALL_BUT                                       :{CARGO_LIST}を
 STR_PURCHASE_INFO_MAX_TE                                        :{BLACK}最大牽引力: {GOLD}{FORCE}
 STR_PURCHASE_INFO_AIRCRAFT_RANGE                                :{BLACK}航続距離: {GOLD}{COMMA} タイル
 STR_PURCHASE_INFO_AIRCRAFT_TYPE                                 :{BLACK}航空機の機種: {GOLD}{STRING}
+
+###length 3
 
 ###length VEHICLE_TYPES
 STR_BUY_VEHICLE_TRAIN_LIST_TOOLTIP                              :{BLACK}列車リスト - 個々の情報を見るには列車をクリックします。Ctrl+クリックでその列車種の表示/非表示を切り替えます
@@ -4609,7 +4600,6 @@ STR_ERROR_AI_PLEASE_REPORT_CRASH                                :{WHITE}実行�
 STR_ERROR_AI_DEBUG_SERVER_ONLY                                  :{YELLOW}AI/ゲームスクリプトのデバッグウインドウはサーバーでのみ使用できます
 
 # AI configuration window
-STR_AI_CONFIG_CAPTION                                           :{WHITE}AIの設定
 STR_AI_CONFIG_GAMELIST_TOOLTIP                                  :{BLACK}このゲームスクリプトは次のゲーム開始時からロードされます
 STR_AI_CONFIG_AILIST_TOOLTIP                                    :{BLACK}}このAIは次のゲーム開始時からロードされます
 STR_AI_CONFIG_HUMAN_PLAYER                                      :人間のプレーヤー
@@ -4625,8 +4615,6 @@ STR_AI_CONFIG_MOVE_DOWN_TOOLTIP                                 :{BLACK}選択�
 STR_AI_CONFIG_GAMESCRIPT                                        :{SILVER}ゲームスクリプト
 STR_AI_CONFIG_AI                                                :{SILVER}AI
 
-STR_AI_CONFIG_CHANGE                                            :{BLACK}{STRING}を選択
-STR_AI_CONFIG_CHANGE_NONE                                       :
 STR_AI_CONFIG_CHANGE_AI                                         :AI
 STR_AI_CONFIG_CHANGE_GAMESCRIPT                                 :ゲームスクリプト
 STR_AI_CONFIG_CHANGE_TOOLTIP                                    :{BLACK}他のスクリプトをロードします
@@ -4657,9 +4645,7 @@ STR_SCREENSHOT_HEIGHTMAP_SCREENSHOT                             :{BLACK}ハイ�
 STR_SCREENSHOT_MINIMAP_SCREENSHOT                               :{BLACK}ミニマップのスクリーンショット
 
 # AI Parameters
-STR_AI_SETTINGS_CAPTION                                         :{WHITE}{STRING} パラメータ
 STR_AI_SETTINGS_CAPTION_AI                                      :AI
-STR_AI_SETTINGS_CAPTION_GAMESCRIPT                              :ゲームスクリプト
 STR_AI_SETTINGS_CLOSE                                           :{BLACK}閉じる
 STR_AI_SETTINGS_RESET                                           :{BLACK}リセット
 STR_AI_SETTINGS_SETTING                                         :{STRING}: {ORANGE}{STRING}
@@ -5096,6 +5082,7 @@ STR_ERROR_TOO_MANY_VEHICLES_IN_GAME                             :{WHITE}輸送�
 STR_ERROR_CAN_T_CHANGE_SERVICING                                :{WHITE}点検周期を変更できません
 
 STR_ERROR_VEHICLE_IS_DESTROYED                                  :{WHITE}輸送機器が破壊されます
+
 
 STR_ERROR_NO_VEHICLES_AVAILABLE_AT_ALL                          :{WHITE}利用できる輸送機器が全くなくなります
 STR_ERROR_NO_VEHICLES_AVAILABLE_AT_ALL_EXPLANATION              :{WHITE}NewGRFの設定を変更してください

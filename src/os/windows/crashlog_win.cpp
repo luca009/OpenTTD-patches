@@ -159,6 +159,36 @@ static const char *GetAccessViolationTypeString(uint type)
 	}
 	buffer += seprintf(buffer, last, " Message:    %s\n\n",
 			message == nullptr ? "<none>" : message);
+
+	if (message != nullptr && strcasestr(message, "out of memory") != nullptr) {
+		PROCESS_MEMORY_COUNTERS pmc;
+		if (GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc))) {
+			buffer += seprintf(buffer, last, " WorkingSetSize: " PRINTF_SIZE "\n", (size_t)pmc.WorkingSetSize);
+			buffer += seprintf(buffer, last, " PeakWorkingSetSize: " PRINTF_SIZE "\n", (size_t)pmc.PeakWorkingSetSize);
+			buffer += seprintf(buffer, last, " QuotaPagedPoolUsage: " PRINTF_SIZE "\n", (size_t)pmc.QuotaPagedPoolUsage);
+			buffer += seprintf(buffer, last, " QuotaPeakPagedPoolUsage: " PRINTF_SIZE "\n", (size_t)pmc.QuotaPeakPagedPoolUsage);
+			buffer += seprintf(buffer, last, " QuotaNonPagedPoolUsage: " PRINTF_SIZE "\n", (size_t)pmc.QuotaNonPagedPoolUsage);
+			buffer += seprintf(buffer, last, " QuotaPeakNonPagedPoolUsage: " PRINTF_SIZE "\n", (size_t)pmc.QuotaPeakNonPagedPoolUsage);
+			buffer += seprintf(buffer, last, " PagefileUsage: " PRINTF_SIZE "\n", (size_t)pmc.PagefileUsage);
+			buffer += seprintf(buffer, last, " PeakPagefileUsage: " PRINTF_SIZE "\n\n", (size_t)pmc.PeakPagefileUsage);
+		}
+		PERFORMANCE_INFORMATION perf;
+		if (GetPerformanceInfo(&perf, sizeof(perf))) {
+			buffer += seprintf(buffer, last, " CommitTotal: " PRINTF_SIZE "\n", (size_t)perf.CommitTotal);
+			buffer += seprintf(buffer, last, " CommitLimit: " PRINTF_SIZE "\n", (size_t)perf.CommitLimit);
+			buffer += seprintf(buffer, last, " CommitPeak: " PRINTF_SIZE "\n", (size_t)perf.CommitPeak);
+			buffer += seprintf(buffer, last, " PhysicalTotal: " PRINTF_SIZE "\n", (size_t)perf.PhysicalTotal);
+			buffer += seprintf(buffer, last, " PhysicalAvailable: " PRINTF_SIZE "\n", (size_t)perf.PhysicalAvailable);
+			buffer += seprintf(buffer, last, " SystemCache: " PRINTF_SIZE "\n", (size_t)perf.SystemCache);
+			buffer += seprintf(buffer, last, " KernelTotal: " PRINTF_SIZE "\n", (size_t)perf.KernelTotal);
+			buffer += seprintf(buffer, last, " KernelPaged: " PRINTF_SIZE "\n", (size_t)perf.KernelPaged);
+			buffer += seprintf(buffer, last, " KernelNonpaged: " PRINTF_SIZE "\n", (size_t)perf.KernelNonpaged);
+			buffer += seprintf(buffer, last, " PageSize: " PRINTF_SIZE "\n", (size_t)perf.PageSize);
+			buffer += seprintf(buffer, last, " HandleCount: %u\n", (uint)perf.HandleCount);
+			buffer += seprintf(buffer, last, " ProcessCount: %u\n", (uint)perf.ProcessCount);
+			buffer += seprintf(buffer, last, " ThreadCount: %u\n\n", (uint)perf.ThreadCount);
+		}
+	}
 	return buffer;
 }
 
@@ -544,7 +574,7 @@ char *CrashLogWindows::AppendDecodedStacktrace(char *buffer, const char *last) c
 					free(demangled);
 #endif
 					if (symbol_ok && bfd_info.function_addr) {
-						if (bfd_info.function_addr < frame.AddrPC.Offset) {
+						if (bfd_info.function_addr > frame.AddrPC.Offset) {
 							buffer += seprintf(buffer, last, " - " OTTD_PRINTF64U, static_cast<DWORD64>(bfd_info.function_addr) - frame.AddrPC.Offset);
 						} else {
 							buffer += seprintf(buffer, last, " + " OTTD_PRINTF64U, frame.AddrPC.Offset - static_cast<DWORD64>(bfd_info.function_addr));

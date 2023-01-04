@@ -114,7 +114,7 @@ Station::~Station()
 		for (NodeID node = 0; node < lg->Size(); ++node) {
 			Station *st = Station::Get((*lg)[node].Station());
 			st->goods[c].flows.erase(this->index);
-			if ((*lg)[node][this->goods[c].node].LastUpdate() != INVALID_DATE) {
+			if (lg->GetConstEdge(node, this->goods[c].node).LastUpdate() != INVALID_DATE) {
 				st->goods[c].flows.DeleteFlows(this->index);
 				RerouteCargo(st, c, this->index, st->index);
 			}
@@ -183,26 +183,30 @@ void BaseStation::PostDestructor(size_t index)
 	InvalidateWindowData(WC_SELECT_STATION, 0, 0);
 }
 
-void BaseStation::SetRoadStopTileData(TileIndex tile, byte data, byte offset)
+bool BaseStation::SetRoadStopTileData(TileIndex tile, byte data, bool animation)
 {
-	for (size_t i = 0; i < this->custom_road_stop_tiles.size(); i++) {
-		if (this->custom_road_stop_tiles[i] == tile) {
-			SB(this->custom_road_stop_data[i], offset, 8, data);
-			return;
+	for (RoadStopTileData &tile_data : this->custom_roadstop_tile_data) {
+		if (tile_data.tile == tile) {
+			uint8 &value = animation ? tile_data.animation_frame : tile_data.random_bits;
+			if (value == data) return false;
+			value = data;
+			return true;
 		}
 	}
-	this->custom_road_stop_tiles.push_back(tile);
-	this->custom_road_stop_data.push_back(((uint)data) << offset);
+	RoadStopTileData tile_data;
+	tile_data.tile = tile;
+	tile_data.animation_frame = animation ? data : 0;
+	tile_data.random_bits = animation ? 0 : data;
+	this->custom_roadstop_tile_data.push_back(tile_data);
+	return data != 0;
 }
 
 void BaseStation::RemoveRoadStopTileData(TileIndex tile)
 {
-	for (size_t i = 0; i < this->custom_road_stop_tiles.size(); i++) {
-		if (this->custom_road_stop_tiles[i] == tile) {
-			this->custom_road_stop_tiles[i] = this->custom_road_stop_tiles.back();
-			this->custom_road_stop_data[i] = this->custom_road_stop_data.back();
-			this->custom_road_stop_tiles.pop_back();
-			this->custom_road_stop_data.pop_back();
+	for (RoadStopTileData &tile_data : this->custom_roadstop_tile_data) {
+		if (tile_data.tile == tile) {
+			tile_data = this->custom_roadstop_tile_data.back();
+			this->custom_roadstop_tile_data.pop_back();
 			return;
 		}
 	}
@@ -612,8 +616,8 @@ CommandCost StationRect::BeforeAddTile(TileIndex tile, StationRectMode mode)
 		Rect new_rect = {std::min(x, this->left), std::min(y, this->top), std::max(x, this->right), std::max(y, this->bottom)};
 
 		/* check new rect dimensions against preset max */
-		int w = new_rect.right - new_rect.left + 1;
-		int h = new_rect.bottom - new_rect.top + 1;
+		int w = new_rect.Width();
+		int h = new_rect.Height();
 		if (mode != ADD_FORCE && (w > _settings_game.station.station_spread || h > _settings_game.station.station_spread)) {
 			dbg_assert(mode != ADD_TRY);
 			return_cmd_error(STR_ERROR_STATION_TOO_SPREAD_OUT);

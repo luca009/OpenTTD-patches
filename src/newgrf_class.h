@@ -57,7 +57,9 @@ public:
 	static void Assign(Tspec *spec);
 	static uint GetClassCount();
 	static uint GetUIClassCount();
+	static bool HasUIClass();
 	static Tid GetUIClass(uint index);
+	static bool IsClassIDValid(Tid cls_id);
 	static NewGRFClass *Get(Tid cls_id);
 
 	static const Tspec *GetByGrf(uint32 grfid, byte local_id, int *index);

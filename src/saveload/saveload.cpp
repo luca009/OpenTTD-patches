@@ -95,8 +95,12 @@ extern bool _sl_upstream_mode;
 namespace upstream_sl {
 	void SlNullPointers();
 	void SlLoadChunks();
+	void SlLoadChunkByID(uint32 id);
 	void SlLoadCheckChunks();
+	void SlLoadCheckChunkByID(uint32 id);
 	void SlFixPointers();
+	void SlFixPointerChunkByID(uint32 id);
+	void SlSaveChunkChunkByID(uint32 id);
 }
 
 /** What are we currently doing? */
@@ -238,7 +242,6 @@ struct SaveLoadParams {
 	StringID error_str;                  ///< the translatable error message to show
 	char *extra_msg;                     ///< the error message
 
-	uint16 game_speed;                   ///< The game speed when saving started.
 	bool saveinprogress;                 ///< Whether there is currently a save in progress.
 	SaveModeFlags save_flags;            ///< Save mode flags
 };
@@ -280,6 +283,7 @@ static const std::vector<ChunkHandler> &ChunkHandlers()
 	extern const ChunkHandlerTable _cargomonitor_chunk_handlers;
 	extern const ChunkHandlerTable _goal_chunk_handlers;
 	extern const ChunkHandlerTable _story_page_chunk_handlers;
+	extern const ChunkHandlerTable _league_chunk_handlers;
 	extern const ChunkHandlerTable _ai_chunk_handlers;
 	extern const ChunkHandlerTable _game_chunk_handlers;
 	extern const ChunkHandlerTable _animated_tile_chunk_handlers;
@@ -322,6 +326,7 @@ static const std::vector<ChunkHandler> &ChunkHandlers()
 		_cargomonitor_chunk_handlers,
 		_goal_chunk_handlers,
 		_story_page_chunk_handlers,
+		_league_chunk_handlers,
 		_engine_chunk_handlers,
 		_town_chunk_handlers,
 		_sign_chunk_handlers,
@@ -2132,6 +2137,10 @@ inline void SlRIFFSpringPPCheck(size_t len)
  */
 static void SlLoadChunk(const ChunkHandler &ch)
 {
+	if (ch.special_proc != nullptr) {
+		if (ch.special_proc(ch.id, CSLSO_PRE_LOAD)) return;
+	}
+
 	byte m = SlReadByte();
 	size_t len;
 	size_t endoffs;
@@ -2195,6 +2204,10 @@ static void SlLoadChunk(const ChunkHandler &ch)
  */
 static void SlLoadCheckChunk(const ChunkHandler *ch)
 {
+	if (ch && ch->special_proc != nullptr) {
+		if (ch->special_proc(ch->id, CSLSO_PRE_LOADCHECK)) return;
+	}
+
 	byte m = SlReadByte();
 	size_t len;
 	size_t endoffs;
@@ -2281,6 +2294,14 @@ static void SlLoadCheckChunk(const ChunkHandler *ch)
  */
 static void SlSaveChunk(const ChunkHandler &ch)
 {
+	if (ch.type == CH_UPSTREAM_SAVE) {
+		SaveLoadVersion old_ver = _sl_version;
+		_sl_version = MAX_LOAD_SAVEGAME_VERSION;
+		upstream_sl::SlSaveChunkChunkByID(ch.id);
+		_sl_version = old_ver;
+		return;
+	}
+
 	ChunkSaveLoadProc *proc = ch.save_proc;
 
 	/* Don't save any chunk information if there is no save handler. */
@@ -3126,15 +3147,9 @@ static inline void ClearSaveLoadState()
 	GamelogStopAnyAction();
 }
 
-/**
- * Update the gui accordingly when starting saving
- * and set locks on saveload. Also turn off fast-forward cause with that
- * saving takes Aaaaages
- */
+/** Update the gui accordingly when starting saving and set locks on saveload. */
 static void SaveFileStart()
 {
-	_sl.game_speed = _game_speed;
-	_game_speed = 100;
 	SetMouseCursorBusy(true);
 
 	InvalidateWindowData(WC_STATUS_BAR, 0, SBI_SAVELOAD_START);
@@ -3144,7 +3159,6 @@ static void SaveFileStart()
 /** Update the gui accordingly when saving is done and release locks on saveload. */
 static void SaveFileDone()
 {
-	if (_game_mode != GM_MENU) _game_speed = _sl.game_speed;
 	SetMouseCursorBusy(false);
 
 	InvalidateWindowData(WC_STATUS_BAR, 0, SBI_SAVELOAD_FINISH);
@@ -3803,4 +3817,9 @@ void FileToSaveLoad::SetTitle(const char *title)
 bool SaveLoadFileTypeIsScenario()
 {
 	return _file_to_saveload.abstract_ftype == FT_SCENARIO;
+}
+
+void SlUnreachablePlaceholder()
+{
+	NOT_REACHED();
 }

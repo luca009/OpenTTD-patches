@@ -206,6 +206,7 @@ STR_UNITS_POWER_IMPERIAL                                        :{COMMA}{NBSP}PS
 STR_UNITS_POWER_METRIC                                          :{COMMA}{NBSP}PS
 STR_UNITS_POWER_SI                                              :{COMMA}{NBSP}kW
 
+
 STR_UNITS_WEIGHT_SHORT_IMPERIAL                                 :{COMMA}{NBSP}t
 STR_UNITS_WEIGHT_SHORT_METRIC                                   :{COMMA}{NBSP}t
 STR_UNITS_WEIGHT_SHORT_SI                                       :{COMMA}{NBSP}kg
@@ -405,10 +406,9 @@ STR_SCENEDIT_FILE_MENU_SEPARATOR                                :
 STR_SCENEDIT_FILE_MENU_QUIT                                     :Beenden
 
 # Settings menu
-###length 14
+###length 15
 STR_SETTINGS_MENU_GAME_OPTIONS                                  :Spieleinstellungen
 STR_SETTINGS_MENU_CONFIG_SETTINGS_TREE                          :Einstellungen
-STR_SETTINGS_MENU_SCRIPT_SETTINGS                               :KI- / Skripteinstellungen
 STR_SETTINGS_MENU_NEWGRF_SETTINGS                               :NewGRF-Einstellungen
 STR_SETTINGS_MENU_TRANSPARENCY_OPTIONS                          :Transparenzeinstellungen
 STR_SETTINGS_MENU_ZONING                                        :Bereiche anzeigen
@@ -1045,21 +1045,8 @@ STR_GAME_OPTIONS_VIDEO_VSYNC_TOOLTIP                            :{BLACK}Dieses K
 
 STR_GAME_OPTIONS_VIDEO_DRIVER_INFO                              :{BLACK}Aktueller Treiber: {STRING}
 
-STR_GAME_OPTIONS_GUI_ZOOM_FRAME                                 :{BLACK}Größe der Bedienelemente
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_TOOLTIP                      :{BLACK}Wähle die Größe der Bedienelemente
 
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_AUTO                         :(automatisch erkennen)
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_NORMAL                       :Normal
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_2X_ZOOM                      :Doppelt
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_4X_ZOOM                      :Vierfach
 
-STR_GAME_OPTIONS_FONT_ZOOM                                      :{BLACK}Schriftgröße
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_TOOLTIP                     :{BLACK}Die Schriftgröße der Spieloberfläche auswählen
-
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_AUTO                        :(automatisch erkennen)
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_NORMAL                      :Normal
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_2X_ZOOM                     :Doppelt
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_4X_ZOOM                     :Vierfach
 
 STR_GAME_OPTIONS_GRAPHICS                                       :{BLACK}Grafik
 
@@ -1465,9 +1452,6 @@ STR_CONFIG_SETTING_CHUNNEL_HELPTEXT                             :Wenn aktiviert,
 
 STR_CONFIG_SETTING_NO_TRAIN_CRASH_OTHER_COMPANY                 :Züge verschiedener Firmen stoßen nicht mehr zusammen: {STRING}
 STR_CONFIG_SETTING_NO_TRAIN_CRASH_OTHER_COMPANY_HELPTEXT        :Diese Einstellung ist in erster Linie dafür da um zu verhindern, dass Spielern denen man nicht vertraut bewusst Zusammenstöße mit Zügen anderer Firmen in Multiplayer-Spielen mit Infrastructure Sharing provozieren.
-
-STR_CONFIG_SETTING_FLIP_DIRECTION_ALL_TRAINS                    :Erlaube Richtungswechsel aller Züge in Depots: {STRING}
-STR_CONFIG_SETTING_FLIP_DIRECTION_ALL_TRAINS_HELPTEXT           :Aktiviert die Umkehr der Fahrtrichtung aller Züge in Depots, selbst wenn dies nicht durch das NewGRF aktiviert ist.
 
 STR_CONFIG_SETTING_ROADVEH_ARTICULATED_OVERTAKING               :Erlaube Überholen durch mehrgliedrige Straßenfahrzeuge: {STRING}
 STR_CONFIG_SETTING_ROADVEH_ARTICULATED_OVERTAKING_HELPTEXT      :Aktiviert das Überholen von Straßenfahrzeugen durch mehrgliedrige Straßenfahrzeuge.
@@ -2551,7 +2535,6 @@ STR_INTRO_HIGHSCORE                                             :{BLACK}Bestenli
 STR_INTRO_CONFIG_SETTINGS_TREE                                  :{BLACK}Einstellungen
 STR_INTRO_NEWGRF_SETTINGS                                       :{BLACK}NewGRF-Einstellungen
 STR_INTRO_ONLINE_CONTENT                                        :{BLACK}Erweiterungen herunterladen
-STR_INTRO_SCRIPT_SETTINGS                                       :{BLACK}KI- / Skripteinstellungen
 STR_INTRO_QUIT                                                  :{BLACK}Beenden
 
 STR_INTRO_TOOLTIP_NEW_GAME                                      :{BLACK}Ein neues Spiel beginnen. Strg+Klick überspringt Karteneinstellungen
@@ -2571,7 +2554,6 @@ STR_INTRO_TOOLTIP_HIGHSCORE                                     :{BLACK}Zeige di
 STR_INTRO_TOOLTIP_CONFIG_SETTINGS_TREE                          :{BLACK}Einstellungen anzeigen
 STR_INTRO_TOOLTIP_NEWGRF_SETTINGS                               :{BLACK}NewGRF-Einstellungen anzeigen und/oder ändern
 STR_INTRO_TOOLTIP_ONLINE_CONTENT                                :{BLACK}Prüfe, ob neue oder aktualisierte Erweiterungen zum Herunterladen bereitstehen
-STR_INTRO_TOOLTIP_SCRIPT_SETTINGS                               :{BLACK}Zeige KI- und Skripteinstellungen
 STR_INTRO_TOOLTIP_QUIT                                          :{BLACK}OpenTTD beenden
 
 STR_INTRO_BASESET                                               :{BLACK}Den momentan ausgewählten Basisgrafiken fehl{P 0 "t" "en"} {NUM} Sprite{P 0 "" "s"}. Bitte überprüfen, ob es Updates für die Basisgrafiken gibt.
@@ -3098,6 +3080,7 @@ STR_LINKGRAPH_STATS_TOOLTIP                                     :{BLACK}{CARGO_L
 STR_LINKGRAPH_STATS_TOOLTIP_RETURN_EXTENSION                    :{}{CARGO_LONG} ZUM Rücktransport vorgesehen ({COMMA}% der Kapazitäten)
 STR_LINKGRAPH_STATS_TOOLTIP_TIME_EXTENSION                      :{}Durchschnittliche Reisezeit: {NUM}{NBSP}Tag{P "" s}
 STR_LINKGRAPH_STATS_TOOLTIP_TIME_EXTENSION_GENERAL              :{}Durchschnittliche Reisezeit: {STRING}
+STR_LINKGRAPH_STATS_TOOLTIP_CAPACITY                            :{}Kapazität: {CARGO_LONG}
 
 # Base for station construction window(s)
 STR_STATION_BUILD_COVERAGE_AREA_TITLE                           :{BLACK}Einzugsgebiet anzeigen
@@ -3353,13 +3336,13 @@ STR_TRACE_RESTRICT_TRAIN_STATUS_REQUIRES_SERVICE                :benötigt Wartu
 STR_TRACE_RESTRICT_REVERSE_SIG                                  :Wende nach Signal
 STR_TRACE_RESTRICT_REVERSE_SIG_CANCEL                           :Breche Wenden ab
 STR_TRACE_RESTRICT_SET_SPEED_RESTRICTION                        :Beschränke Fahrtgeschwindigkeit auf: {VELOCITY}
-STR_TRACE_RESTRICT_REMOVE_SPEED_RESTRICTION                     :Hebe Beschränkung der Fahrtgeschwindig auf
+STR_TRACE_RESTRICT_REMOVE_SPEED_RESTRICTION                     :Freie Fahrt für freie Tfs
 STR_TRACE_RESTRICT_TRAIN_NOT_STUCK                              :Zug kommt voran, zeige keine Nachrichten zu an diesem Pfadsignal wartenden Zügen
 STR_TRACE_RESTRICT_TRAIN_NOT_STUCK_CANCEL                       :Hebe Zug kommt voran auf, zeige Nachrichten zu an diesem Pfadsignal wartenden Zügen
 STR_TRACE_RESTRICT_TRAIN_NOT_STUCK_SHORT                        :Zug kommt voran...
 STR_TRACE_RESTRICT_TRAIN_NOT_STUCK_CANCEL_SHORT                 :Hebe Zug kommt voran auf...
 STR_TRACE_RESTRICT_NO_PBS_BACK_PENALTY                          :Wende die Strafe beim passieren des Pfadsignals von der Rückseite nicht an.
-STR_TRACE_RESTRICT_NO_PBS_BACK_PENALTY_CANCEL                   :Hebe die Nichtanwendung der Strafe beim passieren des Pfadsignals vion der Rückseite auf.
+STR_TRACE_RESTRICT_NO_PBS_BACK_PENALTY_CANCEL                   :Hebe die Nichtanwendung der Strafe beim passieren des Pfadsignals von der Rückseite auf.
 STR_TRACE_RESTRICT_NO_PBS_BACK_PENALTY_SHORT                    :Keine Strafe beim passieren des Pfadsignals von der Rückseite
 STR_TRACE_RESTRICT_NO_PBS_BACK_PENALTY_CANCEL_SHORT             :Aufheben der Straffreiheit beim passieren des Pfadsignals von der Rückseite
 STR_TRACE_RESTRICT_MAKE_TRAIN_SPEED_ADAPTATION_EXEMPT           :Nehme den Zug von der automatischen Geschwindigkeitsanpassung aus.
@@ -4277,6 +4260,10 @@ STR_SPRITE_ALIGNER_PREVIOUS_BUTTON                              :{BLACK}Vorherig
 STR_SPRITE_ALIGNER_PREVIOUS_TOOLTIP                             :{BLACK}Gehe zum vorherigen normalen Sprite und überspringe alle Pseudo-, Recolour- und Schriftsprites (springt ggf. vom letzten bis zum ersten Sprite)
 STR_SPRITE_ALIGNER_SPRITE_TOOLTIP                               :{BLACK}Darstellung des aktuellen Sprites. Die Ausrichtung wird beim Zeichnen des Sprites ignoriert
 STR_SPRITE_ALIGNER_MOVE_TOOLTIP                                 :{BLACK}Bewege die Sprites und ändere dadurch die X- und Y-Offsets. Strg+Klick um die Sprites 8 Blöcke weit zu bewegen.
+
+###length 2
+
+
 STR_SPRITE_ALIGNER_RESET_BUTTON                                 :{BLACK}Setze zurück
 STR_SPRITE_ALIGNER_RESET_TOOLTIP                                :{BLACK}Setze die aktuellen relativen Versätze zurück
 STR_SPRITE_ALIGNER_OFFSETS_ABS                                  :{BLACK}X-Versatz: {NUM}, Y-Versatz: {NUM} (Absolut)
@@ -4585,7 +4572,6 @@ STR_STATION_VIEW_SCHEDULED_TRAINS_TOOLTIP                       :{BLACK}Alle Zü
 STR_STATION_VIEW_SCHEDULED_ROAD_VEHICLES_TOOLTIP                :{BLACK}Alle Straßenfahrzeuge, die diese Station anfahren, anzeigen
 STR_STATION_VIEW_SCHEDULED_AIRCRAFT_TOOLTIP                     :{BLACK}Alle Flugzeuge, die diesen Flughafen anfliegen, anzeigen
 STR_STATION_VIEW_SCHEDULED_SHIPS_TOOLTIP                        :{BLACK}Alle Schiffe, die diesen Hafen ansteuern, anzeigen
-STR_STATION_VIEW_SCHEDULED_TOOLTIP_CTRL_SUFFIX                  :{BLACK}{STRING}. Strg+Klick zur exklusiven Anzeige.
 
 STR_STATION_VIEW_RENAME_STATION_CAPTION                         :Station/Ladeplatz umbenennen
 STR_STATION_VIEW_CLOSE_AIRPORT                                  :{BLACK}Flughafen schließen
@@ -4604,6 +4590,7 @@ STR_DEPARTURES_FREIGHT_TOOLTIP                                  :{BLACK}Zeige Fr
 STR_DEPARTURES_DEPARTURES_TOOLTIP                               :{BLACK}Zeige geplante Abfahrten
 STR_DEPARTURES_ARRIVALS_TOOLTIP                                 :{BLACK}Zeige geplante Ankünfte
 STR_DEPARTURES_VIA_TOOLTIP                                      :{BLACK}Zeige geplante Durchfahrten (halten nicht an)
+STR_DEPARTURES_SHOW_TYPE_TOOLTIP_CTRL_SUFFIX                    :{BLACK}{STRING}. Strg+Klick zur exklusiven Anzeige.
 STR_DEPARTURES_EMPTY                                            :{ORANGE}Aktuell sind für diese Station keine Fahrzeuge geplant.
 STR_DEPARTURES_NONE_SELECTED                                    :{ORANGE}Es wurde keine Fahrplanauskunft angefordert.
 STR_DEPARTURES_TIME                                             :{ORANGE}{DATE_WALLCLOCK_TINY}
@@ -4728,7 +4715,6 @@ STR_FINANCES_SECTION_INFRASTRUCTURE_INCOME                      :{GOLD}Einnahmen
 STR_FINANCES_NEGATIVE_INCOME                                    :-{CURRENCY_LONG}
 STR_FINANCES_ZERO_INCOME                                        :{CURRENCY_LONG}
 STR_FINANCES_POSITIVE_INCOME                                    :+{CURRENCY_LONG}
-STR_FINANCES_NET_PROFIT                                         :{WHITE}Reingewinn
 STR_FINANCES_BANK_BALANCE_TITLE                                 :{WHITE}Kontostand
 STR_FINANCES_OWN_FUNDS_TITLE                                    :{WHITE}Eigenes Kapital
 STR_FINANCES_LOAN_TITLE                                         :{WHITE}Kredit
@@ -4866,7 +4852,7 @@ STR_VEHICLE_LIST_AIRCRAFT_TOOLTIP                               :{BLACK}Flugzeug
 
 STR_VEHICLE_LIST_AGE                                            :{STRING}, Alter: {COMMA} Jahr{P "" e} ({COMMA})
 STR_VEHICLE_LIST_AGE_RED                                        :{STRING}, Alter: {RED}{COMMA} {BLACK}Jahr{P "" e} ({COMMA})
-STR_VEHICLE_LIST_CARGO                                          :{STRING}, Fracht: {CARGO_LIST}
+STR_VEHICLE_LIST_CARGO_LIST                                     :{STRING}, Fracht: {CARGO_LIST}
 STR_VEHICLE_LIST_RELIABILITY                                    :{STRING}, Zuverlässigkeit: {COMMA}%
 STR_VEHICLE_LIST_RELIABILITY_RED                                :{STRING}, Zuverlässigkeit: {RED}{COMMA}%
 STR_VEHICLE_LIST_MAX_SPEED                                      :{STRING}, Max. Geschwindigkeit: {VELOCITY}
@@ -5005,7 +4991,8 @@ STR_PURCHASE_INFO_MAX_TE                                        :{BLACK}Max. Zug
 STR_PURCHASE_INFO_AIRCRAFT_RANGE                                :{BLACK}Reichweite: {GOLD}{COMMA} Felder
 STR_PURCHASE_INFO_AIRCRAFT_TYPE                                 :{BLACK}Flugzeugtyp: {GOLD}{STRING}
 
-STR_CARGO_TYPE_FREIGHT                                          :Alle Fracht außer Passagiere
+###length 3
+STR_CARGO_TYPE_FILTER_FREIGHT                                   :Alle Fracht außer Passagiere
 
 ###length VEHICLE_TYPES
 STR_BUY_VEHICLE_TRAIN_LIST_TOOLTIP                              :{BLACK}Schienenfahrzeugsliste. Einzelheiten durch Anklicken des Fahrzeuges. Strg+Klick schaltet um zwischen Verstecken und Zeigen des Fahrzeugtyps
@@ -5367,7 +5354,7 @@ STR_VEHICLE_LOAD_THROUGH_ABORTED_INSUFFICIENT_TRACK             :{WHITE}{VEHICLE
 STR_VEHICLE_LOAD_THROUGH_ABORTED_DEPOT                          :{WHITE}{VEHICLE}: durchgehendes Laden aufgrund Depot bei {STATION} abgebrochen
 
 STR_RUNNING                                                     :{LTBLUE}Funktioniert
-STR_NEED_REPAIR                                                 :{ORANGE}Der Fahrzeuge ist reparaturbedürftig - die Höchstgeschwindigkeit ist auf {VELOCITY} reduziert
+STR_NEED_REPAIR                                                 :{ORANGE}Das Fahrzeug ist reparaturbedürftig - die Höchstgeschwindigkeit ist auf {VELOCITY} reduziert
 STR_CURRENT_STATUS                                              :{BLACK}Momentaner Status: {STRING}
 
 # The next two need to stay in this order
@@ -5798,20 +5785,16 @@ STR_TIMETABLE_STARTING_DATE                                     :{BLACK}Anfangsd
 STR_TIMETABLE_STARTING_DATE_TOOLTIP                             :{BLACK}Wähle ein Anfangsdatum für diesen Fahrplan aus. Mit Strg+Klick wird bei allen Fahrzeugen, die nach demselben Fahrplan unterwegs sind, ein zeitlich versetztes Anfangsdatum gesetzt, so dass die Abstände zwischen den einzelnen Fahrzeugen immer gleich sind. Dazu muss der Fahrplan erst komplett erfasst worden sein.
 
 STR_TIMETABLE_CHANGE_TIME                                       :{BLACK}Zeit ändern
-STR_TIMETABLE_WAIT_TIME_TOOLTIP                                 :{BLACK}Zeitrahmen für den markierten Auftrag ändern
-STR_TIMETABLE_WAIT_TIME_TOOLTIP_EXTRA                           :{BLACK}{STRING} (Strg+Klick setzt die Zeit für alle Aufträge)
+STR_TIMETABLE_WAIT_TIME_TOOLTIP                                 :{BLACK}Zeitrahmen für den markierten Auftrag ändern (Strg+Klick setzt die Zeit für alle Aufträge)
 
 STR_TIMETABLE_CLEAR_TIME                                        :{BLACK}Zeit löschen
-STR_TIMETABLE_CLEAR_TIME_TOOLTIP                                :{BLACK}Zeitrahmen für den markierten Auftrag löschen
-STR_TIMETABLE_CLEAR_TIME_TOOLTIP_EXTRA                          :{BLACK}{STRING} (Strg+Klick löscht die Zeit für alle Aufträge)
+STR_TIMETABLE_CLEAR_TIME_TOOLTIP                                :{BLACK}Zeitrahmen für den markierten Auftrag löschen (Strg+Klick löscht die Zeit für alle Aufträge)
 
 STR_TIMETABLE_CHANGE_SPEED                                      :{BLACK}Tempolimit ändern
-STR_TIMETABLE_CHANGE_SPEED_TOOLTIP                              :{BLACK}Tempolimit beim Ausführen des ausgewählten Auftrags ändern
-STR_TIMETABLE_CHANGE_SPEED_TOOLTIP_EXTRA                        :{BLACK}{STRING} (Strg+Klick setzt das Tempolimit für alle Aufträge)
+STR_TIMETABLE_CHANGE_SPEED_TOOLTIP                              :{BLACK}Tempolimit beim Ausführen des ausgewählten Auftrags ändern (Strg+Klick setzt das Tempolimit für alle Aufträge)
 
 STR_TIMETABLE_CLEAR_SPEED                                       :{BLACK}Tempolimit löschen
-STR_TIMETABLE_CLEAR_SPEED_TOOLTIP                               :{BLACK}Tempolimit für das Ausführen des ausgewählten Auftrags löschen
-STR_TIMETABLE_CLEAR_SPEED_TOOLTIP_EXTRA                         :{BLACK}{STRING} (Strg+Klick löscht das Tempolimit für alle Aufträge)
+STR_TIMETABLE_CLEAR_SPEED_TOOLTIP                               :{BLACK}Tempolimit für das Ausführen des ausgewählten Auftrags löschen (Strg+Klick löscht das Tempolimit für alle Aufträge)
 
 STR_TIMETABLE_RESET_LATENESS                                    :{BLACK}Verspätung löschen
 STR_TIMETABLE_RESET_LATENESS_TOOLTIP                            :{BLACK}Verspätungsmelder zurücksetzen (das Fahrzeug gilt dann als pünktlich).
@@ -5920,7 +5903,6 @@ STR_ERROR_AI_PLEASE_REPORT_CRASH                                :{WHITE}Eine der
 STR_ERROR_AI_DEBUG_SERVER_ONLY                                  :{YELLOW}Debugfenster für KI oder Skripte ist nur auf dem Server verfügbar
 
 # AI configuration window
-STR_AI_CONFIG_CAPTION                                           :{WHITE}KI / Skripte einstellen
 STR_AI_CONFIG_GAMELIST_TOOLTIP                                  :{BLACK}Das Skript, das im nächsten Spiel geladen wird
 STR_AI_CONFIG_AILIST_TOOLTIP                                    :{BLACK}Die KIs, die im nächsten Spiel geladen werden
 STR_AI_CONFIG_HUMAN_PLAYER                                      :Menschlicher Spieler
@@ -5936,8 +5918,6 @@ STR_AI_CONFIG_MOVE_DOWN_TOOLTIP                                 :{BLACK}Die ausg
 STR_AI_CONFIG_GAMESCRIPT                                        :{SILVER}Skript
 STR_AI_CONFIG_AI                                                :{SILVER}KIs
 
-STR_AI_CONFIG_CHANGE                                            :{BLACK}Wähle {STRING} aus
-STR_AI_CONFIG_CHANGE_NONE                                       :
 STR_AI_CONFIG_CHANGE_AI                                         :KI
 STR_AI_CONFIG_CHANGE_GAMESCRIPT                                 :Skript
 STR_AI_CONFIG_CHANGE_TOOLTIP                                    :{BLACK}Lade ein anderes Skript
@@ -5971,9 +5951,7 @@ STR_SCREENSHOT_TOPOGRAPHY_SCREENSHOT                            :{BLACK}Topograp
 STR_SCREENSHOT_INDUSTRY_SCREENSHOT                              :{BLACK}Industrie-Screenshot
 
 # AI Parameters
-STR_AI_SETTINGS_CAPTION                                         :{WHITE}{STRING} Parameter
 STR_AI_SETTINGS_CAPTION_AI                                      :KI
-STR_AI_SETTINGS_CAPTION_GAMESCRIPT                              :Skript
 STR_AI_SETTINGS_CLOSE                                           :{BLACK}Schließen
 STR_AI_SETTINGS_RESET                                           :{BLACK}Zurücksetzen
 STR_AI_SETTINGS_SETTING                                         :{STRING}: {ORANGE}{STRING}
@@ -6451,6 +6429,7 @@ STR_ERROR_TOO_MANY_VEHICLES_IN_GAME                             :{WHITE}Zu viele
 STR_ERROR_CAN_T_CHANGE_SERVICING                                :{WHITE}Das Wartungsintervall kann nicht geändert werden ...
 
 STR_ERROR_VEHICLE_IS_DESTROYED                                  :{WHITE}... Fahrzeug ist zerstört
+
 
 STR_ERROR_NO_VEHICLES_AVAILABLE_AT_ALL                          :{WHITE}Es sind keine Fahrzeuge verfügbar!
 STR_ERROR_NO_VEHICLES_AVAILABLE_AT_ALL_EXPLANATION              :{WHITE}Bitte die NewGRF-Einstellungen ändern, damit Fahrzeuge früher verfügbar sind

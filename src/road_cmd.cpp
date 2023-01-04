@@ -1866,7 +1866,7 @@ const byte _road_sloped_sprites[14] = {
  * @param bits Roadbits
  * @return Offset for the sprite within the spritegroup.
  */
-static uint GetRoadSpriteOffset(Slope slope, RoadBits bits)
+uint GetRoadSpriteOffset(Slope slope, RoadBits bits)
 {
 	if (slope != SLOPE_FLAT) {
 		switch (slope) {
@@ -2046,21 +2046,24 @@ static void DrawRoadDetail(SpriteID img, const TileInfo *ti, int dx, int dy, int
  * @param tram_rti Tram road type information
  * @param road_offset Road sprite offset (based on road bits)
  * @param tram_offset Tram sprite offset (based on road bits)
+ * @param draw_underlay Whether to draw underlays
  */
-void DrawRoadOverlays(const TileInfo *ti, PaletteID pal, const RoadTypeInfo *road_rti, const RoadTypeInfo *tram_rti, uint road_offset, uint tram_offset)
+void DrawRoadOverlays(const TileInfo *ti, PaletteID pal, const RoadTypeInfo *road_rti, const RoadTypeInfo *tram_rti, uint road_offset, uint tram_offset, bool draw_underlay)
 {
-	/* Road underlay takes precedence over tram */
-	if (road_rti != nullptr) {
-		if (road_rti->UsesOverlay()) {
-			SpriteID ground = GetCustomRoadSprite(road_rti, ti->tile, ROTSG_GROUND);
-			DrawGroundSprite(ground + road_offset, pal);
-		}
-	} else {
-		if (tram_rti->UsesOverlay()) {
-			SpriteID ground = GetCustomRoadSprite(tram_rti, ti->tile, ROTSG_GROUND);
-			DrawGroundSprite(ground + tram_offset, pal);
+	if (draw_underlay) {
+		/* Road underlay takes precedence over tram */
+		if (road_rti != nullptr) {
+			if (road_rti->UsesOverlay()) {
+				SpriteID ground = GetCustomRoadSprite(road_rti, ti->tile, ROTSG_GROUND);
+				DrawGroundSprite(ground + road_offset, pal);
+			}
 		} else {
-			DrawGroundSprite(SPR_TRAMWAY_TRAM + tram_offset, pal);
+			if (tram_rti->UsesOverlay()) {
+				SpriteID ground = GetCustomRoadSprite(tram_rti, ti->tile, ROTSG_GROUND);
+				DrawGroundSprite(ground + tram_offset, pal);
+			} else {
+				DrawGroundSprite(SPR_TRAMWAY_TRAM + tram_offset, pal);
+			}
 		}
 	}
 
@@ -2156,7 +2159,17 @@ void DrawRoadBits(TileInfo *ti, RoadBits road, RoadBits tram, Roadside roadside,
 	if (is_road_tile && road_rti != nullptr) {
 		DisallowedRoadDirections drd = GetDisallowedRoadDirections(ti->tile);
 		if (drd != DRD_NONE) {
-			DrawGroundSpriteAt(SPR_ONEWAY_BASE + drd - 1 + ((road == ROAD_X) ? 0 : 3), PAL_NONE, 8, 8, GetPartialPixelZ(8, 8, ti->tileh));
+			SpriteID oneway = GetCustomRoadSprite(road_rti, ti->tile, ROTSG_ONEWAY);
+
+			if (oneway == 0) oneway = SPR_ONEWAY_BASE;
+
+			if ((ti->tileh == SLOPE_NE) || (ti->tileh == SLOPE_NW)) {
+				oneway += SPR_ONEWAY_SLOPE_N_OFFSET;
+			} else if ((ti->tileh == SLOPE_SE) || (ti->tileh == SLOPE_SW)) {
+				oneway += SPR_ONEWAY_SLOPE_S_OFFSET;
+			}
+
+			DrawGroundSpriteAt(oneway + drd - 1 + ((road == ROAD_X) ? 0 : 3), PAL_NONE, 8, 8, GetPartialPixelZ(8, 8, ti->tileh));
 		}
 	}
 

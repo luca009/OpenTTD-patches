@@ -204,6 +204,7 @@ STR_UNITS_POWER_IMPERIAL                                        :{COMMA}{NBSP}ح
 STR_UNITS_POWER_METRIC                                          :{COMMA}{NBSP}حصان
 STR_UNITS_POWER_SI                                              :{COMMA}{NBSP}ك واط
 
+
 STR_UNITS_WEIGHT_SHORT_IMPERIAL                                 :{COMMA}{NBSP} طن
 STR_UNITS_WEIGHT_SHORT_METRIC                                   :{COMMA}{NBSP}طن
 STR_UNITS_WEIGHT_SHORT_SI                                       :{COMMA}{NBSP}كجم
@@ -386,10 +387,9 @@ STR_SCENEDIT_FILE_MENU_SEPARATOR                                :
 STR_SCENEDIT_FILE_MENU_QUIT                                     :انهاء
 
 # Settings menu
-###length 14
+###length 15
 STR_SETTINGS_MENU_GAME_OPTIONS                                  :إعدادات اللعبه
 STR_SETTINGS_MENU_CONFIG_SETTINGS_TREE                          :الإعدادات
-STR_SETTINGS_MENU_SCRIPT_SETTINGS                               :الذكاء الصناعي/ اعدادات اللعبة
 STR_SETTINGS_MENU_NEWGRF_SETTINGS                               :إعدادات اﻹضافات
 STR_SETTINGS_MENU_TRANSPARENCY_OPTIONS                          :خيارات الشفافية
 STR_SETTINGS_MENU_TOWN_NAMES_DISPLAYED                          :عرض اسماء المدن
@@ -973,20 +973,8 @@ STR_GAME_OPTIONS_VIDEO_ACCELERATION_RESTART                     :{WHITE}لن ي�
 
 
 
-STR_GAME_OPTIONS_GUI_ZOOM_FRAME                                 :{BLACK}حجم اللوحة
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_TOOLTIP                      :{BLACK}حدد العنصر المطلوب
 
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_NORMAL                       :تقريب عادي
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_2X_ZOOM                      :تقريب ×2
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_4X_ZOOM                      :تقريب ×4
 
-STR_GAME_OPTIONS_FONT_ZOOM                                      :{BLACK}حجم الخط
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_TOOLTIP                     :{BLACK}حدد حجم خط الواجهة المراد استخدامه
-
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_AUTO                        :(كشف أوتوماتيكي)
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_NORMAL                      :عادي
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_2X_ZOOM                     :حجم مزدوج
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_4X_ZOOM                     :حجم رباعي
 
 STR_GAME_OPTIONS_GRAPHICS                                       :{BLACK}الرسومات
 
@@ -1738,7 +1726,6 @@ STR_INTRO_HIGHSCORE                                             :{BLACK}قائم
 STR_INTRO_CONFIG_SETTINGS_TREE                                  :{BLACK}الاعدادات
 STR_INTRO_NEWGRF_SETTINGS                                       :{BLACK} اعدادات NewGRF
 STR_INTRO_ONLINE_CONTENT                                        :{BLACK} إبحث عن المحتوى عبر الشبكه العنكبوتيه
-STR_INTRO_SCRIPT_SETTINGS                                       :{BLACK}إعدادات الذكاء الصناعى
 STR_INTRO_QUIT                                                  :{BLACK}خروج
 
 STR_INTRO_TOOLTIP_NEW_GAME                                      :{BLACK}بدأ لعبة جديدة
@@ -2834,6 +2821,10 @@ STR_SPRITE_ALIGNER_PREVIOUS_BUTTON                              :{BLACK}العف
 STR_SPRITE_ALIGNER_PREVIOUS_TOOLTIP                             :{BLACK}نابع للعفريتة الطبيعية التالية، تجاوز اي عفريتة موقوفة/ مصبوغة/مخطوطة و انهي في البداية.
 STR_SPRITE_ALIGNER_SPRITE_TOOLTIP                               :{BLACK}عرض العفريتة المختارة حاليا. يتم تجاهل الموائمة عند رسم هذا العفريت.
 STR_SPRITE_ALIGNER_MOVE_TOOLTIP                                 :{BLACK}حرك العفريتة في الجوار، غير الاحداثيات س ، ص.
+
+###length 2
+
+
 STR_SPRITE_ALIGNER_PICKER_BUTTON                                :{BLACK}اختر عفريتة
 STR_SPRITE_ALIGNER_PICKER_TOOLTIP                               :{BLACK}اختر عفريتة من اي مكان في الشاشة.
 
@@ -3314,6 +3305,8 @@ STR_PURCHASE_INFO_NONE                                          :بدون
 STR_PURCHASE_INFO_ALL_BUT                                       :الكل الا {CARGO_LIST}
 STR_PURCHASE_INFO_MAX_TE                                        :{BLACK}تأثير الجذب القصى: {GOLD}{FORCE}
 STR_PURCHASE_INFO_AIRCRAFT_TYPE                                 :{BLACK}نوع الطائرة:{GOLD}{STRING}
+
+###length 3
 
 ###length VEHICLE_TYPES
 STR_BUY_VEHICLE_TRAIN_LIST_TOOLTIP                              :{BLACK}قائمة اختيار القطارات - اضغط على العربة لعرض معلوماتها
@@ -3928,7 +3921,6 @@ STR_ERROR_AI_PLEASE_REPORT_CRASH                                :{WHITE}واحد
 STR_ERROR_AI_DEBUG_SERVER_ONLY                                  :{YELLOW} شاشة اخطاء الذكاء الصناعي متوفرة فقط للخادم (سرڤر)
 
 # AI configuration window
-STR_AI_CONFIG_CAPTION                                           :{WHITE}إعدادات الذكاء الصناعي
 STR_AI_CONFIG_GAMELIST_TOOLTIP                                  :{BLACK}مخطوطات اللعبة الذي سيتم تحميله في اللعبة التالية
 STR_AI_CONFIG_HUMAN_PLAYER                                      :لاعب انساني
 STR_AI_CONFIG_RANDOM_AI                                         :ذكاء صناعي عشوائي
@@ -3942,8 +3934,6 @@ STR_AI_CONFIG_MOVE_DOWN_TOOLTIP                                 :{BLACK}انقل
 
 STR_AI_CONFIG_AI                                                :{SILVER} الذكاء الاصطناعي
 
-STR_AI_CONFIG_CHANGE                                            :{BLACK}اختر {STRING}
-STR_AI_CONFIG_CHANGE_NONE                                       :
 STR_AI_CONFIG_CHANGE_AI                                         :الذكاء الاصطناعي
 STR_AI_CONFIG_CHANGE_GAMESCRIPT                                 :مخطوط اللعبة
 STR_AI_CONFIG_CONFIGURE                                         :{BLACK} اعداد
@@ -4360,6 +4350,7 @@ STR_ERROR_TOO_MANY_VEHICLES_IN_GAME                             :{WHITE}العر
 STR_ERROR_CAN_T_CHANGE_SERVICING                                :{WHITE}لا يمكن تغيير فترات الصيانة
 
 STR_ERROR_VEHICLE_IS_DESTROYED                                  :{WHITE}... العربة تحطمت
+
 
 STR_ERROR_NO_VEHICLES_AVAILABLE_AT_ALL                          :{WHITE}لن تتوافر اى وسائل نقل على اﻹطلاق
 STR_ERROR_NO_VEHICLES_AVAILABLE_YET                             :{WHITE}لا تتوافر اى آليه نقل بعد

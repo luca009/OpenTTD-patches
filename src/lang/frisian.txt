@@ -201,6 +201,7 @@ STR_UNITS_POWER_IMPERIAL                                        :{COMMA}{NBSP}hp
 STR_UNITS_POWER_METRIC                                          :{COMMA}{NBSP}hp
 STR_UNITS_POWER_SI                                              :{COMMA}{NBSP}kW
 
+
 STR_UNITS_WEIGHT_SHORT_IMPERIAL                                 :{COMMA}{NBSP}t
 STR_UNITS_WEIGHT_SHORT_METRIC                                   :{COMMA}{NBSP}t
 STR_UNITS_WEIGHT_SHORT_SI                                       :{COMMA}{NBSP}kg
@@ -380,10 +381,9 @@ STR_SCENEDIT_FILE_MENU_SEPARATOR                                :
 STR_SCENEDIT_FILE_MENU_QUIT                                     :Ofslute
 
 # Settings menu
-###length 14
+###length 15
 STR_SETTINGS_MENU_GAME_OPTIONS                                  :Spulopsjes
 STR_SETTINGS_MENU_CONFIG_SETTINGS_TREE                          :Ynstellings
-STR_SETTINGS_MENU_SCRIPT_SETTINGS                               :AI/Spulskriptynstellings
 STR_SETTINGS_MENU_NEWGRF_SETTINGS                               :NewGRF-ynstellings
 STR_SETTINGS_MENU_TRANSPARENCY_OPTIONS                          :Trochsichtigensopsjes
 STR_SETTINGS_MENU_TOWN_NAMES_DISPLAYED                          :Stêdsnammen sjen litte
@@ -977,19 +977,8 @@ STR_GAME_OPTIONS_RESOLUTION_ITEM                                :{NUM}x{NUM}
 
 
 
-STR_GAME_OPTIONS_GUI_ZOOM_FRAME                                 :{BLACK}Interfacegrutte
 
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_AUTO                         :(automatysk)
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_NORMAL                       :Normaal
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_2X_ZOOM                      :Dûbele grutte
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_4X_ZOOM                      :Fjouwerdûbele grutte
 
-STR_GAME_OPTIONS_FONT_ZOOM                                      :{BLACK}Lettergrutte
-
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_AUTO                        :(automatysk)
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_NORMAL                      :Normaal
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_2X_ZOOM                     :Dûbele grutte
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_4X_ZOOM                     :Fjouwerdûbele grutte
 
 
 STR_GAME_OPTIONS_REFRESH_RATE                                   :{BLACK}Byldferfaskingssnelheid
@@ -1897,7 +1886,6 @@ STR_INTRO_HIGHSCORE                                             :{BLACK}Topskore
 STR_INTRO_CONFIG_SETTINGS_TREE                                  :{BLACK}Ynstellings
 STR_INTRO_NEWGRF_SETTINGS                                       :{BLACK}NewGRF ynstellings
 STR_INTRO_ONLINE_CONTENT                                        :{BLACK}Sikje online ynhâld
-STR_INTRO_SCRIPT_SETTINGS                                       :{BLACK}AI/Spulskriptynstellings
 STR_INTRO_QUIT                                                  :{BLACK}Ôfslute
 
 STR_INTRO_TOOLTIP_NEW_GAME                                      :{BLACK}Begjin in nei spul. Ctrl + klik slaat kaartynstelling oer
@@ -1917,7 +1905,6 @@ STR_INTRO_TOOLTIP_HIGHSCORE                                     :{BLACK}Topskore
 STR_INTRO_TOOLTIP_CONFIG_SETTINGS_TREE                          :{BLACK}Ynstellings sjen litte
 STR_INTRO_TOOLTIP_NEWGRF_SETTINGS                               :{BLACK}Lit NewGRF ynstellings sjen
 STR_INTRO_TOOLTIP_ONLINE_CONTENT                                :{BLACK}Strún ynternet ôf om nije ynhâld del te heljen
-STR_INTRO_TOOLTIP_SCRIPT_SETTINGS                               :{BLACK}AI/Spulskriptynstellings sjen litte
 STR_INTRO_TOOLTIP_QUIT                                          :{BLACK}Slút 'OpenTTD' ôf
 
 
@@ -2886,6 +2873,10 @@ STR_SPRITE_ALIGNER_PREVIOUS_BUTTON                              :{BLACK}Foarig f
 STR_SPRITE_ALIGNER_PREVIOUS_TOOLTIP                             :{BLACK}Gean tebek nei de foarige ôfbylding, sla pseudo/werkleure/lettertype ôfbyldings oer en begjin wer oernei at it begjin berikke is
 STR_SPRITE_ALIGNER_SPRITE_TOOLTIP                               :{BLACK}Represintaasje fan de no selektearre ôfbylding. Dizze wurdt net rjochte by it tekenjen
 STR_SPRITE_ALIGNER_MOVE_TOOLTIP                                 :{BLACK}Ferweech de ôfbylding, feroarje de X en Y útslach
+
+###length 2
+
+
 STR_SPRITE_ALIGNER_OFFSETS_ABS                                  :{BLACK}X útslach: {NUM}, Y útslach: {NUM} (Absolút)
 STR_SPRITE_ALIGNER_OFFSETS_REL                                  :{BLACK}X útslach: {NUM}, Y útslach: {NUM} (Relatyf)
 STR_SPRITE_ALIGNER_PICKER_BUTTON                                :{BLACK}Kies ôfbylding
@@ -3364,6 +3355,8 @@ STR_PURCHASE_INFO_ALL_BUT                                       :Alles útsein {
 STR_PURCHASE_INFO_MAX_TE                                        :{BLACK}Maks. Lûkkrêft: {GOLD}{FORCE}
 STR_PURCHASE_INFO_AIRCRAFT_RANGE                                :{BLACK}Berik: {GOLD}{COMMA} flakken
 STR_PURCHASE_INFO_AIRCRAFT_TYPE                                 :{BLACK}Fleantúch type: {GOLD}{STRING}
+
+###length 3
 
 ###length VEHICLE_TYPES
 
@@ -3872,7 +3865,6 @@ STR_ERROR_AI_NO_AI_FOUND                                        :Gjin geskikte k
 STR_ERROR_AI_DEBUG_SERVER_ONLY                                  :{YELLOW}AI/Spulskript debugskerm is allinich beskikber foar de server
 
 # AI configuration window
-STR_AI_CONFIG_CAPTION                                           :{WHITE}AI/Spulskript konfiguraasje
 STR_AI_CONFIG_GAMELIST_TOOLTIP                                  :{BLACK}It spulskript dat yn it folgjende spul laden sil wurde
 STR_AI_CONFIG_AILIST_TOOLTIP                                    :{BLACK}AIs dy't yn it folgjende spul laden sille wurde
 STR_AI_CONFIG_HUMAN_PLAYER                                      :Minslike spiler
@@ -3887,8 +3879,6 @@ STR_AI_CONFIG_MOVE_DOWN                                         :{BLACK}Pleats l
 STR_AI_CONFIG_GAMESCRIPT                                        :{SILVER}Spulskript
 STR_AI_CONFIG_AI                                                :{SILVER}AIs
 
-STR_AI_CONFIG_CHANGE                                            :{BLACK}Selektear {STRING}
-STR_AI_CONFIG_CHANGE_NONE                                       :
 STR_AI_CONFIG_CHANGE_AI                                         :AI
 STR_AI_CONFIG_CHANGE_GAMESCRIPT                                 :Spulskript
 STR_AI_CONFIG_CHANGE_TOOLTIP                                    :{BLACK}in oar script lade
@@ -3912,9 +3902,7 @@ STR_AI_LIST_CANCEL_TOOLTIP                                      :{BLACK}Skript n
 
 
 # AI Parameters
-STR_AI_SETTINGS_CAPTION                                         :{WHITE}{STRING} Parameters
 STR_AI_SETTINGS_CAPTION_AI                                      :AI
-STR_AI_SETTINGS_CAPTION_GAMESCRIPT                              :Spulskript
 STR_AI_SETTINGS_CLOSE                                           :{BLACK}Slúte
 STR_AI_SETTINGS_RESET                                           :{BLACK}Weromsette
 STR_AI_SETTINGS_SETTING                                         :{STRING}: {ORANGE}{STRING}
@@ -4297,6 +4285,7 @@ STR_ERROR_TOO_MANY_VEHICLES_IN_GAME                             :{WHITE}Te folle
 STR_ERROR_CAN_T_CHANGE_SERVICING                                :{WHITE}Kin tiid tusken ûnderhâldsbeurten net feroarje...
 
 STR_ERROR_VEHICLE_IS_DESTROYED                                  :{WHITE}... wein verneatige
+
 
 STR_ERROR_NO_VEHICLES_AVAILABLE_AT_ALL                          :{WHITE}Hielendal gjin fiertugen talitten
 STR_ERROR_NO_VEHICLES_AVAILABLE_AT_ALL_EXPLANATION              :{WHITE}Feroarje jo NewGRF-konfiguraasje

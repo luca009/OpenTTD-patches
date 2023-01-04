@@ -42,6 +42,7 @@
 #include "../road_cmd.h"
 #include "../ai/ai.hpp"
 #include "../ai/ai_gui.hpp"
+#include "../game/game.hpp"
 #include "../town.h"
 #include "../economy_base.h"
 #include "../animated_tile_func.h"
@@ -317,7 +318,6 @@ static void InitializeWindowsAndCaches()
 
 	CheckTrainsLengths();
 	ShowNewGRFError();
-	ShowAIDebugWindowIfAIError();
 
 	/* Rebuild the smallmap list of owners. */
 	BuildOwnerLegend();
@@ -614,6 +614,22 @@ TileIndex GetOtherTunnelBridgeEndOld(TileIndex tile)
 
 
 /**
+ * Start the scripts.
+ */
+static void StartScripts()
+{
+	/* Start the GameScript. */
+	Game::StartNew();
+
+	/* Start the AIs. */
+	for (const Company *c : Company::Iterate()) {
+		if (Company::IsValidAiID(c->index)) AI::StartNew(c->index, false);
+	}
+
+	ShowAIDebugWindowIfAIError();
+}
+
+/**
  * Perform a (large) amount of savegame conversion *magic* in order to
  * load older savegames and to fill the caches for various purposes.
  * @return True iff conversion went without a problem.
@@ -806,10 +822,13 @@ bool AfterLoadGame()
 	if (SlXvIsFeatureMissing(XSLFI_VARIABLE_DAY_LENGTH) && SlXvIsFeatureMissing(XSLFI_SPRINGPP) && SlXvIsFeatureMissing(XSLFI_JOKERPP) && SlXvIsFeatureMissing(XSLFI_CHILLPP)) {
 		_settings_game.economy.day_length_factor = 1;
 	}
+	if (SlXvIsFeatureMissing(XSLFI_VARIABLE_DAY_LENGTH, 3)) {
+		_scaled_tick_counter = (uint64)((_tick_counter * _settings_game.economy.day_length_factor) + _tick_skip_counter);
+	}
 
 	/* Update current year
 	 * must be done before loading sprites as some newgrfs check it */
-	SetDate(_date, _date_fract);
+	SetDate(_date, _date_fract, false);
 
 	/*
 	 * Force the old behaviour for compatibility reasons with old savegames. As new
@@ -952,6 +971,8 @@ bool AfterLoadGame()
 
 	AfterLoadEngines();
 	AnalyseIndustryTileSpriteGroups();
+	extern void AnalyseHouseSpriteGroups();
+	AnalyseHouseSpriteGroups();
 
 	/* Update all vehicles */
 	AfterLoadVehicles(true);
@@ -960,13 +981,6 @@ bool AfterLoadGame()
 
 	/* Update template vehicles */
 	AfterLoadTemplateVehicles();
-
-	/* Make sure there is an AI attached to an AI company */
-	{
-		for (const Company *c : Company::Iterate()) {
-			if (c->is_ai && c->ai_instance == nullptr) AI::StartNew(c->index);
-		}
-	}
 
 	/* make sure there is a town in the game */
 	if (_game_mode == GM_NORMAL && Town::GetNumItems() == 0) {
@@ -3815,7 +3829,11 @@ bool AfterLoadGame()
 	/* Use current order time to approximate last loading time */
 	if (IsSavegameVersionBefore(SLV_LAST_LOADING_TICK) && SlXvIsFeatureMissing(XSLFI_LAST_LOADING_TICK)) {
 		for (Vehicle *v : Vehicle::Iterate()) {
-			v->last_loading_tick = std::max(_tick_counter, static_cast<uint64>(v->current_order_time)) - v->current_order_time;
+			v->last_loading_tick = std::max(_scaled_tick_counter, static_cast<uint64>(v->current_order_time)) - v->current_order_time;
+		}
+	} else if (SlXvIsFeaturePresent(XSLFI_LAST_LOADING_TICK, 1, 1)) {
+		for (Vehicle *v : Vehicle::Iterate()) {
+			v->last_loading_tick *= _settings_game.economy.day_length_factor;
 		}
 	}
 
@@ -4182,6 +4200,9 @@ bool AfterLoadGame()
 	_game_load_tick_skip_counter = _tick_skip_counter;
 	_game_load_time = time(nullptr);
 
+	/* Start the scripts. This MUST happen after everything else. */
+	StartScripts();
+
 	return true;
 }
 
@@ -4211,6 +4232,8 @@ void ReloadNewGRFData()
 	ResetVehicleHash();
 	AfterLoadEngines();
 	AnalyseIndustryTileSpriteGroups();
+	extern void AnalyseHouseSpriteGroups();
+	AnalyseHouseSpriteGroups();
 	AfterLoadVehicles(false);
 	StartupEngines();
 	GroupStatistics::UpdateAfterLoad();

@@ -207,6 +207,11 @@ STR_UNITS_POWER_IMPERIAL                                        :{COMMA}{NBSP}ZS
 STR_UNITS_POWER_METRIC                                          :{COMMA}{NBSP}ZS
 STR_UNITS_POWER_SI                                              :{COMMA}{NBSP}kW
 
+STR_UNITS_POWER_IMPERIAL_TO_WEIGHT_SI                           :{DECIMAL}{NBSP}zs/Mg
+STR_UNITS_POWER_METRIC_TO_WEIGHT_IMPERIAL                       :{DECIMAL}{NBSP}zs/l
+STR_UNITS_POWER_SI_TO_WEIGHT_IMPERIAL                           :{DECIMAL}{NBSP}kW/l
+STR_UNITS_POWER_SI_TO_WEIGHT_SI                                 :{DECIMAL}{NBSP}W/kg
+
 STR_UNITS_WEIGHT_SHORT_IMPERIAL                                 :{COMMA}{NBSP}t
 STR_UNITS_WEIGHT_SHORT_METRIC                                   :{COMMA}{NBSP}t
 STR_UNITS_WEIGHT_SHORT_SI                                       :{COMMA}{NBSP}kg
@@ -399,10 +404,9 @@ STR_SCENEDIT_FILE_MENU_SEPARATOR                                :
 STR_SCENEDIT_FILE_MENU_QUIT                                     :Iziet
 
 # Settings menu
-###length 14
+###length 15
 STR_SETTINGS_MENU_GAME_OPTIONS                                  :Spēles opcijas
 STR_SETTINGS_MENU_CONFIG_SETTINGS_TREE                          :Iestatījumi
-STR_SETTINGS_MENU_SCRIPT_SETTINGS                               :MI/spēles skriptu iestatījumi
 STR_SETTINGS_MENU_NEWGRF_SETTINGS                               :NewGRF iestatījumi
 STR_SETTINGS_MENU_TRANSPARENCY_OPTIONS                          :Caurspīdības opcijas
 STR_SETTINGS_MENU_TOWN_NAMES_DISPLAYED                          :Rādīt pilsētu nosaukumus
@@ -1011,21 +1015,13 @@ STR_GAME_OPTIONS_VIDEO_VSYNC_TOOLTIP                            :{BLACK}Atzīmē
 
 STR_GAME_OPTIONS_VIDEO_DRIVER_INFO                              :{BLACK}Esošais vadītājs: {STRING}
 
-STR_GAME_OPTIONS_GUI_ZOOM_FRAME                                 :{BLACK}Lietotāja saskarnes lielums
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_TOOLTIP                      :{BLACK}Lietotāja saskarnes elementu lieluma izvēle
+STR_GAME_OPTIONS_GUI_SCALE_TOOLTIP                              :{BLACK}Velciet slīdni, lai iestatītu interfeisa izmēru. Turiet nospiestu taustiņu Ctrl, lai veiktu nepārtrauktu regulēšanu
+STR_GAME_OPTIONS_GUI_SCALE_AUTO                                 :{BLACK}Automātiski noteikt izmēru
 
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_AUTO                         :(automātiski noteikt)
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_NORMAL                       :Parasts
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_2X_ZOOM                      :Divkāršs
-STR_GAME_OPTIONS_GUI_ZOOM_DROPDOWN_4X_ZOOM                      :Četrkāršs
 
-STR_GAME_OPTIONS_FONT_ZOOM                                      :{BLACK}Fonta izmērs
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_TOOLTIP                     :{BLACK}Izvēlieties saskarnes fonta izmēru
-
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_AUTO                        :(automātiski noteikt)
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_NORMAL                      :Normāls
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_2X_ZOOM                     :Divkāršs izmērs
-STR_GAME_OPTIONS_FONT_ZOOM_DROPDOWN_4X_ZOOM                     :Četrkāršs izmērs
+STR_GAME_OPTIONS_GUI_SCALE_2X                                   :2x
+STR_GAME_OPTIONS_GUI_SCALE_3X                                   :3x
+STR_GAME_OPTIONS_GUI_SCALE_5X                                   :5x
 
 STR_GAME_OPTIONS_GRAPHICS                                       :{BLACK}Grafika
 
@@ -2074,7 +2070,8 @@ STR_INTRO_HIGHSCORE                                             :{BLACK}Sasniegu
 STR_INTRO_CONFIG_SETTINGS_TREE                                  :{BLACK}Iestatījumi
 STR_INTRO_NEWGRF_SETTINGS                                       :{BLACK}NewGRF iestatījumi
 STR_INTRO_ONLINE_CONTENT                                        :{BLACK}Pārbaudīt tiešsaistes saturu
-STR_INTRO_SCRIPT_SETTINGS                                       :{BLACK}MI/spēles skriptu iestatījumi
+STR_INTRO_AI_SETTINGS                                           :{BLACK}AI Iestatījumi
+STR_INTRO_GAMESCRIPT_SETTINGS                                   :{BLACK}Spēles Skripta Iestatījumi
 STR_INTRO_QUIT                                                  :{BLACK}Iziet
 
 STR_INTRO_TOOLTIP_NEW_GAME                                      :{BLACK}Sākt jaunu spēli. Ctrl+klikšķis izlaiž kartes konfigurēšanu
@@ -2094,7 +2091,6 @@ STR_INTRO_TOOLTIP_HIGHSCORE                                     :{BLACK}Rādīt 
 STR_INTRO_TOOLTIP_CONFIG_SETTINGS_TREE                          :{BLACK}Displeja iestatījumi
 STR_INTRO_TOOLTIP_NEWGRF_SETTINGS                               :{BLACK}Rādīt NewGRF iestatījumus
 STR_INTRO_TOOLTIP_ONLINE_CONTENT                                :{BLACK}Pārbaudīt vai lejupielādei nav pieejams jauns un atjaunināts saturs
-STR_INTRO_TOOLTIP_SCRIPT_SETTINGS                               :{BLACK}Rādīt MI un spēles skriptu iestatījumus
 STR_INTRO_TOOLTIP_QUIT                                          :{BLACK}Iziet no 'OpenTTD'
 
 STR_INTRO_BASESET                                               :{BLACK}Pašlaik izvēlētajai bāzes grafikas kopai trūkst  {NUM} sprait{P s i u}. Lūdzu, pārbaudiet, vai bāzes kopai ir atjauninājumi.
@@ -2606,6 +2602,8 @@ STR_LINKGRAPH_LEGEND_SATURATED                                  :{TINY_FONT}{BLA
 STR_LINKGRAPH_LEGEND_OVERLOADED                                 :{TINY_FONT}{BLACK}pārslogots
 
 # Linkgraph tooltip
+STR_LINKGRAPH_STATS_TOOLTIP_RETURN_EXTENSION                    :{}{CARGO_LONG} jātransportē atpakaļ ({COMMA}% no pārvadājuma)
+STR_LINKGRAPH_STATS_TOOLTIP_TIME_EXTENSION                      :{}Vidējais ceļojuma laiks: {NUM}{NBSP}dienas
 
 # Base for station construction window(s)
 STR_STATION_BUILD_COVERAGE_AREA_TITLE                           :{BLACK}Pārklājuma iezīmēšana
@@ -3323,6 +3321,11 @@ STR_SPRITE_ALIGNER_PREVIOUS_BUTTON                              :{BLACK}Iepriek�
 STR_SPRITE_ALIGNER_PREVIOUS_TOOLTIP                             :{BLACK}Iet pie iepriekšējā parastā gariņa, izlaižot visus pseido/pārkrāsotos/fonta gariņus
 STR_SPRITE_ALIGNER_SPRITE_TOOLTIP                               :{BLACK}Atlasītā gariņa attēlojums. To attēlojot, izkārtojums netiek ievērots
 STR_SPRITE_ALIGNER_MOVE_TOOLTIP                                 :{BLACK}Pārvietot gariņu, lai mainītu X un Y vērtības. Ctrl+klikšķis, lai vienā piegājienā pārvietotu gariņu par astoņām vienībām
+
+###length 2
+STR_SPRITE_ALIGNER_CENTRE_SPRITE                                :{BLACK}Spraits centrēts
+
+
 STR_SPRITE_ALIGNER_RESET_BUTTON                                 :{BLACK}Atiestatīt relatīvi
 STR_SPRITE_ALIGNER_RESET_TOOLTIP                                :{BLACK}Pāriestatīt paršreizējo relatīvo nobīdi
 STR_SPRITE_ALIGNER_OFFSETS_ABS                                  :{BLACK}X nobīde: {NUM}, Y nobīde: {NUM} (absolūta)
@@ -3666,14 +3669,16 @@ STR_FINANCES_SECTION_LOAN_INTEREST                              :{GOLD}Aizdevuma
 STR_FINANCES_SECTION_OTHER                                      :{GOLD}Citi
 
 STR_FINANCES_NEGATIVE_INCOME                                    :-{CURRENCY_LONG}
+STR_FINANCES_ZERO_INCOME                                        :{CURRENCY_LONG}
 STR_FINANCES_POSITIVE_INCOME                                    :+{CURRENCY_LONG}
-STR_FINANCES_NET_PROFIT                                         :{WHITE}Tīrā peļņa
+STR_FINANCES_PROFIT                                             :{WHITE}Peļņa
 STR_FINANCES_BANK_BALANCE_TITLE                                 :{WHITE}Bankas bilance
 STR_FINANCES_OWN_FUNDS_TITLE                                    :{WHITE}Pašu līdzekļi
 STR_FINANCES_LOAN_TITLE                                         :{WHITE}Aizdevums
 STR_FINANCES_INTEREST_RATE                                      :{WHITE}Aizdevuma procenti: {BLACK}{NUM}%
 STR_FINANCES_MAX_LOAN                                           :{WHITE}Maksimālais aizdevums: {BLACK}{CURRENCY_LONG}
 STR_FINANCES_TOTAL_CURRENCY                                     :{BLACK}{CURRENCY_LONG}
+STR_FINANCES_BANK_BALANCE                                       :{WHITE}{CURRENCY_LONG}
 STR_FINANCES_BORROW_BUTTON                                      :{BLACK}Aizņemties {CURRENCY_LONG}
 STR_FINANCES_BORROW_TOOLTIP                                     :{BLACK}Palielināt aizdevuma apmēru. Ctrl+klikšķis lai aizņemtos cik daudz vien iespējams
 STR_FINANCES_REPAY_BUTTON                                       :{BLACK}Atmaksāt {CURRENCY_LONG}
@@ -3805,6 +3810,8 @@ STR_VEHICLE_LIST_MANAGE_LIST_TOOLTIP                            :{BLACK}Sūtīt 
 STR_VEHICLE_LIST_REPLACE_VEHICLES                               :Nomainīt transportlīdzekļus
 STR_VEHICLE_LIST_SEND_FOR_SERVICING                             :Sūtīt uz apkopi
 STR_VEHICLE_LIST_PROFIT_THIS_YEAR_LAST_YEAR                     :{TINY_FONT}{BLACK}Peļņa šogad: {CURRENCY_LONG} (pērn: {CURRENCY_LONG})
+STR_VEHICLE_LIST_CARGO                                          :{TINY_FONT}{BLACK}[{CARGO_LIST}]
+STR_VEHICLE_LIST_NAME_AND_CARGO                                 :{TINY_FONT}{BLACK}{STRING} {STRING}
 
 STR_VEHICLE_LIST_SEND_TRAIN_TO_DEPOT                            :Sūtīt uz depo
 STR_VEHICLE_LIST_SEND_ROAD_VEHICLE_TO_DEPOT                     :Sūtīt uz depo
@@ -3896,6 +3903,8 @@ STR_PURCHASE_INFO_ALL_BUT                                       :visu, izņemot 
 STR_PURCHASE_INFO_MAX_TE                                        :{BLACK}Maksimālais vilces spēks: {GOLD}{FORCE}
 STR_PURCHASE_INFO_AIRCRAFT_RANGE                                :{BLACK}Apgabas: {GOLD}{COMMA} lauciņi
 STR_PURCHASE_INFO_AIRCRAFT_TYPE                                 :{BLACK}Lidaparāta veids: {GOLD}{STRING}
+
+###length 3
 
 ###length VEHICLE_TYPES
 STR_BUY_VEHICLE_TRAIN_LIST_TOOLTIP                              :{BLACK}Vilciena vagonu atlasīšanas saraksts - klikšķināt uz transportlīdzekļa, lai iegūtu informāciju
@@ -4557,7 +4566,6 @@ STR_ERROR_AI_PLEASE_REPORT_CRASH                                :{WHITE}Viens no
 STR_ERROR_AI_DEBUG_SERVER_ONLY                                  :{YELLOW}MI/spēles skriptu atkļūdošanas logs ir pieejams tikai serverim
 
 # AI configuration window
-STR_AI_CONFIG_CAPTION                                           :{WHITE}MI/spēles skriptu konfigurācija
 STR_AI_CONFIG_GAMELIST_TOOLTIP                                  :{BLACK}Spēles skripts, kas tiks ielādēts nākamajā spēlē
 STR_AI_CONFIG_AILIST_TOOLTIP                                    :{BLACK}MI, kas tiks ielādēts nākamajā spēlē
 STR_AI_CONFIG_HUMAN_PLAYER                                      :Spēlētājs (cilvēks)
@@ -4571,10 +4579,9 @@ STR_AI_CONFIG_MOVE_DOWN                                         :{BLACK}Nolaist 
 STR_AI_CONFIG_MOVE_DOWN_TOOLTIP                                 :{BLACK}Nolaist izvēlētos MI sarakstā uz leju
 
 STR_AI_CONFIG_GAMESCRIPT                                        :{SILVER}Spēles skripti
+STR_AI_CONFIG_GAMESCRIPT_PARAM                                  :{SILVER}Parametri
 STR_AI_CONFIG_AI                                                :{SILVER}MI
 
-STR_AI_CONFIG_CHANGE                                            :{BLACK}Izvēlēties {STRING}
-STR_AI_CONFIG_CHANGE_NONE                                       :
 STR_AI_CONFIG_CHANGE_AI                                         :MI
 STR_AI_CONFIG_CHANGE_GAMESCRIPT                                 :Spēles skripts
 STR_AI_CONFIG_CHANGE_TOOLTIP                                    :{BLACK}Ielādēt citu skriptu
@@ -4605,9 +4612,7 @@ STR_SCREENSHOT_HEIGHTMAP_SCREENSHOT                             :{BLACK}Augstumk
 STR_SCREENSHOT_MINIMAP_SCREENSHOT                               :{BLACK}Minikartes ekrānuzņēmums
 
 # AI Parameters
-STR_AI_SETTINGS_CAPTION                                         :{WHITE}{STRING} parametri
 STR_AI_SETTINGS_CAPTION_AI                                      :MI
-STR_AI_SETTINGS_CAPTION_GAMESCRIPT                              :Spēles skripts
 STR_AI_SETTINGS_CLOSE                                           :{BLACK}Aizvērt
 STR_AI_SETTINGS_RESET                                           :{BLACK}Atiestatīt
 STR_AI_SETTINGS_SETTING                                         :{STRING}: {ORANGE}{STRING}
@@ -4952,6 +4957,7 @@ STR_ERROR_OBJECT_IN_THE_WAY                                     :{WHITE}Traucēj
 STR_ERROR_COMPANY_HEADQUARTERS_IN                               :{WHITE}... traucē uzņēmuma birojs
 STR_ERROR_CAN_T_PURCHASE_THIS_LAND                              :{WHITE}Nevar nopirkt šo zemes platību...
 STR_ERROR_YOU_ALREADY_OWN_IT                                    :{WHITE}... tā jums jau pieder!
+STR_ERROR_BUILD_OBJECT_LIMIT_REACHED                            :{WHITE}... sasniegts objektu būvniecības limits
 
 # Group related errors
 STR_ERROR_GROUP_CAN_T_CREATE                                    :{WHITE}Nevar izveidot grupu...
@@ -5023,6 +5029,7 @@ STR_ERROR_TOO_MANY_VEHICLES_IN_GAME                             :{WHITE}Spēlē 
 STR_ERROR_CAN_T_CHANGE_SERVICING                                :{WHITE}Nevar mainīt apkopes starplaiku...
 
 STR_ERROR_VEHICLE_IS_DESTROYED                                  :{WHITE}... transportlīdzeklis ir iznīcināts
+
 
 STR_ERROR_NO_VEHICLES_AVAILABLE_AT_ALL                          :{WHITE}Vispār nebūs pieejami transporta līdzekļi
 STR_ERROR_NO_VEHICLES_AVAILABLE_AT_ALL_EXPLANATION              :{WHITE}Mainiet jūsu NewGRF konfogurāciju
