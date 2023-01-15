@@ -4131,14 +4131,14 @@ int GetWaitTimeRating(const CargoSpec *cs, const GoodsEntry *ge)
 	uint wait_time = ge->time_since_pickup;
 
 	if (_settings_game.station.cargo_class_rating_wait_time) {
-		if (cs->classes & CC_PASSENGERS) {
-			wait_time *= 3;
-		} else if (cs->classes & CC_REFRIGERATED) {
-			wait_time *= 2;
-		} else if (cs->classes & (CC_MAIL | CC_ARMOURED | CC_EXPRESS)) {
+		if (cs->classes & (CC_REFRIGERATED | CC_PASSENGERS)) {
 			wait_time += (wait_time >> 1);
+		} else if (cs->classes & (CC_ARMOURED | CC_EXPRESS)) {
+			wait_time += (wait_time >> 2);
+		} else if (cs->classes & CC_MAIL) {
+			wait_time -= (wait_time >> 1);
 		} else if (cs->classes & (CC_BULK | CC_LIQUID)) {
-			wait_time >>= 2;
+			wait_time >>= 3;
 		}
 	}
 
@@ -4182,9 +4182,10 @@ int GetVehicleAgeRating(const GoodsEntry *ge)
 
 	const byte age = ge->last_age;
 
-	if (age < 30) rating += 10;
-	if (age < 20) rating += 10;
-	if (age < 10) rating += 13;
+	if (age < 50) rating += 5;
+	if (age < 30) rating += 7;
+	if (age < 20) rating += 9;
+	if (age < 10) rating += 12;
 
 	return rating;
 }
