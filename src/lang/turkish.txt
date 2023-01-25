@@ -392,7 +392,7 @@ STR_SCENEDIT_TOOLBAR_TOWN_GENERATION                            :{BLACK}Şehir y
 STR_SCENEDIT_TOOLBAR_INDUSTRY_GENERATION                        :{BLACK}Fabrika yapımı
 STR_SCENEDIT_TOOLBAR_ROAD_CONSTRUCTION                          :{BLACK}Yol yapımı
 STR_SCENEDIT_TOOLBAR_TRAM_CONSTRUCTION                          :{BLACK} Tramvay yapımı
-STR_SCENEDIT_TOOLBAR_PLANT_TREES                                :{BLACK}Ağaç dik. Shift ile tıklama maliyet tahminini gösterir
+STR_SCENEDIT_TOOLBAR_PLANT_TREES                                :{BLACK}Ağaç dik. Ctrl ile tıklama alanı çapraz olarak seçer. Shift ile tıklama maliyet tahminini gösterir
 STR_SCENEDIT_TOOLBAR_PLACE_SIGN                                 :{BLACK}Tabela koy
 STR_SCENEDIT_TOOLBAR_PLACE_OBJECT                               :{BLACK}Nesneyi yerleştirin. Ctrl alanı çapraz olarak seçer. Shift inşa etme/değerini gösterme arasında geçiş yapar
 
@@ -2712,8 +2712,6 @@ STR_BUILD_SIGNAL_DRAG_SIGNALS_DENSITY_INCREASE_TOOLTIP          :{BLACK}Sinyal s
 STR_SELECT_RAIL_BRIDGE_CAPTION                                  :{WHITE}Tren Köprüsü Seç
 STR_SELECT_ROAD_BRIDGE_CAPTION                                  :{WHITE}Köprü Seç
 STR_SELECT_BRIDGE_SELECTION_TOOLTIP                             :{BLACK}Köprü seçimi - tercih ettiğiniz köprüyü yapmak için tıklayın
-STR_SELECT_BRIDGE_INFO                                          :{GOLD}{STRING},{} {VELOCITY} {WHITE}{CURRENCY_LONG}
-STR_SELECT_BRIDGE_SCENEDIT_INFO                                 :{GOLD}{STRING},{} {VELOCITY}
 STR_BRIDGE_NAME_SUSPENSION_STEEL                                :Çelik, Asma
 STR_BRIDGE_NAME_GIRDER_STEEL                                    :Çelik, Kirişli
 STR_BRIDGE_NAME_CANTILEVER_STEEL                                :Çelik, Ağ
@@ -2833,7 +2831,7 @@ STR_OBJECT_CLASS_TRNS                                           :Vericiler
 STR_PLANT_TREE_CAPTION                                          :{WHITE}Ağaçlar
 STR_PLANT_TREE_TOOLTIP                                          :{BLACK}Dikilecek ağaç türünü seçin. Eğer alan zaten ağaç içeriyorsa, bu seçimden bağımsız olarak karışık ağaç türleri ekleyecek.
 STR_TREES_RANDOM_TYPE                                           :{BLACK}Rastgele türde ağaçlar
-STR_TREES_RANDOM_TYPE_TOOLTIP                                   :{BLACK}Rastgele türde ağaçlar koy. Shift ile ağaç koyma/maliyet gösterme tercihi yapılır
+STR_TREES_RANDOM_TYPE_TOOLTIP                                   :{BLACK}Rastgele türde ağaçlar koy. Ctrl ile tıklama alanı çapraz olarak seçer. Shift ile tıklama maliyet tahminini gösterir
 STR_TREES_RANDOM_TREES_BUTTON                                   :{BLACK}Rastgele Ağaç
 STR_TREES_RANDOM_TREES_TOOLTIP                                  :{BLACK}Haritaya rastgele ağaç dik
 STR_TREES_MODE_NORMAL_BUTTON                                    :{BLACK}Normal
