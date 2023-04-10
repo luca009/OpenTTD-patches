@@ -26,6 +26,7 @@
 #include "schdispatch.h"
 #include "vehiclelist.h"
 #include "tracerestrict.h"
+#include "core/backup_type.hpp"
 
 #include "widgets/timetable_widget.h"
 
@@ -124,15 +125,15 @@ static void FillTimetableArrivalDepartureTable(const Vehicle *v, VehicleOrderID 
 	assert(v->GetNumOrders() >= 2);
 	assert(start < v->GetNumOrders());
 
-	Ticks sum = offset;
-	VehicleOrderID i = start;
-	const Order *order = v->GetOrder(i);
-
 	/* Pre-initialize with unknown time */
 	for (int i = 0; i < v->GetNumOrders(); ++i) {
 		table[i].arrival = table[i].departure = INVALID_TICKS;
 		table[i].flags = 0;
 	}
+
+	Ticks sum = offset;
+	VehicleOrderID i = start;
+	const Order *order = v->GetOrder(i);
 
 	bool predicted = false;
 	bool no_offset = false;
@@ -532,7 +533,7 @@ struct TimetableWindow : GeneralVehicleWindow {
 		return ES_NOT_HANDLED;
 	}
 
-	void OnPaint() override
+	void SetButtonDisabledStates()
 	{
 		const Vehicle *v = this->vehicle;
 		int selected = this->sel_index;
@@ -549,7 +550,7 @@ struct TimetableWindow : GeneralVehicleWindow {
 				const Order *order = v->GetOrder(((selected + 1) / 2) % v->GetNumOrders());
 				if (selected % 2 != 0) {
 					/* Travel time */
-					disable = order != nullptr && (order->IsType(OT_CONDITIONAL) || order->IsType(OT_IMPLICIT));
+					disable = order != nullptr && (order->IsType(OT_CONDITIONAL) || order->IsType(OT_IMPLICIT) || order->HasNoTimetableTimes());
 					disable_time = disable;
 					wait_lockable = !disable;
 					wait_locked = wait_lockable && order->IsTravelFixed();
@@ -620,7 +621,11 @@ struct TimetableWindow : GeneralVehicleWindow {
 
 		this->SetWidgetDisabledState(WID_VT_SCHEDULED_DISPATCH, v->orders == nullptr);
 		this->GetWidget<NWidgetStacked>(WID_VT_START_DATE_SELECTION)->SetDisplayedPlane(HasBit(v->vehicle_flags, VF_SCHEDULED_DISPATCH) ? 1 : 0);
+	}
 
+	void OnPaint() override
+	{
+		this->SetButtonDisabledStates();
 		this->DrawWidgets();
 	}
 
@@ -694,7 +699,7 @@ struct TimetableWindow : GeneralVehicleWindow {
 					} else {
 						StringID string;
 						TextColour colour = (i == selected) ? TC_WHITE : TC_BLACK;
-						if (order->IsType(OT_CONDITIONAL)) {
+						if (order->IsType(OT_CONDITIONAL) || order->HasNoTimetableTimes()) {
 							string = STR_TIMETABLE_NO_TRAVEL;
 						} else if (order->IsType(OT_IMPLICIT)) {
 							string = STR_TIMETABLE_NOT_TIMETABLEABLE;
@@ -723,12 +728,9 @@ struct TimetableWindow : GeneralVehicleWindow {
 							Dimension lock_d = GetSpriteSize(SPR_LOCK);
 							DrawPixelInfo tmp_dpi;
 							if (FillDrawPixelInfo(&tmp_dpi, rtl ? tr.left : middle, tr.top, rtl ? middle : tr.right, lock_d.height)) {
-								DrawPixelInfo *old_dpi = _cur_dpi;
-								_cur_dpi = &tmp_dpi;
+								AutoRestoreBackup dpi_backup(_cur_dpi, &tmp_dpi);
 
 								DrawSprite(SPR_LOCK, PAL_NONE, rtl ? edge - 3 - lock_d.width - tr.left : edge + 3 - middle, 0);
-
-								_cur_dpi = old_dpi;
 							}
 						}
 
@@ -899,7 +901,10 @@ struct TimetableWindow : GeneralVehicleWindow {
 				/* Allow change time by double-clicking order */
 				if (click_count == 2) {
 					this->sel_index = selected == INVALID_ORDER ? -1 : selected;
-					this->OnClick(pt, WID_VT_CHANGE_TIME, click_count);
+					this->SetButtonDisabledStates();
+					if (!this->IsWidgetDisabled(WID_VT_CHANGE_TIME)) {
+						this->OnClick(pt, WID_VT_CHANGE_TIME, click_count);
+					}
 					return;
 				} else {
 					this->sel_index = (selected == INVALID_ORDER || selected == this->sel_index) ? -1 : selected;
@@ -999,7 +1004,7 @@ struct TimetableWindow : GeneralVehicleWindow {
 			}
 
 			case WID_VT_RESET_LATENESS: // Reset the vehicle's late counter.
-				DoCommandP(0, v->index, 0, CMD_SET_VEHICLE_ON_TIME | CMD_MSG(STR_ERROR_CAN_T_TIMETABLE_VEHICLE));
+				DoCommandP(0, v->index | (_ctrl_pressed ? 1 << 20 : 0), 0, CMD_SET_VEHICLE_ON_TIME | CMD_MSG(STR_ERROR_CAN_T_TIMETABLE_VEHICLE));
 				break;
 
 			case WID_VT_AUTOFILL: { // Autofill the timetable.
@@ -1054,7 +1059,7 @@ struct TimetableWindow : GeneralVehicleWindow {
 				list.emplace_back(new DropDownListStringItem(STR_TIMETABLE_LEAVE_EARLY, OLT_LEAVE_EARLY, leave_type_disabled));
 				list.emplace_back(new DropDownListStringItem(STR_TIMETABLE_LEAVE_EARLY_FULL_ANY, OLT_LEAVE_EARLY_FULL_ANY, leave_type_disabled || !order->IsType(OT_GOTO_STATION)));
 				list.emplace_back(new DropDownListStringItem(STR_TIMETABLE_LEAVE_EARLY_FULL_ALL, OLT_LEAVE_EARLY_FULL_ALL, leave_type_disabled || !order->IsType(OT_GOTO_STATION)));
-				ShowDropDownList(this, std::move(list), order != nullptr ? order->GetLeaveType() : -1, WID_VT_EXTRA);
+				ShowDropDownList(this, std::move(list), order != nullptr ? order->GetLeaveType() : -1, WID_VT_EXTRA, 0, true);
 				break;
 			}
 

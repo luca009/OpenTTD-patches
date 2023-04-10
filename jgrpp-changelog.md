@@ -2,6 +2,64 @@
 
 * * *
 
+### v0.52.1 (2023-03-25)
+* Fix AI/GS scripts which use text strings.
+* Add a "very reduced" mode to the vehicle breakdowns setting.
+* Template-based train replacement:
+  * Trigger early servicing of trains when a template is added/edited which requires the train to be replaced/modified.
+  * Fix wagons in a free wagon chain in the depot not always being used for replacement when this is enabled.
+  * Engines in the depot are no longer used for replacement if there are any wagons or other engines attached.
+* Bump trunk base from commit e5438891e27c0895964e1a030c91295d3b6ef474 to commit 24e9af83aaca7093ca2ab7e5d54565ec63d42433.
+
+### v0.52.0 (2023-03-19)
+* Fix template based train replacement build window not being refreshed for engine variant changes.
+* Fix building a road stop/waypoint over an existing road stop/waypoint clearing the one-way state.
+* Fix water flooding in the scenario editor at day lengths above 4.
+* Fix crash if screen resized to be smaller than confirmation window.
+* Fix tooltips for vertical link graph lines.
+* Fix dropdown strings for the the autosave setting in the settings window.
+* NewGRF:
+  * Allow ships to carry more than one cargo.
+  * Allow NewGRFs to set town zone radii.
+* Routing restrictions:
+  * Fix values not being fully initialised to their defaults when changing action type in some cases.
+  * Re-order action and condition dropdowns.
+* Bump trunk base from commit 09f7f32b8d85ea378984908b6a29764d8576284e to commit e5438891e27c0895964e1a030c91295d3b6ef474.
+
+### v0.51.1 (2023-02-28)
+* Fix crash when looking at the town growth speed setting in the settings window.
+* Fix wrong texts in the about/question mark menu in the main toolbar.
+* Fix template based train replacement template edit window not being refreshed after flipping wagons in multiplayer.
+* Fix oversized road waypoints overlapping in the build window.
+* Improve speed/performance of generating public roads.
+
+### v0.51.0 (2023-02-24)
+* Fix crash after timetabling change counter and release slot orders.
+* Fix widths of columns in the build vehicle window after map generation.
+* Fix scrollbars of text windows (readme, changelog, etc).
+* Run water flooding at constant speed at day lengths >= 4.
+* Add routing restriction conditional on whether PBS reservation passes through a tile.
+* Template-based train replacement:
+  * Allow naming templates.
+* NewGRF:
+  * Allow NewGRFs to set road/tram type road vehicle collision behaviour, and to disallow tunnels for a road/tram type.
+  * Allow more than 255 object and road stop types per GRF.
+  * Allow NewGRFs to set a height for road stops in the road stop build window.
+  * Add railtype/signal variable to get signal side.
+* Re-organise language/translation files.
+* Bump trunk base from commit 0b2567d882827f3a2c8b9e927c4d7f354e498a58 to commit 09f7f32b8d85ea378984908b6a29764d8576284e.
+
+### v0.50.3 (2023-01-29)
+* Fix crash which could occur when loading savegames which were made when a template train was being edited.
+* Fix crash which could occur when reloading NewGRFs when the landscape info window is open.
+* Fix some NewGRF rail stations having incorrect layouts.
+* Fix incorrect water infrastructure totals when building ship depots and docks over water objects.
+* Fix the viewport map default display mode setting.
+* Fix map maximum height when generating landscape with TGP for maps larger than 4k in both axes.
+* Add setting and per-town override for whether towns can build bridges.
+* Music: extmidi (Linux): Don't constantly retry if the music player can't be launched, e.g. if timidity is not installed.
+* Bump trunk base from commit 83d5e681fc133d2820aff3cf05159bce820e2b56 to commit 0b2567d882827f3a2c8b9e927c4d7f354e498a58.
+
 ### v0.50.2 (2023-01-20)
 * Fix crash which could occur when refreshing all signal states when rail infrastructure sharing was disabled and signalled tunnel/bridges were present.
 * Fix changing the day length shifting the scheduled dispatch start times, and pending timetable start times, when using time in minutes.

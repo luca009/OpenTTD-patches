@@ -575,11 +575,6 @@ STR_UNITS_VELOCITY_METRIC                                       :{COMMA}{NBSP}km
 STR_UNITS_VELOCITY_SI                                           :{COMMA}{NBSP}m/s
 STR_UNITS_VELOCITY_GAMEUNITS                                    :{DECIMAL}{NBSP}p{P ole ola ól}/dzień
 
-STR_UNIT_NAME_VELOCITY_IMPERIAL                                 :mph
-STR_UNIT_NAME_VELOCITY_METRIC                                   :km/h
-STR_UNIT_NAME_VELOCITY_SI                                       :m/s
-STR_UNIT_NAME_VELOCITY_GAMEUNITS                                :pola/dzień
-
 STR_UNITS_POWER_IMPERIAL                                        :{COMMA}{NBSP}hp
 STR_UNITS_POWER_METRIC                                          :{COMMA}{NBSP}KM
 STR_UNITS_POWER_SI                                              :{COMMA}{NBSP}kW
@@ -628,7 +623,6 @@ STR_TOOLTIP_SORT_ORDER                                          :{BLACK}Wybierz 
 STR_TOOLTIP_SORT_CRITERIA                                       :{BLACK}Wybierz kryterium sortowania
 STR_TOOLTIP_FILTER_CRITERIA                                     :{BLACK}Wybierz kryteria filtrowania
 STR_BUTTON_SORT_BY                                              :{BLACK}Sortuj wg
-STR_BUTTON_RENAME                                               :{BLACK}Zmień nazwę
 STR_BUTTON_CATCHMENT                                            :{BLACK}Zasięg
 STR_TOOLTIP_CATCHMENT                                           :{BLACK}Przełącz wyświetlanie zasięgu
 
@@ -975,12 +969,6 @@ STR_MONTH_SEP                                                   :Wrzesień
 STR_MONTH_OCT                                                   :Październik
 STR_MONTH_NOV                                                   :Listopad
 STR_MONTH_DEC                                                   :Grudzień
-
-###length VEHICLE_TYPES
-STR_VEHICLE_TYPE_TRAINS                                         :Pociągi
-STR_VEHICLE_TYPE_ROAD_VEHICLES                                  :Samochody i tramwaje
-STR_VEHICLE_TYPE_SHIPS                                          :Statki
-STR_VEHICLE_TYPE_AIRCRAFT                                       :Samoloty
 
 # Graph window
 STR_GRAPH_KEY_BUTTON                                            :{BLACK}Legenda
@@ -1598,6 +1586,9 @@ STR_CONFIG_SETTING_HORIZONTAL_POS_RIGHT                         :z prawej strony
 
 STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN                         :Maksymalna wysokość początkowej pożyczki: {STRING}
 STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_HELPTEXT                :Maksymalna wysokość pożyczki, jaką firma może zaciągnąć (bez uwzględnienia inflacji)
+STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_VALUE                   :{CURRENCY_LONG}
+###setting-zero-is-special
+STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_DISABLED                :Brak pożyczki {RED}Wymagany Game Script, aby zapewnić początkowe fundusze
 
 STR_CONFIG_SETTING_INTEREST_RATE                                :Oprocentowanie: {STRING}
 STR_CONFIG_SETTING_INTEREST_RATE_HELPTEXT                       :Oprocentowanie pożyczki; kontroluje też inflację, jeśli jest włączona
@@ -2467,7 +2458,7 @@ STR_INTRO_QUIT                                                  :{BLACK}Wyjście
 
 STR_INTRO_TOOLTIP_NEW_GAME                                      :{BLACK}Rozpocznij nową grę. Ctrl+klik pomija konfigurowanie mapy
 STR_INTRO_TOOLTIP_LOAD_GAME                                     :{BLACK}Wczytaj zapisaną grę
-STR_INTRO_TOOLTIP_PLAY_HEIGHTMAP                                :{BLACK}Rozpocznij nowa grę używając mapy wysokości jako krajobrazu
+STR_INTRO_TOOLTIP_PLAY_HEIGHTMAP                                :{BLACK}Rozpocznij nowa grę, używając mapy wysokości jako krajobrazu
 STR_INTRO_TOOLTIP_PLAY_SCENARIO                                 :{BLACK}Rozpocznij nową grę, używając przygotowanego scenariusza
 STR_INTRO_TOOLTIP_SCENARIO_EDITOR                               :{BLACK}Stwórz własny świat/scenariusz
 STR_INTRO_TOOLTIP_MULTIPLAYER                                   :{BLACK}Rozpocznij grę wieloosobową
@@ -2487,7 +2478,7 @@ STR_INTRO_TOOLTIP_GAMESCRIPT_SETTINGS                           :{BLACK}Wyświet
 STR_INTRO_TOOLTIP_QUIT                                          :{BLACK}Wyjdź z „OpenTTD”
 
 STR_INTRO_BASESET                                               :{BLACK}Aktualnie używany podstawowy zestaw graficzny nie posiada {NUM} wymagan{P ego ych ych} sprite{P 'u 'ów 'ów}. Proszę poszukać aktualizacji dla zestawu podstawowego.
-STR_INTRO_TRANSLATION                                           :{BLACK}Tej wersji językowej brakuje jeszcze {NUM} wpis{P "" y ów}. Możesz pomóc ulepszyć nam OpenTTD rejestrując się jako tłumacz. Szczegóły znajdziesz w pliku readme.txt.
+STR_INTRO_TRANSLATION                                           :{BLACK}Tej wersji językowej brakuje jeszcze {NUM} wpis{P "" y ów}. Możesz pomóc ulepszyć nam OpenTTD, rejestrując się jako tłumacz. Szczegóły znajdziesz w pliku „readme”.
 
 # Quit window
 STR_QUIT_CAPTION                                                :{WHITE}Wyjście
@@ -2688,7 +2679,7 @@ STR_NETWORK_START_SERVER_NUMBER_OF_CLIENTS                      :{BLACK}Dopuszcz
 STR_NETWORK_START_SERVER_NUMBER_OF_CLIENTS_TOOLTIP              :{BLACK}Ustaw maksymalną liczbę klientów. Nie wszystkie miejsca muszą być zapełnione.
 STR_NETWORK_START_SERVER_COMPANIES_SELECT                       :{BLACK}{NUM} firm{P a y ""}
 STR_NETWORK_START_SERVER_NUMBER_OF_COMPANIES                    :{BLACK}Maksymalna liczba firm:
-STR_NETWORK_START_SERVER_NUMBER_OF_COMPANIES_TOOLTIP            :{BLACK}Ogranicz serwer do określonej ilości firm
+STR_NETWORK_START_SERVER_NUMBER_OF_COMPANIES_TOOLTIP            :{BLACK}Ogranicz serwer do określonej liczby firm
 
 STR_NETWORK_START_SERVER_NEW_GAME_NAME_OSKTITLE                 :{BLACK}Wpisz nazwę dla gry sieciowej
 
@@ -2747,7 +2738,8 @@ STR_NETWORK_CLIENT_LIST_NEW_COMPANY                             :(Nowa firma)
 STR_NETWORK_CLIENT_LIST_NEW_COMPANY_TOOLTIP                     :{BLACK}Utwórz nową firmę i dołącz do niej
 STR_NETWORK_CLIENT_LIST_PLAYER_ICON_SELF_TOOLTIP                :{BLACK}To jesteś ty
 STR_NETWORK_CLIENT_LIST_PLAYER_ICON_HOST_TOOLTIP                :{BLACK}To jest gospodarz gry
-STR_NETWORK_CLIENT_LIST_CLIENT_COMPANY_COUNT                    :{BLACK}{NUM} klient{P "" ów ów} / {NUM} firm{P a y ""}
+STR_NETWORK_CLIENT_LIST_CLIENT_COMPANY_COUNT                    :{BLACK}{NUM} klient{P "" ów ów} - {NUM}/{NUM} firm{P ę y ""}
+STR_NETWORK_CLIENT_LIST_CLIENT_COMPANY_COUNT_TOOLTIP            :{BLACK}Liczba aktualnie podłączonych klientów, liczba firm oraz maksymalna liczba firm dozwolona przez administratora serwera
 
 # Matches ConnectionType
 ###length 5
@@ -2998,8 +2990,6 @@ STR_LINKGRAPH_LEGEND_OVERLOADED                                 :{TINY_FONT}{BLA
 STR_LINKGRAPH_STATS_TOOLTIP                                     :{BLACK}{CARGO_LONG} miesięcznie do przetransportowania z {STATION} do {STATION} ({COMMA}% przepustowości){STRING}
 STR_LINKGRAPH_STATS_TOOLTIP_RETURN_EXTENSION                    :{}{CARGO_LONG} do przetransportowania z powrotem ({COMMA}% przepustowości)
 STR_LINKGRAPH_STATS_TOOLTIP_TIME_EXTENSION                      :{}Średni czas podróży: {NUM}{NBSP}d{P zień ni ni}
-STR_LINKGRAPH_STATS_TOOLTIP_TIME_EXTENSION_GENERAL              :{}Średni czas podróży: {STRING}
-STR_LINKGRAPH_STATS_TOOLTIP_CAPACITY                            :{}Ładowność: {CARGO_LONG}
 
 # Base for station construction window(s)
 STR_STATION_BUILD_COVERAGE_AREA_TITLE                           :{BLACK}Podświetlaj zasięg
@@ -3542,9 +3532,6 @@ STR_MAPGEN_DESERT_COVERAGE                                      :{BLACK}Pokrycie
 STR_MAPGEN_DESERT_COVERAGE_UP                                   :{BLACK}Zwiększ pokrycie pustynią o 10%
 STR_MAPGEN_DESERT_COVERAGE_DOWN                                 :{BLACK}Zmniejsz pokrycie pustynią o 10%
 STR_MAPGEN_DESERT_COVERAGE_TEXT                                 :{BLACK}{NUM}%
-STR_MAPGEN_SNOW_LINE_HEIGHT                                     :{BLACK}Śnieg od wysokości:
-STR_MAPGEN_SNOW_LINE_UP                                         :{BLACK}Podnieś wysokość śniegu o jeden w górę
-STR_MAPGEN_SNOW_LINE_DOWN                                       :{BLACK}Obniż wysokość śniegu o jeden w dół
 STR_MAPGEN_TERRAIN_TYPE                                         :{BLACK}Typ terenu:
 STR_MAPGEN_SEA_LEVEL                                            :{BLACK}Poziom wody:
 STR_MAPGEN_QUANTITY_OF_RIVERS                                   :{BLACK}Liczba rzek:
@@ -3602,7 +3589,6 @@ STR_MAPGEN_TERRAIN_TYPE_QUERY_CAPT                              :{WHITE}Żądana
 STR_MAPGEN_HEIGHTMAP_HEIGHT_QUERY_CAPT                          :{WHITE}Najwyższy szczyt
 STR_MAPGEN_SNOW_COVERAGE_QUERY_CAPT                             :{WHITE}Pokrycie śniegiem (w %)
 STR_MAPGEN_DESERT_COVERAGE_QUERY_CAPT                           :{WHITE}Pokrycie pustynią (w %)
-STR_MAPGEN_SNOW_LINE_QUERY_CAPT                                 :{WHITE}Zmień wysokość linii śniegowej
 STR_MAPGEN_START_DATE_QUERY_CAPT                                :{WHITE}Zmień datę rozpoczęcia
 
 # SE Map generation
@@ -3747,8 +3733,8 @@ STR_NEWGRF_ERROR_MSG_INFO                                       :{SILVER}{STRING
 STR_NEWGRF_ERROR_MSG_WARNING                                    :{RED}Ostrzeżenie: {SILVER}{STRING}
 STR_NEWGRF_ERROR_MSG_ERROR                                      :{RED}Błąd: {SILVER}{STRING}
 STR_NEWGRF_ERROR_MSG_FATAL                                      :{RED}Błąd krytyczny: {SILVER}{STRING}
-STR_NEWGRF_ERROR_FATAL_POPUP                                    :{WHITE}Wystąpił błąd krytyczny NewGRF:{}{STRING}
-STR_NEWGRF_ERROR_POPUP                                          :{WHITE}Wystąpił błąd NewGRF:{}{STRING}
+STR_NEWGRF_ERROR_FATAL_POPUP                                    :{WHITE}NewGRF „{STRING}” zwrócił błąd krytyczny:{}{STRING}
+STR_NEWGRF_ERROR_POPUP                                          :{WHITE}NewGRF „{STRING}” zwrócił błąd:{}{STRING}
 STR_NEWGRF_ERROR_VERSION_NUMBER                                 :{1:STRING} nie zadziała z wersją TTDPatcha zgłoszoną przez OpenTTD
 STR_NEWGRF_ERROR_DOS_OR_WINDOWS                                 :{1:STRING} jest przeznaczony dla TTD w wersji {2:STRING}
 STR_NEWGRF_ERROR_UNSET_SWITCH                                   :{1:STRING} jest zaprojektowany do użycia z {2:STRING}
@@ -4288,7 +4274,6 @@ STR_PURCHASE_INFO_RUNNINGCOST                                   :{BLACK}Koszt ut
 STR_PURCHASE_INFO_CAPACITY                                      :{BLACK}Ładowność: {GOLD}{CARGO_LONG} {STRING}
 STR_PURCHASE_INFO_REFITTABLE                                    :(przebudowywalny)
 STR_PURCHASE_INFO_DESIGNED_LIFE                                 :{BLACK}Zaprojektowany: {GOLD}{NUM}{BLACK} Żywotność: {GOLD}{COMMA} lat
-STR_PURCHASE_INFO_DESIGNED                                      :{BLACK}Zaprojektowany: {GOLD}{NUM}
 STR_PURCHASE_INFO_RELIABILITY                                   :{BLACK}Maksymalna niezawodność: {GOLD}{COMMA}%
 STR_PURCHASE_INFO_COST                                          :{BLACK}Koszt: {GOLD}{CURRENCY_LONG}
 STR_PURCHASE_INFO_COST_REFIT                                    :{BLACK}Koszt: {GOLD}{CURRENCY_LONG}{BLACK} (Koszt przebudowy: {GOLD}{CURRENCY_LONG}{BLACK})
@@ -4931,7 +4916,7 @@ STR_TIMETABLE_CLEAR_SPEED                                       :{BLACK}Wyczyś�
 STR_TIMETABLE_CLEAR_SPEED_TOOLTIP                               :{BLACK}Wyczyść maksymalną prędkość przejazdu w zaznaczonym poleceniu. Ctrl+klik wyczyści prędkość we wszystkich poleceniach
 
 STR_TIMETABLE_RESET_LATENESS                                    :{BLACK}Wyzeruj spóźnienia
-STR_TIMETABLE_RESET_LATENESS_TOOLTIP                            :{BLACK}Wyzeruj licznik spóźnienia, aby pojazd podróżował zgodnie z rozkładem jazdy
+STR_TIMETABLE_RESET_LATENESS_TOOLTIP                            :{BLACK}Wyzeruj licznik spóźnienia, aby pojazd podróżował zgodnie z rozkładem jazdy. Ctrl+klik spowoduje wyzerowanie całej grupy, więc ostatni pojazd będzie punktualny, a wszystkie pozostałe będą przed czasem
 
 STR_TIMETABLE_AUTOFILL                                          :{BLACK}Automat. wypełnienie
 STR_TIMETABLE_AUTOFILL_TOOLTIP                                  :{BLACK}Wypełnij automatycznie rozkład jazdy wartościami z następnego przejazdu. Ctrl+klik, aby spróbować utrzymać czasy oczekiwania
@@ -5025,8 +5010,10 @@ STR_SCREENSHOT_WORLD_SCREENSHOT                                 :{BLACK}Zrzut ek
 STR_SCREENSHOT_HEIGHTMAP_SCREENSHOT                             :{BLACK}Zrzut ekranu mapy wysokościowej
 STR_SCREENSHOT_MINIMAP_SCREENSHOT                               :{BLACK}Zrzut ekranu minimapy
 
-# AI Parameters
-STR_AI_SETTINGS_CAPTION_AI                                      :{WHITE}Parametry SI
+# Script Parameters
+STR_AI_SETTINGS_CAPTION                                         :{WHITE}{STRING} Parametry
+STR_AI_SETTINGS_CAPTION_AI                                      :SI
+STR_AI_SETTINGS_CAPTION_GAMESCRIPT                              :Game Script
 STR_AI_SETTINGS_CLOSE                                           :{BLACK}Zamknij
 STR_AI_SETTINGS_RESET                                           :{BLACK}Resetuj
 STR_AI_SETTINGS_SETTING                                         :{STRING}: {ORANGE}{STRING}
@@ -5040,7 +5027,7 @@ STR_TEXTFILE_VIEW_README                                        :{BLACK}Odczytaj
 STR_TEXTFILE_VIEW_CHANGELOG                                     :{BLACK}Lista zmian
 STR_TEXTFILE_VIEW_LICENCE                                       :{BLACK}Licencja
 ###length 3
-STR_TEXTFILE_README_CAPTION                                     :{WHITE}{STRING} {STRING} - plik readme.txt
+STR_TEXTFILE_README_CAPTION                                     :{WHITE}{STRING} {STRING} - plik „readme”
 STR_TEXTFILE_CHANGELOG_CAPTION                                  :{WHITE}{STRING} {STRING} - lista zmian
 STR_TEXTFILE_LICENCE_CAPTION                                    :{WHITE}{STRING} {STRING} - licencja
 
@@ -5466,7 +5453,7 @@ STR_ERROR_AIRCRAFT_IS_IN_FLIGHT                                 :{WHITE}Samolot 
 # Order related errors
 STR_ERROR_NO_MORE_SPACE_FOR_ORDERS                              :{WHITE}Brak miejsca na polecenia
 STR_ERROR_TOO_MANY_ORDERS                                       :{WHITE}Zbyt wiele poleceń
-STR_ERROR_CAN_T_INSERT_NEW_ORDER                                :{WHITE}Nie można wstawić nowego polecenia...
+STR_ERROR_CAN_T_INSERT_NEW_ORDER                                :{WHITE}Nie można dodać nowego polecenia...
 STR_ERROR_CAN_T_DELETE_THIS_ORDER                               :{WHITE}Nie można usunąć tego polecenia...
 STR_ERROR_CAN_T_MODIFY_THIS_ORDER                               :{WHITE}Nie można zmodyfikować tego polecenia...
 STR_ERROR_CAN_T_MOVE_THIS_ORDER                                 :{WHITE}Nie można przenieść tego polecenia...
@@ -5483,6 +5470,20 @@ STR_ERROR_CAN_T_STOP_SHARING_ORDER_LIST                         :{WHITE}Nie moż
 STR_ERROR_CAN_T_COPY_ORDER_LIST                                 :{WHITE}Nie można skopiować listy poleceń...
 STR_ERROR_TOO_FAR_FROM_PREVIOUS_DESTINATION                     :{WHITE}... zbyt daleko od poprzedniego celu
 STR_ERROR_AIRCRAFT_NOT_ENOUGH_RANGE                             :{WHITE}... samolot nie ma wystarczającego zasięgu
+
+# Extra messages which go on the third line of errors, explaining why orders failed
+STR_ERROR_NO_RAIL_STATION                                       :{WHITE}Brak stacji kolejowej
+STR_ERROR_NO_BUS_STATION                                        :{WHITE}Brak przystanku autobusowego
+STR_ERROR_NO_TRUCK_STATION                                      :{WHITE}Brak stacji dla ciężarówek
+STR_ERROR_NO_DOCK                                               :{WHITE}Brak doku
+STR_ERROR_NO_AIRPORT                                            :{WHITE}Brak lotniska/lądowiska
+STR_ERROR_NO_STOP_COMPATIBLE_ROAD_TYPE                          :{WHITE}Brak przystanków na odpowiednim typie drogi
+STR_ERROR_NO_STOP_COMPATIBLE_TRAM_TYPE                          :{WHITE}Brak odpowiednich przystanków dla tego typu tramwajów
+STR_ERROR_NO_STOP_ARTICULATED_VEHICLE                           :{WHITE}Brak przystanków przeznaczonych dla pojazdów przegubowych.{}Pojazdy przegubowe wymagają przystanku przelotowego, a nie zatokowego
+STR_ERROR_AIRPORT_NO_PLANES                                     :{WHITE}Ten samolot nie może wylądować na tym lądowisku
+STR_ERROR_AIRPORT_NO_HELICOPTERS                                :{WHITE}Ten helikopter nie może wylądować na tym lotnisku
+STR_ERROR_NO_RAIL_WAYPOINT                                      :{WHITE}Brak posterunku kolejowego
+STR_ERROR_NO_BUOY                                               :{WHITE}Brak boi
 
 # Timetable related errors
 STR_ERROR_CAN_T_TIMETABLE_VEHICLE                               :{WHITE}Nie można wyznaczyć rozkładu jazdy pojazdu...
@@ -5511,11 +5512,6 @@ STR_BASEMUSIC_WIN_DESCRIPTION                                   :Oryginalna edyc
 STR_BASEMUSIC_DOS_DESCRIPTION                                   :Oryginalna edycja utworów muzycznych dla Transport Tycoon Deluxe DOS.
 STR_BASEMUSIC_TTO_DESCRIPTION                                   :Oryginalna edycja utworów muzycznych dla Transport Tycoon DOS.
 STR_BASEMUSIC_NONE_DESCRIPTION                                  :Zestaw utworów muzycznych nie zawierający żadnej muzyki.
-
-STR_TRADITIONAL_TRAIN_NAME                                      :Pociąg {COMMA}
-STR_TRADITIONAL_ROAD_VEHICLE_NAME                               :Pojazd {COMMA}
-STR_TRADITIONAL_SHIP_NAME                                       :Statek {COMMA}
-STR_TRADITIONAL_AIRCRAFT_NAME                                   :Samolot {COMMA}
 
 ##id 0x2000
 # Town building names

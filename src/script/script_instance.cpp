@@ -12,6 +12,7 @@
 #include "../saveload/saveload.h"
 
 #include "../script/squirrel_class.hpp"
+#include "../script/squirrel_std.hpp"
 
 #include "script_fatalerror.hpp"
 #include "script_storage.hpp"
@@ -61,7 +62,8 @@ ScriptInstance::ScriptInstance(const char *APIName) :
 	is_paused(false),
 	in_shutdown(false),
 	callback(nullptr),
-	APIName(APIName)
+	APIName(APIName),
+	allow_text_param_mismatch(false)
 {
 	this->storage = new ScriptStorage();
 	this->engine  = new Squirrel(APIName);
@@ -116,12 +118,21 @@ void ScriptInstance::Initialize(const char *main_script, const char *instance_na
 
 void ScriptInstance::RegisterAPI()
 {
-	extern void squirrel_register_std(Squirrel *engine);
 	squirrel_register_std(this->engine);
 }
 
 bool ScriptInstance::LoadCompatibilityScripts(const char *api_version, Subdirectory dir)
 {
+	const char *api_vers[] = { "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "12", "13", "14" };
+	uint api_idx = 0;
+	for (; api_idx < lengthof(api_vers) ; api_idx++) {
+		if (strcmp(api_version, api_vers[api_idx]) == 0) break;
+	}
+	if (api_idx < 12) {
+		/* 13 and below */
+		this->allow_text_param_mismatch = true;
+	}
+
 	char script_name[32];
 	seprintf(script_name, lastof(script_name), "compat_%s.nut", api_version);
 	for (Searchpath sp : _valid_searchpaths) {
@@ -714,7 +725,7 @@ void ScriptInstance::LoadOnStack(ScriptData *data)
 {
 	ScriptObject::ActiveInstance active(this);
 
-	if (data == nullptr) return;
+	if (this->IsDead() || data == nullptr) return;
 
 	HSQUIRRELVM vm = this->engine->GetVM();
 

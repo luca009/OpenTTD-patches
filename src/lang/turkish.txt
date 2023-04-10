@@ -197,10 +197,6 @@ STR_UNITS_VELOCITY_METRIC                                       :{COMMA}{NBSP}km
 STR_UNITS_VELOCITY_SI                                           :{COMMA}{NBSP}m/s
 STR_UNITS_VELOCITY_GAMEUNITS                                    :{DECIMAL}{NBSP}karo/gün
 
-STR_UNIT_NAME_VELOCITY_IMPERIAL                                 :mil/s
-STR_UNIT_NAME_VELOCITY_METRIC                                   :km/h
-STR_UNIT_NAME_VELOCITY_SI                                       :m/s
-
 STR_UNITS_POWER_IMPERIAL                                        :{COMMA}{NBSP}bg
 STR_UNITS_POWER_METRIC                                          :{COMMA}{NBSP}bg
 STR_UNITS_POWER_SI                                              :{COMMA}{NBSP}kW
@@ -249,7 +245,6 @@ STR_TOOLTIP_SORT_ORDER                                          :{BLACK}Sıralam
 STR_TOOLTIP_SORT_CRITERIA                                       :{BLACK}Sıralama kriterini seçin
 STR_TOOLTIP_FILTER_CRITERIA                                     :{BLACK}Süzme kriterini seçin
 STR_BUTTON_SORT_BY                                              :{BLACK}Sırala
-STR_BUTTON_RENAME                                               :{BLACK}Yeni ad
 STR_BUTTON_CATCHMENT                                            :{BLACK}Kapsama alanı
 STR_TOOLTIP_CATCHMENT                                           :{BLACK}Kapsama alanını göstermeyi aç/kapa
 
@@ -596,12 +591,6 @@ STR_MONTH_SEP                                                   :Eylül
 STR_MONTH_OCT                                                   :Ekim
 STR_MONTH_NOV                                                   :Kasım
 STR_MONTH_DEC                                                   :Aralık
-
-###length VEHICLE_TYPES
-STR_VEHICLE_TYPE_TRAINS                                         :Trenler
-STR_VEHICLE_TYPE_ROAD_VEHICLES                                  :Karayolu Taşıtları
-STR_VEHICLE_TYPE_SHIPS                                          :Gemiler
-STR_VEHICLE_TYPE_AIRCRAFT                                       :Uçaklar
 
 # Graph window
 STR_GRAPH_KEY_BUTTON                                            :{BLACK}Anahtar
@@ -1218,6 +1207,9 @@ STR_CONFIG_SETTING_HORIZONTAL_POS_RIGHT                         :Sağ
 
 STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN                         :En yüsek açılış borcu: {STRING}
 STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_HELPTEXT                :Bir şirketin alabileceği en fazla borç (enflasyon hesaba katılmadan)
+STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_VALUE                   :{CURRENCY_LONG}
+###setting-zero-is-special
+STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_DISABLED                :Borç yok seçeneği, başlangıç fonunu sağlamak için oyun betiği {RED}gerektirir.
 
 STR_CONFIG_SETTING_INTEREST_RATE                                :Faiz oranı: {STRING}
 STR_CONFIG_SETTING_INTEREST_RATE_HELPTEXT                       :Borç faiz oranı; eğer aktifse aynı zamanda enflasyonu da belirler
@@ -1937,13 +1929,13 @@ STR_CONFIG_SETTING_LINKGRAPH_TIME                               :Dağıtım graf
 STR_CONFIG_SETTING_LINKGRAPH_TIME_HELPTEXT                      :Bağlantı grafiğini oluşturan parçaların her tekrar hesaplaması için kullanılan zaman. Tekrar hesaplama başlatıldığında bu kadar gün sürecek bir işlem başlatılmış olur. Buraya daha kısa süreler girdikçe işlemin bitmesi gerekirken bitmemiş olma ihtimali artar. Ardından oyun ("lag") olana dek durur. Daha uzun süreler girdiğinizde güzergahlar değiştikçe dağıtımın güncellenmesi daha uzun sürer.
 
 STR_CONFIG_SETTING_DISTRIBUTION_PAX                             :Yolcular için dağıtım kipi: {STRING}
-STR_CONFIG_SETTING_DISTRIBUTION_PAX_HELPTEXT                    :"simetrik" seçildiğinde A durağından B durağına taşınan ile B'den A'ya taşınan yolcu miktarı kabaca eşit olur. "asimetrik" seçildiğinde iki yönde de rastgele miktarda yolcu gönderilebilir. "el ile" seçildiğinde yolcular için otomatik dağıtım yapılmaz.
+STR_CONFIG_SETTING_DISTRIBUTION_PAX_HELPTEXT                    :"Simetrik" seçildiğinde A durağından B durağına taşınan ile B'den A'ya taşınan yolcu miktarı kabaca eşit olur. "Asimetrik" seçildiğinde iki yönde de rastgele miktarda yolcu gönderilebilir. "el ile" seçildiğinde yolcular için otomatik dağıtım yapılmaz.
 STR_CONFIG_SETTING_DISTRIBUTION_MAIL                            :Posta için dağıtım kipi: {STRING}
-STR_CONFIG_SETTING_DISTRIBUTION_MAIL_HELPTEXT                   :"simetrik" seçildiğinde A durağından B durağına gönderilen ile B'den A'ya gönderilen posta miktarı kabaca eşit olur. "asimetrik" seçildiğinde iki yönde de rastgele miktarda posta gönderilebilir. "el ile" seçildiğinde posta için otomatik dağıtım yapılmaz.
+STR_CONFIG_SETTING_DISTRIBUTION_MAIL_HELPTEXT                   :"Simetrik" seçildiğinde A durağından B durağına gönderilen ile B'den A'ya gönderilen posta miktarı kabaca eşit olur. "Asimetrik" seçildiğinde iki yönde de rastgele miktarda posta gönderilebilir. "El ile" seçildiğinde posta için otomatik dağıtım yapılmaz.
 STR_CONFIG_SETTING_DISTRIBUTION_ARMOURED                        :ZIRHLI kargo sınıfı için dağıtım kipi: {STRING}
 STR_CONFIG_SETTING_DISTRIBUTION_ARMOURED_HELPTEXT               :ZIRHLI kargo sınıfı ılıman iklimde değerli mallar, yarı-tropik iklimde elmaslar, veya yarı-soğuk iklimde altın içerir. NewGRF dosyaları bunu değiştirebilir. "Simetrik" olarak ayarlandığında A durağından B durağına gönderilen kargo miktarı, B'den A'ya gönderilene kabaca eşit olur. "Asimetrik" ise herhangi bir yönde rastgele miktarda kargo gönderilebileceğini gösterir. "El ile" seçildiğinde o kargo için otomatik dağıtım yapılmaz. Yarı-soğuk iklimde oynarken bu değeri "asimetrik" veya "el ile" olarak ayarlamanız tavsiye edilir, çünkü bankalar altınları altın madenine geri göndermez. Ilıman ve yarı-tropik iklim için aynı zamanda "simetrik" seçebilirsiniz, zira bankalar değerli malların bir kısmını malların geldiği kaynak bankaya geri gönderir.
 STR_CONFIG_SETTING_DISTRIBUTION_DEFAULT                         :Diğer kargo sınıfları için dağılım kipi: {STRING}
-STR_CONFIG_SETTING_DISTRIBUTION_DEFAULT_HELPTEXT                :"asimetrik", kargonun iki yönde de rastgele miktarda gönderileceğini gösterir. "el ile" seçildiği takdirde o kargolar için otomatik dağılım yapılmaz.
+STR_CONFIG_SETTING_DISTRIBUTION_DEFAULT_HELPTEXT                :"Asimetrik", kargonun iki yönde de rastgele miktarda gönderileceğini gösterir. "El ile" seçildiği takdirde o kargolar için otomatik dağılım yapılmaz.
 ###length 3
 STR_CONFIG_SETTING_DISTRIBUTION_MANUAL                          :el ile (manual)
 STR_CONFIG_SETTING_DISTRIBUTION_ASYMMETRIC                      :asimetrik
@@ -2367,7 +2359,8 @@ STR_NETWORK_CLIENT_LIST_NEW_COMPANY                             :(Yeni şirket)
 STR_NETWORK_CLIENT_LIST_NEW_COMPANY_TOOLTIP                     :{BLACK}Yeni bir şirket oluştur ve ona katıl
 STR_NETWORK_CLIENT_LIST_PLAYER_ICON_SELF_TOOLTIP                :{BLACK}Bu sensin
 STR_NETWORK_CLIENT_LIST_PLAYER_ICON_HOST_TOOLTIP                :{BLACK}Bu, oyunun ev sahibi
-STR_NETWORK_CLIENT_LIST_CLIENT_COMPANY_COUNT                    :{BLACK}{NUM} oyuncu / {NUM} şirket
+STR_NETWORK_CLIENT_LIST_CLIENT_COMPANY_COUNT                    :{BLACK}{NUM} oyuncu - {NUM}/{NUM} şirket
+STR_NETWORK_CLIENT_LIST_CLIENT_COMPANY_COUNT_TOOLTIP            :{BLACK}Şu anda bağlı olan istemci sayısı, şirket sayısı ve sunucu sahibi tarafından izin verilen maksimum şirket sayısı
 
 # Matches ConnectionType
 ###length 5
@@ -2618,8 +2611,6 @@ STR_LINKGRAPH_LEGEND_OVERLOADED                                 :{TINY_FONT}{BLA
 STR_LINKGRAPH_STATS_TOOLTIP                                     :{BLACK}{CARGO_LONG} aylık nakledilecek {STATION} istasyonundan {STATION} istasyonuna ({COMMA}% kapasite ile){STRING}
 STR_LINKGRAPH_STATS_TOOLTIP_RETURN_EXTENSION                    :{}{CARGO_LONG} geri nakledilecek ({COMMA}% kapasite ile)
 STR_LINKGRAPH_STATS_TOOLTIP_TIME_EXTENSION                      :{}Ortalama seyahat süresi: {NUM}{NBSP}gün
-STR_LINKGRAPH_STATS_TOOLTIP_TIME_EXTENSION_GENERAL              :{}Ortalama seyahat süresi: {STRING}
-STR_LINKGRAPH_STATS_TOOLTIP_CAPACITY                            :{}Kapasite: {CARGO_LONG}
 
 # Base for station construction window(s)
 STR_STATION_BUILD_COVERAGE_AREA_TITLE                           :{BLACK}Kapsama alanı
@@ -2712,6 +2703,10 @@ STR_BUILD_SIGNAL_DRAG_SIGNALS_DENSITY_INCREASE_TOOLTIP          :{BLACK}Sinyal s
 STR_SELECT_RAIL_BRIDGE_CAPTION                                  :{WHITE}Tren Köprüsü Seç
 STR_SELECT_ROAD_BRIDGE_CAPTION                                  :{WHITE}Köprü Seç
 STR_SELECT_BRIDGE_SELECTION_TOOLTIP                             :{BLACK}Köprü seçimi - tercih ettiğiniz köprüyü yapmak için tıklayın
+STR_SELECT_BRIDGE_INFO_NAME                                     :{GOLD}{STRING}
+STR_SELECT_BRIDGE_INFO_NAME_MAX_SPEED                           :{GOLD}{STRING},{} {VELOCITY}
+STR_SELECT_BRIDGE_INFO_NAME_COST                                :{GOLD}{0:STRING},{} {WHITE}{2:CURRENCY_LONG}
+STR_SELECT_BRIDGE_INFO_NAME_MAX_SPEED_COST                      :{GOLD}{STRING},{} {VELOCITY} {WHITE}{CURRENCY_LONG}
 STR_BRIDGE_NAME_SUSPENSION_STEEL                                :Çelik, Asma
 STR_BRIDGE_NAME_GIRDER_STEEL                                    :Çelik, Kirişli
 STR_BRIDGE_NAME_CANTILEVER_STEEL                                :Çelik, Ağ
@@ -3158,9 +3153,6 @@ STR_MAPGEN_DESERT_COVERAGE                                      :{BLACK}Çöl ö
 STR_MAPGEN_DESERT_COVERAGE_UP                                   :{BLACK}Çöl örtüsünü yüzde on arttır
 STR_MAPGEN_DESERT_COVERAGE_DOWN                                 :{BLACK}Çöl örtüsünü yüzde on azalt
 STR_MAPGEN_DESERT_COVERAGE_TEXT                                 :{BLACK}%{NUM}
-STR_MAPGEN_SNOW_LINE_HEIGHT                                     :{BLACK}Kar yüksekliği:
-STR_MAPGEN_SNOW_LINE_UP                                         :{BLACK}Kar yüksekliğini bir arttır
-STR_MAPGEN_SNOW_LINE_DOWN                                       :{BLACK}Kar yüksekliğini bir azalt
 STR_MAPGEN_TERRAIN_TYPE                                         :{BLACK}Arazi türü:
 STR_MAPGEN_SEA_LEVEL                                            :{BLACK}Deniz seviyesi:
 STR_MAPGEN_QUANTITY_OF_RIVERS                                   :{BLACK}Nehirler:
@@ -3218,7 +3210,6 @@ STR_MAPGEN_TERRAIN_TYPE_QUERY_CAPT                              :{WHITE}Hedef zi
 STR_MAPGEN_HEIGHTMAP_HEIGHT_QUERY_CAPT                          :{WHITE}En yüksek tepe
 STR_MAPGEN_SNOW_COVERAGE_QUERY_CAPT                             :{WHITE}Kar örtüsü (% olarak)
 STR_MAPGEN_DESERT_COVERAGE_QUERY_CAPT                           :{WHITE}Çöl örtüsü (% olarak)
-STR_MAPGEN_SNOW_LINE_QUERY_CAPT                                 :{WHITE}Kar yüksekliğini değiştir
 STR_MAPGEN_START_DATE_QUERY_CAPT                                :{WHITE}Başlangıç yılını değiştir
 
 # SE Map generation
@@ -3363,8 +3354,8 @@ STR_NEWGRF_ERROR_MSG_INFO                                       :{SILVER}{STRING
 STR_NEWGRF_ERROR_MSG_WARNING                                    :{RED}Uyarı: {SILVER}{STRING}
 STR_NEWGRF_ERROR_MSG_ERROR                                      :{RED}Hata: {SILVER}{STRING}
 STR_NEWGRF_ERROR_MSG_FATAL                                      :{RED}Ölümcül hata: {SILVER}{STRING}
-STR_NEWGRF_ERROR_FATAL_POPUP                                    :{WHITE}Ölümcül bir NewGRF hatası oluştu:{}{STRING}
-STR_NEWGRF_ERROR_POPUP                                          :{WHITE}NewGRF hatası oluştu:{}{STRING}
+STR_NEWGRF_ERROR_FATAL_POPUP                                    :{WHITE}NewGRF "{STRING}" bir ölümcül hata bildirdi:{}{STRING}
+STR_NEWGRF_ERROR_POPUP                                          :{WHITE}NewGRF "{STRING}" bir ölümcül hata bildirdi:{}{STRING}
 STR_NEWGRF_ERROR_VERSION_NUMBER                                 :{1:STRING} OpenTTD tarafından belirtilen TTDPatch sürümüyle çalışmayacaktır
 STR_NEWGRF_ERROR_DOS_OR_WINDOWS                                 :{1:STRING}, TTD'nin {2:STRING} sürümü içindir
 STR_NEWGRF_ERROR_UNSET_SWITCH                                   :{1:STRING}, {2:STRING} ile kullanılmak için tasarlanmıştır
@@ -3904,7 +3895,6 @@ STR_PURCHASE_INFO_RUNNINGCOST                                   :{BLACK}Bakım: 
 STR_PURCHASE_INFO_CAPACITY                                      :{BLACK}Kapasite: {GOLD}{CARGO_LONG} {STRING}
 STR_PURCHASE_INFO_REFITTABLE                                    :(modifiyeli)
 STR_PURCHASE_INFO_DESIGNED_LIFE                                 :{BLACK}Yapım yılı: {GOLD}{NUM}{BLACK} Ömür: {GOLD}{COMMA} sene
-STR_PURCHASE_INFO_DESIGNED                                      :{BLACK}Yapım yılı: {GOLD}{NUM}
 STR_PURCHASE_INFO_RELIABILITY                                   :{BLACK}Aza. Güvenilirlik: {GOLD}%{COMMA}
 STR_PURCHASE_INFO_COST                                          :{BLACK}Fiyat: {GOLD}{CURRENCY_LONG}
 STR_PURCHASE_INFO_COST_REFIT                                    :{BLACK}Maliyet: {GOLD}{CURRENCY_LONG}{BLACK} (Tamirat Maliyeti: {GOLD}{CURRENCY_LONG}{BLACK})
@@ -4541,7 +4531,7 @@ STR_TIMETABLE_CLEAR_SPEED                                       :{BLACK}Hız Sı
 STR_TIMETABLE_CLEAR_SPEED_TOOLTIP                               :{BLACK}Seçili emrin azami seyahat hızını sil. Ctrl+Tıklama bütün emirlerin azami hızlarını siler
 
 STR_TIMETABLE_RESET_LATENESS                                    :{BLACK}Gecikme sayacını sıfırla
-STR_TIMETABLE_RESET_LATENESS_TOOLTIP                            :{BLACK}Geç kalma sayacını sıfırla, böylece araç zamanında gitmiş sayılacak
+STR_TIMETABLE_RESET_LATENESS_TOOLTIP                            :{BLACK}Geç kalma sayacını sıfırla, böylece araç zamanında gitmiş sayılacak. Ctrl ile tıklamak bütün grubu sıfırlar böylece en son araç zamanında ve diğer tüm araçlar erken gelmiş sayılacak.
 
 STR_TIMETABLE_AUTOFILL                                          :{BLACK}Otomatik doldur
 STR_TIMETABLE_AUTOFILL_TOOLTIP                                  :{BLACK}Zaman tablosunu bir sonraki yolculuktaki değerlerle otomatik doldur Bekleme sürelerini tutmak için Ctrl ile tıklanır
@@ -4635,8 +4625,10 @@ STR_SCREENSHOT_WORLD_SCREENSHOT                                 :{BLACK}Tüm har
 STR_SCREENSHOT_HEIGHTMAP_SCREENSHOT                             :{BLACK}Yükseklik haritası ekran görüntüsü
 STR_SCREENSHOT_MINIMAP_SCREENSHOT                               :{BLACK}Küçük harita ekran görüntüsü
 
-# AI Parameters
-STR_AI_SETTINGS_CAPTION_AI                                      :{WHITE}YZ Parametreleri
+# Script Parameters
+STR_AI_SETTINGS_CAPTION                                         :{WHITE}{STRING} Parametreler
+STR_AI_SETTINGS_CAPTION_AI                                      :YZ
+STR_AI_SETTINGS_CAPTION_GAMESCRIPT                              :Oyun Betiği
 STR_AI_SETTINGS_CLOSE                                           :{BLACK}Kapat
 STR_AI_SETTINGS_RESET                                           :{BLACK}Yeniden başlat
 STR_AI_SETTINGS_SETTING                                         :{STRING}: {ORANGE}{STRING}
@@ -5094,6 +5086,8 @@ STR_ERROR_CAN_T_COPY_ORDER_LIST                                 :{WHITE}Talimat 
 STR_ERROR_TOO_FAR_FROM_PREVIOUS_DESTINATION                     :{WHITE}... önceki hedeften çok uzak
 STR_ERROR_AIRCRAFT_NOT_ENOUGH_RANGE                             :{WHITE}... uçağın menzili yeterli değil
 
+# Extra messages which go on the third line of errors, explaining why orders failed
+
 # Timetable related errors
 STR_ERROR_CAN_T_TIMETABLE_VEHICLE                               :{WHITE}Aracın zaman çizelgesi oluşturulamıyor...
 STR_ERROR_TIMETABLE_ONLY_WAIT_AT_STATIONS                       :{WHITE}Araçlar sadece istasyonlarda bekleyebilir
@@ -5121,11 +5115,6 @@ STR_BASEMUSIC_WIN_DESCRIPTION                                   :Özgün Transpo
 STR_BASEMUSIC_DOS_DESCRIPTION                                   :Özgün Transport Tycoon Deluxe DOS sürüm müziği.
 STR_BASEMUSIC_TTO_DESCRIPTION                                   :Özgün Transport Tycoon Deluxe (Original/World Editor) DOS sürümü müzikleri.
 STR_BASEMUSIC_NONE_DESCRIPTION                                  :Müzik içermeyen boş bir müzik paketi.
-
-STR_TRADITIONAL_TRAIN_NAME                                      :Tren {COMMA}
-STR_TRADITIONAL_ROAD_VEHICLE_NAME                               :Karayolu Aracı {COMMA}
-STR_TRADITIONAL_SHIP_NAME                                       :Gemi {COMMA}
-STR_TRADITIONAL_AIRCRAFT_NAME                                   :Uçak {COMMA}
 
 ##id 0x2000
 # Town building names

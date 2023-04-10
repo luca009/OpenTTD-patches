@@ -106,7 +106,6 @@ std::string _config_file_text;
 std::string _private_file; ///< Private configuration file of OpenTTD.
 std::string _secrets_file; ///< Secrets configuration file of OpenTTD.
 
-typedef std::list<ErrorMessageData> ErrorList;
 static ErrorList _settings_error_list; ///< Errors while loading minimal settings.
 
 static bool _fallback_gui_zoom_max = false;
@@ -1285,6 +1284,7 @@ static void ZoomMinMaxChanged(int32 new_value)
 		UpdateRouteStepSpriteSize();
 		UpdateFontHeightCache();
 		LoadStringWidthTable();
+		ReInitAllWindows(false);
 	}
 }
 
@@ -1801,7 +1801,10 @@ static void ParseCompanyPasswordStorageSecret(const std::string &value)
 static void UpdateClientConfigValues()
 {
 	NetworkServerUpdateGameInfo();
-	if (_network_server) NetworkServerSendConfigUpdate();
+	if (_network_server) {
+		NetworkServerSendConfigUpdate();
+		SetWindowClassesDirty(WC_CLIENT_LIST);
+	}
 }
 
 /* End - Callback Functions */
@@ -2326,7 +2329,6 @@ void LoadFromConfig(bool startup)
 		PostZoningModeChange();
 
 		/* Display scheduled errors */
-		extern void ScheduleErrorMessage(ErrorList &datas);
 		ScheduleErrorMessage(_settings_error_list);
 		if (FindWindowById(WC_ERRMSG, 0) == nullptr) ShowFirstError();
 	} else {

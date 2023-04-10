@@ -50,12 +50,13 @@ void ShowNewGRFError()
 		/* Only show Fatal and Error level messages */
 		if (c->error == nullptr || (c->error->severity != STR_NEWGRF_ERROR_MSG_FATAL && c->error->severity != STR_NEWGRF_ERROR_MSG_ERROR)) continue;
 
-		SetDParam   (0, c->error->message != STR_NULL ? c->error->message : STR_JUST_RAW_STRING);
-		SetDParamStr(1, c->error->custom_message);
-		SetDParamStr(2, c->filename);
-		SetDParamStr(3, c->error->data);
+		SetDParamStr(0, c->GetName());
+		SetDParam   (1, c->error->message != STR_NULL ? c->error->message : STR_JUST_RAW_STRING);
+		SetDParamStr(2, c->error->custom_message);
+		SetDParamStr(3, c->filename);
+		SetDParamStr(4, c->error->data);
 		for (uint i = 0; i < lengthof(c->error->param_value); i++) {
-			SetDParam(4 + i, c->error->param_value[i]);
+			SetDParam(5 + i, c->error->param_value[i]);
 		}
 		if (c->error->severity == STR_NEWGRF_ERROR_MSG_FATAL) {
 			ShowErrorMessage(STR_NEWGRF_ERROR_FATAL_POPUP, INVALID_STRING_ID, WL_CRITICAL);
@@ -947,7 +948,6 @@ struct NewGRFWindow : public Window, NewGRFScanCallback {
 			case WID_NS_OPEN_URL: {
 				const GRFConfig *c = (this->avail_sel == nullptr) ? this->active_sel : this->avail_sel;
 
-				extern void OpenBrowser(const char *url);
 				OpenBrowser(c->GetURL());
 				break;
 			}
@@ -1289,16 +1289,16 @@ struct NewGRFWindow : public Window, NewGRFScanCallback {
 			WIDGET_LIST_END
 		);
 
-		const GRFConfig *c = (this->avail_sel == nullptr) ? this->active_sel : this->avail_sel;
+		const GRFConfig *selected_config = (this->avail_sel == nullptr) ? this->active_sel : this->avail_sel;
 		for (TextfileType tft = TFT_BEGIN; tft < TFT_END; tft++) {
-			this->SetWidgetDisabledState(WID_NS_NEWGRF_TEXTFILE + tft, c == nullptr || c->GetTextfile(tft) == nullptr);
+			this->SetWidgetDisabledState(WID_NS_NEWGRF_TEXTFILE + tft, selected_config == nullptr || selected_config->GetTextfile(tft) == nullptr);
 		}
-		this->SetWidgetDisabledState(WID_NS_OPEN_URL, c == nullptr || StrEmpty(c->GetURL()));
+		this->SetWidgetDisabledState(WID_NS_OPEN_URL, selected_config == nullptr || StrEmpty(selected_config->GetURL()));
 
 		this->SetWidgetDisabledState(WID_NS_SET_PARAMETERS, !this->show_params || this->active_sel == nullptr || this->active_sel->num_valid_params == 0);
 		this->SetWidgetDisabledState(WID_NS_VIEW_PARAMETERS, !this->show_params || this->active_sel == nullptr || this->active_sel->num_valid_params == 0);
 		this->SetWidgetDisabledState(WID_NS_TOGGLE_PALETTE, disable_all ||
-				(!(_settings_client.gui.newgrf_developer_tools || _settings_client.gui.scenario_developer) && ((c->palette & GRFP_GRF_MASK) != GRFP_GRF_UNSET)));
+				(!(_settings_client.gui.newgrf_developer_tools || _settings_client.gui.scenario_developer) && ((selected_config->palette & GRFP_GRF_MASK) != GRFP_GRF_UNSET)));
 
 		if (!disable_all) {
 			/* All widgets are now enabled, so disable widgets we can't use */

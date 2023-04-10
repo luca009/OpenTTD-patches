@@ -115,6 +115,7 @@
 #include "tracerestrict.h"
 #include "worker_thread.h"
 #include "vehiclelist.h"
+#include "core/backup_type.hpp"
 
 #include <map>
 #include <vector>
@@ -375,7 +376,7 @@ std::vector<DrawnPathRouteTileLine> _vp_route_paths_last_mark_dirty;
 static void MarkRoutePathsDirty(const std::vector<DrawnPathRouteTileLine> &lines);
 
 TileHighlightData _thd;
-static TileInfo *_cur_ti;
+static TileInfo _cur_ti;
 bool _draw_bounding_boxes = false;
 bool _draw_dirty_blocks = false;
 std::atomic<uint> _dirty_block_colour;
@@ -547,11 +548,11 @@ struct ViewportRedrawRegion {
 
 static std::vector<ViewportRedrawRegion> _vp_redraw_regions;
 
-static void DoViewportRedrawRegions(const Window *w, int left, int top, int width, int height)
+static void DoViewportRedrawRegions(const Window *w_start, int left, int top, int width, int height)
 {
 	if (width <= 0 || height <= 0) return;
 
-	for (const Window *w : Window::IterateFromBack<const Window>(w)) {
+	for (const Window *w : Window::IterateFromBack<const Window>(w_start)) {
 		if (left + width > w->left &&
 				w->left + w->width > left &&
 				top + height > w->top &&
@@ -644,7 +645,7 @@ static void DoSetViewportPositionFillRegion(int left, int top, int width, int he
 	DrawOverlappedWindowForAll(left, top, left + width, top + height);
 };
 
-static void DoSetViewportPosition(Window *w, const int left, const int top, const int width, const int height)
+static void DoSetViewportPosition(Window *w, const int vp_left, const int vp_top, const int vp_width, const int vp_height)
 {
 	const int xo = _vp_move_offs.x;
 	const int yo = _vp_move_offs.y;
@@ -653,9 +654,9 @@ static void DoSetViewportPosition(Window *w, const int left, const int top, cons
 	IncrementWindowUpdateNumber();
 
 	_vp_redraw_regions.clear();
-	DoViewportRedrawRegions(w, left, top, width, height);
+	DoViewportRedrawRegions(w, vp_left, vp_top, vp_width, vp_height);
 
-	if (abs(xo) >= width || abs(yo) >= height) {
+	if (abs(xo) >= vp_width || abs(yo) >= vp_height) {
 		/* fully outside */
 		for (ViewportRedrawRegion &vrr : _vp_redraw_regions) {
 			RedrawScreenRect(vrr.coords.left, vrr.coords.top, vrr.coords.right, vrr.coords.bottom);
@@ -978,7 +979,7 @@ void DrawGroundSpriteAt(SpriteID image, PaletteID pal, int32 x, int32 y, int z, 
 		Point pt = RemapCoords(x, y, z);
 		AddChildSpriteToFoundation(image, pal, sub, _vd.foundation_part, pt.x + extra_offs_x * ZOOM_LVL_BASE, pt.y + extra_offs_y * ZOOM_LVL_BASE);
 	} else {
-		AddTileSpriteToDraw(image, pal, _cur_ti->x + x, _cur_ti->y + y, _cur_ti->z + z, sub, extra_offs_x * ZOOM_LVL_BASE, extra_offs_y * ZOOM_LVL_BASE);
+		AddTileSpriteToDraw(image, pal, _cur_ti.x + x, _cur_ti.y + y, _cur_ti.z + z, sub, extra_offs_x * ZOOM_LVL_BASE, extra_offs_y * ZOOM_LVL_BASE);
 	}
 }
 
@@ -1684,26 +1685,24 @@ static void ViewportAddLandscape()
 			dbg_assert(row == tilecoord.y + tilecoord.x);
 
 			TileType tile_type;
-			TileInfo tile_info;
-			_cur_ti = &tile_info;
-			tile_info.x = tilecoord.x * TILE_SIZE; // FIXME tile_info should use signed integers
-			tile_info.y = tilecoord.y * TILE_SIZE;
+			_cur_ti.x = tilecoord.x * TILE_SIZE;
+			_cur_ti.y = tilecoord.y * TILE_SIZE;
 
 			if (IsInsideBS(tilecoord.x, 0, MapSizeX()) && IsInsideBS(tilecoord.y, 0, MapSizeY())) {
 				/* This includes the south border at MapMaxX / MapMaxY. When terraforming we still draw tile selections there. */
-				tile_info.tile = TileXY(tilecoord.x, tilecoord.y);
-				tile_type = GetTileType(tile_info.tile);
+				_cur_ti.tile = TileXY(tilecoord.x, tilecoord.y);
+				tile_type = GetTileType(_cur_ti.tile);
 			} else {
-				tile_info.tile = INVALID_TILE;
+				_cur_ti.tile = INVALID_TILE;
 				tile_type = MP_VOID;
 			}
 
 			if (tile_type != MP_VOID) {
 				/* We are inside the map => paint landscape. */
-				tile_info.tileh = GetTilePixelSlope(tile_info.tile, &tile_info.z);
+				_cur_ti.tileh = GetTilePixelSlope(_cur_ti.tile, &_cur_ti.z);
 			} else {
 				/* We are outside the map => paint black. */
-				tile_info.tileh = GetTilePixelSlopeOutsideMap(tilecoord.x, tilecoord.y, &tile_info.z);
+				_cur_ti.tileh = GetTilePixelSlopeOutsideMap(tilecoord.x, tilecoord.y, &_cur_ti.z);
 			}
 
 			int viewport_y = GetViewportY(tilecoord);
@@ -1722,10 +1721,10 @@ static void ViewportAddLandscape()
 				/* Is tile with buildings visible? */
 				if (min_visible_height < MAX_TILE_EXTENT_TOP) tile_visible = true;
 
-				if (IsBridgeAbove(tile_info.tile)) {
+				if (IsBridgeAbove(_cur_ti.tile)) {
 					/* Is the bridge visible? */
-					TileIndex bridge_tile = GetNorthernBridgeEnd(tile_info.tile);
-					int bridge_height = ZOOM_LVL_BASE * (GetBridgePixelHeight(bridge_tile) - TilePixelHeight(tile_info.tile));
+					TileIndex bridge_tile = GetNorthernBridgeEnd(_cur_ti.tile);
+					int bridge_height = ZOOM_LVL_BASE * (GetBridgePixelHeight(bridge_tile) - TilePixelHeight(_cur_ti.tile));
 					if (min_visible_height < bridge_height + MAX_TILE_EXTENT_TOP) tile_visible = true;
 				}
 
@@ -1747,10 +1746,10 @@ static void ViewportAddLandscape()
 				_vd.last_foundation_child[1] = nullptr;
 
 				bool no_ground_tiles = min_visible_height > 0;
-				_tile_type_procs[tile_type]->draw_tile_proc(&tile_info, { min_visible_height, no_ground_tiles });
-				if (tile_info.tile != INVALID_TILE && min_visible_height <= 0) {
-					DrawTileSelection(&tile_info);
-					DrawTileZoning(&tile_info);
+				_tile_type_procs[tile_type]->draw_tile_proc(&_cur_ti, { min_visible_height, no_ground_tiles });
+				if (_cur_ti.tile != INVALID_TILE && min_visible_height <= 0) {
+					DrawTileSelection(&_cur_ti);
+					DrawTileZoning(&_cur_ti);
 				}
 			}
 		}
@@ -1828,9 +1827,6 @@ static void ViewportAddKdtreeSigns(ViewportDrawerDynamic *vdd, DrawPixelInfo *dp
 	bool show_competitors = HasBit(_display_opt, DO_SHOW_COMPETITOR_SIGNS) && !towns_only;
 	bool hide_hidden_waypoints = _settings_client.gui.allow_hiding_waypoint_labels && !HasBit(_extra_display_opt, XDO_SHOW_HIDDEN_SIGNS);
 
-	const BaseStation *st;
-	const Sign *si;
-
 	/* Collect all the items first and draw afterwards, to ensure layering */
 	std::vector<const BaseStation *> stations;
 	std::vector<const Town *> towns;
@@ -1838,19 +1834,20 @@ static void ViewportAddKdtreeSigns(ViewportDrawerDynamic *vdd, DrawPixelInfo *dp
 
 	_viewport_sign_kdtree.FindContained(search_rect.left, search_rect.top, search_rect.right, search_rect.bottom, [&](const ViewportSignKdtreeItem & item) {
 		switch (item.type) {
-			case ViewportSignKdtreeItem::VKI_STATION:
+			case ViewportSignKdtreeItem::VKI_STATION: {
 				if (!show_stations) break;
-				st = BaseStation::Get(item.id.station);
+				const BaseStation *st = BaseStation::Get(item.id.station);
 
 				/* Don't draw if station is owned by another company and competitor station names are hidden. Stations owned by none are never ignored. */
 				if (!show_competitors && _local_company != st->owner && st->owner != OWNER_NONE) break;
 
 				stations.push_back(st);
 				break;
+			}
 
-			case ViewportSignKdtreeItem::VKI_WAYPOINT:
+			case ViewportSignKdtreeItem::VKI_WAYPOINT: {
 				if (!show_waypoints) break;
-				st = BaseStation::Get(item.id.station);
+				const BaseStation *st = BaseStation::Get(item.id.station);
 
 				/* Don't draw if station is owned by another company and competitor station names are hidden. Stations owned by none are never ignored. */
 				if (!show_competitors && _local_company != st->owner && st->owner != OWNER_NONE) break;
@@ -1858,15 +1855,16 @@ static void ViewportAddKdtreeSigns(ViewportDrawerDynamic *vdd, DrawPixelInfo *dp
 
 				stations.push_back(st);
 				break;
+			}
 
 			case ViewportSignKdtreeItem::VKI_TOWN:
 				if (!show_towns) break;
 				towns.push_back(Town::Get(item.id.town));
 				break;
 
-			case ViewportSignKdtreeItem::VKI_SIGN:
+			case ViewportSignKdtreeItem::VKI_SIGN: {
 				if (!show_signs) break;
-				si = Sign::Get(item.id.sign);
+				const Sign *si = Sign::Get(item.id.sign);
 
 				/* Don't draw if sign is owned by another company and competitor signs should be hidden.
 				* Note: It is intentional that also signs owned by OWNER_NONE are hidden. Bankrupt
@@ -1875,6 +1873,7 @@ static void ViewportAddKdtreeSigns(ViewportDrawerDynamic *vdd, DrawPixelInfo *dp
 
 				signs.push_back(si);
 				break;
+			}
 
 			default:
 				NOT_REACHED();
@@ -2484,10 +2483,9 @@ static inline void DrawRouteStep(const Viewport * const vp, const TileIndex tile
 	DrawSprite(SetBit(s, PALETTE_MODIFIER_TRANSPARENT), PALETTE_TO_TRANSPARENT, _cur_dpi->left + x_bottom_spr, _cur_dpi->top + y2);
 
 	/* Fill with the data. */
-	DrawPixelInfo *old_dpi = _cur_dpi;
 	y2 = y + _vp_route_step_height_top;
 	DrawPixelInfo dpi_for_text = _vdd->MakeDPIForText();
-	_cur_dpi = &dpi_for_text;
+	AutoRestoreBackup dpi_backup(_cur_dpi, &dpi_for_text);
 
 	const int x_str = x_centre - (str_width / 2);
 	if (list.size() > max_rank_order_type_count) {
@@ -2523,7 +2521,6 @@ static inline void DrawRouteStep(const Viewport * const vp, const TileIndex tile
 			}
 		}
 	}
-	_cur_dpi = old_dpi;
 }
 
 static bool ViewportPrepareVehicleRouteSteps(const Vehicle * const veh)
@@ -3327,9 +3324,8 @@ static void ViewportMapDrawScrollingViewportBox(const Viewport * const vp)
 
 static void ViewportMapDrawSelection(const Viewport * const vp)
 {
-	DrawPixelInfo *old_dpi = _cur_dpi;
 	DrawPixelInfo dpi_for_text = _vdd->MakeDPIForText();
-	_cur_dpi = &dpi_for_text;
+	AutoRestoreBackup dpi_backup(_cur_dpi, &dpi_for_text);
 
 	auto draw_line = [&](Point from_pt, Point to_pt) {
 		GfxDrawLine(from_pt.x, from_pt.y, to_pt.x, to_pt.y, PC_WHITE, 2, 0);
@@ -3370,8 +3366,6 @@ static void ViewportMapDrawSelection(const Viewport * const vp)
 	} else {
 		draw_line(start_pt, end_pt);
 	}
-
-	_cur_dpi = old_dpi;
 }
 
 template <bool is_32bpp>
@@ -3629,9 +3623,6 @@ void ViewportDoDraw(Viewport *vp, int left, int top, int right, int bottom, uint
 		_spare_viewport_drawers.pop_back();
 	}
 
-	DrawPixelInfo *old_dpi = _cur_dpi;
-	_cur_dpi = &_vdd->dpi;
-
 	_vdd->display_flags = display_flags;
 	_vdd->transparency_opt = _transparency_opt;
 	_vdd->invisibility_opt = _invisibility_opt;
@@ -3645,7 +3636,7 @@ void ViewportDoDraw(Viewport *vp, int left, int top, int right, int bottom, uint
 	_vdd->dpi.height = (bottom - top) & mask;
 	_vdd->dpi.left = left & mask;
 	_vdd->dpi.top = top & mask;
-	_vdd->dpi.pitch = old_dpi->pitch;
+	_vdd->dpi.pitch = _cur_dpi->pitch;
 	_vd.last_child = nullptr;
 
 	_vdd->offset_x = UnScaleByZoomLower(_vdd->dpi.left - (vp->virtual_left & mask), vp->zoom);
@@ -3653,7 +3644,9 @@ void ViewportDoDraw(Viewport *vp, int left, int top, int right, int bottom, uint
 	int x = _vdd->offset_x + vp->left;
 	int y = _vdd->offset_y + vp->top;
 
-	_vdd->dpi.dst_ptr = BlitterFactory::GetCurrentBlitter()->MoveTo(old_dpi->dst_ptr, x - old_dpi->left, y - old_dpi->top);
+	_vdd->dpi.dst_ptr = BlitterFactory::GetCurrentBlitter()->MoveTo(_cur_dpi->dst_ptr, x - _cur_dpi->left, y - _cur_dpi->top);
+
+	AutoRestoreBackup dpi_backup(_cur_dpi, &_vdd->dpi);
 
 	if (vp->overlay != nullptr && vp->overlay->GetCargoMask() != 0 && vp->overlay->GetCompanyMask() != 0) {
 		vp->overlay->PrepareDraw();
@@ -3700,8 +3693,6 @@ void ViewportDoDraw(Viewport *vp, int left, int top, int right, int bottom, uint
 			}, vp, _vdd.release());
 		}
 	}
-
-	_cur_dpi = old_dpi;
 }
 
 /* This is run in a worker thread */
@@ -3778,9 +3769,10 @@ void ViewportDoDrawProcessAllPending()
 			_viewport_drawer_returns.pop_back();
 			lk.unlock();
 
-			DrawPixelInfo *old_dpi = _cur_dpi;
-			ViewportDoDrawPhase3(vp);
-			_cur_dpi = old_dpi;
+			{
+				AutoRestoreBackup dpi_backup(_cur_dpi, AutoRestoreBackupNoNewValueTag{});
+				ViewportDoDrawPhase3(vp);
+			}
 
 			_viewport_drawer_jobs--;
 			if (_viewport_drawer_jobs == 0) return;
@@ -4001,12 +3993,12 @@ void UpdateViewportSizeZoom(Viewport *vp)
 	UpdateViewportDirtyBlockLeftMargin(vp);
 	if (vp->zoom >= ZOOM_LVL_DRAW_MAP) {
 		memset(vp->map_draw_vehicles_cache.done_hash_bits, 0, sizeof(vp->map_draw_vehicles_cache.done_hash_bits));
-		vp->map_draw_vehicles_cache.vehicle_pixels.assign(vp->width * vp->height, false);
+		vp->map_draw_vehicles_cache.vehicle_pixels.assign(vp->ScreenArea(), false);
 
 		if (BlitterFactory::GetCurrentBlitter()->GetScreenDepth() == 32) {
-			vp->land_pixel_cache.assign(vp->height * vp->width * 4, 0xD7);
+			vp->land_pixel_cache.assign(vp->ScreenArea() * 4, 0xD7);
 		} else {
-			vp->land_pixel_cache.assign(vp->height * vp->width, 0xD7);
+			vp->land_pixel_cache.assign(vp->ScreenArea(), 0xD7);
 		}
 	} else {
 		vp->map_draw_vehicles_cache.vehicle_pixels.clear();
@@ -4116,7 +4108,7 @@ void MarkViewportDirty(Viewport * const vp, int left, int top, int right, int bo
 		uint bitdepth = BlitterFactory::GetCurrentBlitter()->GetScreenDepth() / 8;
 		uint8 *land_cache = vp->land_pixel_cache.data() + ((l + (t * vp->width)) * bitdepth);
 		while (--h) {
-			memset(land_cache, 0xD7, w * bitdepth);
+			memset(land_cache, 0xD7, (size_t)w * bitdepth);
 			land_cache += vp->width * bitdepth;
 		}
 	}
@@ -6015,8 +6007,7 @@ calc_heightdiff_single_direction:;
 			if (dx != 1 || dy != 1) {
 				heightdiff = CalcHeightdiff(style, 0, t0, t1);
 				params[index++] = DistanceManhattan(t0, t1);
-				params[index++] = sqrtl(dx * dx + dy * dy); //DistanceSquare does not like big numbers
-
+				params[index++] = IntSqrt64(((uint64)dx * (uint64)dx) + ((uint64)dy * (uint64)dy)); // Avoid overflow in DistanceSquare
 			} else {
 				index += 2;
 			}
@@ -6024,8 +6015,8 @@ calc_heightdiff_single_direction:;
 			params[index++] = DistanceFromEdge(t1);
 			params[index++] = GetTileMaxZ(t1) * TILE_HEIGHT_STEP;
 			params[index++] = heightdiff;
-			//Show always the measurement tooltip
-			GuiShowTooltips(_thd.GetCallbackWnd(),STR_MEASURE_DIST_HEIGHTDIFF, index, params, TCC_EXIT_VIEWPORT);
+			/* Always show the measurement tooltip */
+			GuiShowTooltips(_thd.GetCallbackWnd(), STR_MEASURE_DIST_HEIGHTDIFF, index, params, TCC_EXIT_VIEWPORT);
 			break;
 		}
 

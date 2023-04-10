@@ -197,11 +197,6 @@ STR_UNITS_VELOCITY_METRIC                                       :{COMMA}{NBSP}km
 STR_UNITS_VELOCITY_SI                                           :{COMMA}{NBSP}m/s
 STR_UNITS_VELOCITY_GAMEUNITS                                    :{DECIMAL}{NBSP}cel·les/dia
 
-STR_UNIT_NAME_VELOCITY_IMPERIAL                                 :mph
-STR_UNIT_NAME_VELOCITY_METRIC                                   :km/h
-STR_UNIT_NAME_VELOCITY_SI                                       :m/s
-STR_UNIT_NAME_VELOCITY_GAMEUNITS                                :cel·les/dia
-
 STR_UNITS_POWER_IMPERIAL                                        :{COMMA}{NBSP}cv
 STR_UNITS_POWER_METRIC                                          :{COMMA}{NBSP}cv
 STR_UNITS_POWER_SI                                              :{COMMA}{NBSP}kW
@@ -250,7 +245,6 @@ STR_TOOLTIP_SORT_ORDER                                          :{BLACK}Seleccio
 STR_TOOLTIP_SORT_CRITERIA                                       :{BLACK}Selecciona el criteri per ordenar la llista
 STR_TOOLTIP_FILTER_CRITERIA                                     :{BLACK}Filtra per tipus de càrrega
 STR_BUTTON_SORT_BY                                              :{BLACK}Ordena per:
-STR_BUTTON_RENAME                                               :{BLACK}Canvia el nom
 STR_BUTTON_CATCHMENT                                            :{BLACK}Cobertura
 STR_TOOLTIP_CATCHMENT                                           :{BLACK}Mostra/Amaga l'àrea de cobertura
 
@@ -597,12 +591,6 @@ STR_MONTH_SEP                                                   :Setembre
 STR_MONTH_OCT                                                   :Octubre
 STR_MONTH_NOV                                                   :Novembre
 STR_MONTH_DEC                                                   :Desembre
-
-###length VEHICLE_TYPES
-STR_VEHICLE_TYPE_TRAINS                                         :Trens
-STR_VEHICLE_TYPE_ROAD_VEHICLES                                  :Automòbils
-STR_VEHICLE_TYPE_SHIPS                                          :Vaixells
-STR_VEHICLE_TYPE_AIRCRAFT                                       :Avions
 
 # Graph window
 STR_GRAPH_KEY_BUTTON                                            :{BLACK}Llegenda
@@ -1219,6 +1207,9 @@ STR_CONFIG_SETTING_HORIZONTAL_POS_RIGHT                         :Dreta
 
 STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN                         :Préstec inicial màxim: {STRING}
 STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_HELPTEXT                :Quantitat màxima del préstec que pot demanar una companyia (sense tenir en compte la inflació)
+STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_VALUE                   :{CURRENCY_LONG}
+###setting-zero-is-special
+STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_DISABLED                :Sense préstec {RED}Fa falta un script de partida que doni els fons inicials
 
 STR_CONFIG_SETTING_INTEREST_RATE                                :Taxa d'interès: {STRING}
 STR_CONFIG_SETTING_INTEREST_RATE_HELPTEXT                       :Tipus d'interès dels préstecs; també controla la inflació, si està activada
@@ -2368,7 +2359,8 @@ STR_NETWORK_CLIENT_LIST_NEW_COMPANY                             :(Companyia nova
 STR_NETWORK_CLIENT_LIST_NEW_COMPANY_TOOLTIP                     :{BLACK}Crea una companyia nova i uniu-vos.
 STR_NETWORK_CLIENT_LIST_PLAYER_ICON_SELF_TOOLTIP                :{BLACK}Aquest ets tu.
 STR_NETWORK_CLIENT_LIST_PLAYER_ICON_HOST_TOOLTIP                :{BLACK}Aquest és l'hoste de la partida.
-STR_NETWORK_CLIENT_LIST_CLIENT_COMPANY_COUNT                    :{BLACK}{NUM} client{P "" s} / {NUM} companyi{P a es}
+STR_NETWORK_CLIENT_LIST_CLIENT_COMPANY_COUNT                    :{BLACK}{NUM} client{P "" s} - {NUM}/{NUM} companyi{P a es}
+STR_NETWORK_CLIENT_LIST_CLIENT_COMPANY_COUNT_TOOLTIP            :{BLACK}El nombre de clients connectats actualment, el nombre de companyies i el nombre màxim de companyies permeses per l'administrador del servidor.
 
 # Matches ConnectionType
 ###length 5
@@ -2619,8 +2611,6 @@ STR_LINKGRAPH_LEGEND_OVERLOADED                                 :{G=Masculin}{TI
 STR_LINKGRAPH_STATS_TOOLTIP                                     :{BLACK}{CARGO_LONG} a transportar cada mes de {STATION} a {STATION} ({COMMA}{NBSP}% de capacitat){STRING}
 STR_LINKGRAPH_STATS_TOOLTIP_RETURN_EXTENSION                    :{}{CARGO_LONG} per a transportar de tornada ({COMMA}{NBSP}% de capacitat)
 STR_LINKGRAPH_STATS_TOOLTIP_TIME_EXTENSION                      :{}Temps de viatge mitjà: {NUM}{NBSP}di{P a es}
-STR_LINKGRAPH_STATS_TOOLTIP_TIME_EXTENSION_GENERAL              :{}Temps de viatge mitjà: {STRING}
-STR_LINKGRAPH_STATS_TOOLTIP_CAPACITY                            :{}Capacitat: {CARGO_LONG}
 
 # Base for station construction window(s)
 STR_STATION_BUILD_COVERAGE_AREA_TITLE                           :{BLACK}Marca l'àrea de cobertura
@@ -2713,6 +2703,10 @@ STR_BUILD_SIGNAL_DRAG_SIGNALS_DENSITY_INCREASE_TOOLTIP          :{BLACK}Augmenta
 STR_SELECT_RAIL_BRIDGE_CAPTION                                  :{WHITE}Selecciona Pont de Tren
 STR_SELECT_ROAD_BRIDGE_CAPTION                                  :{WHITE}Selecciona Pont de Carretera
 STR_SELECT_BRIDGE_SELECTION_TOOLTIP                             :{BLACK}Selecció de pont - clica sobre el pont triat per construir-lo
+STR_SELECT_BRIDGE_INFO_NAME                                     :{GOLD}{STRING}
+STR_SELECT_BRIDGE_INFO_NAME_MAX_SPEED                           :{GOLD}{STRING},{} {VELOCITY}
+STR_SELECT_BRIDGE_INFO_NAME_COST                                :{GOLD}{0:STRING},{} {WHITE}{2:CURRENCY_LONG}
+STR_SELECT_BRIDGE_INFO_NAME_MAX_SPEED_COST                      :{GOLD}{STRING},{} {VELOCITY} {WHITE}{CURRENCY_LONG}
 STR_BRIDGE_NAME_SUSPENSION_STEEL                                :Pont penjant d'acer
 STR_BRIDGE_NAME_GIRDER_STEEL                                    :Pont biga d'acer
 STR_BRIDGE_NAME_CANTILEVER_STEEL                                :Pont en mènsula d'acer
@@ -3003,7 +2997,7 @@ STR_LAI_TREE_NAME_CACTUS_PLANTS                                 :Plantes de Cact
 STR_LAI_STATION_DESCRIPTION_RAILROAD_STATION                    :Estació de Ferrocarril
 STR_LAI_STATION_DESCRIPTION_AIRCRAFT_HANGAR                     :Hangar d'Avions
 STR_LAI_STATION_DESCRIPTION_AIRPORT                             :Aeroport
-STR_LAI_STATION_DESCRIPTION_TRUCK_LOADING_AREA                  :Àrea de càrrega de camions
+STR_LAI_STATION_DESCRIPTION_TRUCK_LOADING_AREA                  :Moll de càrrega de camions
 STR_LAI_STATION_DESCRIPTION_BUS_STATION                         :Parada d'autobús
 STR_LAI_STATION_DESCRIPTION_SHIP_DOCK                           :Moll per vaixells
 STR_LAI_STATION_DESCRIPTION_BUOY                                :Boia
@@ -3159,9 +3153,6 @@ STR_MAPGEN_DESERT_COVERAGE                                      :{BLACK}Proporci
 STR_MAPGEN_DESERT_COVERAGE_UP                                   :{BLACK}Augmenta un 10 % la proporció de terreny desèrtic
 STR_MAPGEN_DESERT_COVERAGE_DOWN                                 :{BLACK}Redueix un 10 % la proporció de terreny desèrtic
 STR_MAPGEN_DESERT_COVERAGE_TEXT                                 :{BLACK}{NUM}{NBSP}%
-STR_MAPGEN_SNOW_LINE_HEIGHT                                     :{BLACK}Alçada dels estatges amb neu:
-STR_MAPGEN_SNOW_LINE_UP                                         :{BLACK}Mou els estatges amb neu un pas amunt
-STR_MAPGEN_SNOW_LINE_DOWN                                       :{BLACK}Mou els estatges amb neu un pas avall
 STR_MAPGEN_TERRAIN_TYPE                                         :{BLACK}Tipus de terreny:
 STR_MAPGEN_SEA_LEVEL                                            :{BLACK}Nivell de mar:
 STR_MAPGEN_QUANTITY_OF_RIVERS                                   :{BLACK}Quantitat de rius:
@@ -3219,7 +3210,6 @@ STR_MAPGEN_TERRAIN_TYPE_QUERY_CAPT                              :{WHITE}Alçada 
 STR_MAPGEN_HEIGHTMAP_HEIGHT_QUERY_CAPT                          :{WHITE}Alçada màxima dels cims
 STR_MAPGEN_SNOW_COVERAGE_QUERY_CAPT                             :{WHITE}Percentatge de terreny amb neu
 STR_MAPGEN_DESERT_COVERAGE_QUERY_CAPT                           :{WHITE}Percentatge de terreny desèrtic
-STR_MAPGEN_SNOW_LINE_QUERY_CAPT                                 :{WHITE}Canvia l'alçada d'inici d'estatges amb neu
 STR_MAPGEN_START_DATE_QUERY_CAPT                                :{WHITE}Canviar l'any inicial
 
 # SE Map generation
@@ -3364,8 +3354,8 @@ STR_NEWGRF_ERROR_MSG_INFO                                       :{SILVER}{STRING
 STR_NEWGRF_ERROR_MSG_WARNING                                    :{RED}Alerta: {SILVER}{STRING}
 STR_NEWGRF_ERROR_MSG_ERROR                                      :{RED}Error: {SILVER}{STRING}
 STR_NEWGRF_ERROR_MSG_FATAL                                      :{RED}Fatal: {SILVER}{STRING}
-STR_NEWGRF_ERROR_FATAL_POPUP                                    :{WHITE}S'ha produït un error fatal de NewGRF:{}{STRING}
-STR_NEWGRF_ERROR_POPUP                                          :{WHITE}S'ha produït un error relacionat amb els NewGRF:{}{STRING}
+STR_NEWGRF_ERROR_FATAL_POPUP                                    :{WHITE}El NewGRF "{STRING}" ha retornat un error fatal:{}{STRING}
+STR_NEWGRF_ERROR_POPUP                                          :{WHITE}El NewGRF "{STRING}" ha retornat un error:{}{STRING}
 STR_NEWGRF_ERROR_VERSION_NUMBER                                 :{1:STRING} no funcionarà amb la versió TTDPatch informada per l'OpenTTD
 STR_NEWGRF_ERROR_DOS_OR_WINDOWS                                 :{1:STRING} és per a la versió {2:STRING} del TTD
 STR_NEWGRF_ERROR_UNSET_SWITCH                                   :{1:STRING} està dissenyat per a fer-se servir amb {2:STRING}
@@ -3905,7 +3895,6 @@ STR_PURCHASE_INFO_RUNNINGCOST                                   :{BLACK}Cost d'u
 STR_PURCHASE_INFO_CAPACITY                                      :{BLACK}Capacitat: {GOLD}{CARGO_LONG} {STRING}
 STR_PURCHASE_INFO_REFITTABLE                                    :(remodelable)
 STR_PURCHASE_INFO_DESIGNED_LIFE                                 :{BLACK}Dissenyat: {GOLD}{NUM}{BLACK} Vida: {GOLD}{COMMA} any{P "" s}
-STR_PURCHASE_INFO_DESIGNED                                      :{BLACK}Dissenyat: {GOLD}{NUM}
 STR_PURCHASE_INFO_RELIABILITY                                   :{BLACK}Fiabilitat màxima: {GOLD}{COMMA}%
 STR_PURCHASE_INFO_COST                                          :{BLACK}Cost: {GOLD}{CURRENCY_LONG}
 STR_PURCHASE_INFO_COST_REFIT                                    :{BLACK}Cost: {GOLD}{CURRENCY_LONG}{BLACK} (Cost del remodelat: {GOLD}{CURRENCY_LONG}{BLACK})
@@ -4542,7 +4531,7 @@ STR_TIMETABLE_CLEAR_SPEED                                       :{BLACK}Esborra 
 STR_TIMETABLE_CLEAR_SPEED_TOOLTIP                               :{BLACK}Esborra la velocitat de viatge màxima de l'ordre seleccionada. Amb Ctrl+clic s'esborra la velocitat per a totes les ordres.
 
 STR_TIMETABLE_RESET_LATENESS                                    :{BLACK}Restablir Retard
-STR_TIMETABLE_RESET_LATENESS_TOOLTIP                            :{BLACK}Restableix el comptador de retards, de manera que el vehicle serà puntual
+STR_TIMETABLE_RESET_LATENESS_TOOLTIP                            :{BLACK}Restableix el comptador de retards, de manera que el vehicle serà puntual. Amb Ctrl+clic, es restableix el grup sencer de manera que el vehicle més endarrerit passa a anar a hora i els altres arribaran abans d'hora.
 
 STR_TIMETABLE_AUTOFILL                                          :{BLACK}Autoomple
 STR_TIMETABLE_AUTOFILL_TOOLTIP                                  :{BLACK}Omple automàticament l'horari amb valors del proper viatge. CTRL+clic per a intentar mantenir els temps d'espera.
@@ -4636,8 +4625,10 @@ STR_SCREENSHOT_WORLD_SCREENSHOT                                 :{BLACK}Captura 
 STR_SCREENSHOT_HEIGHTMAP_SCREENSHOT                             :{BLACK}Captura de pantalla del mapa d'alçades
 STR_SCREENSHOT_MINIMAP_SCREENSHOT                               :{BLACK}Captura de pantalla del minimapa
 
-# AI Parameters
-STR_AI_SETTINGS_CAPTION_AI                                      :{WHITE}Paràmetres de la IA
+# Script Parameters
+STR_AI_SETTINGS_CAPTION                                         :{WHITE}{STRING}Paràmetres
+STR_AI_SETTINGS_CAPTION_AI                                      :IA
+STR_AI_SETTINGS_CAPTION_GAMESCRIPT                              :Script de la partida
 STR_AI_SETTINGS_CLOSE                                           :{BLACK}Tanca
 STR_AI_SETTINGS_RESET                                           :{BLACK}Restableix
 STR_AI_SETTINGS_SETTING                                         :{STRING}: {ORANGE}{STRING}
@@ -5095,6 +5086,20 @@ STR_ERROR_CAN_T_COPY_ORDER_LIST                                 :{WHITE}No es po
 STR_ERROR_TOO_FAR_FROM_PREVIOUS_DESTINATION                     :{WHITE}... massa lluny del destí previ
 STR_ERROR_AIRCRAFT_NOT_ENOUGH_RANGE                             :{WHITE}... l'avió no té prou autonomia
 
+# Extra messages which go on the third line of errors, explaining why orders failed
+STR_ERROR_NO_RAIL_STATION                                       :{WHITE}No hi ha cap estació ferroviària
+STR_ERROR_NO_BUS_STATION                                        :{WHITE}No hi ha cap estació d'autobusos
+STR_ERROR_NO_TRUCK_STATION                                      :{WHITE}No hi ha cap estació de camions
+STR_ERROR_NO_DOCK                                               :{WHITE}No hi ha cap port
+STR_ERROR_NO_AIRPORT                                            :{WHITE}No hi ha cap aeroport/heliport
+STR_ERROR_NO_STOP_COMPATIBLE_ROAD_TYPE                          :{WHITE}No hi ha parades amb un tipus de carretera compatible
+STR_ERROR_NO_STOP_COMPATIBLE_TRAM_TYPE                          :{WHITE}No hi ha parades amb un tipus de tramvia compatible
+STR_ERROR_NO_STOP_ARTICULATED_VEHICLE                           :{WHITE}No hi ha parades que siguin adequades per a vehicles de carretera articulats.{}Aquest tipus de vehicles necessiten una estació de pas, no pas una estació final
+STR_ERROR_AIRPORT_NO_PLANES                                     :{WHITE}L'avió no pot aterrar en aquest aeroport
+STR_ERROR_AIRPORT_NO_HELICOPTERS                                :{WHITE}L'helicòpter no pot aterrar en aquest aeroport
+STR_ERROR_NO_RAIL_WAYPOINT                                      :{WHITE}No hi ha cap punt de pas ferroviari
+STR_ERROR_NO_BUOY                                               :{WHITE}No hi ha cap boia
+
 # Timetable related errors
 STR_ERROR_CAN_T_TIMETABLE_VEHICLE                               :{WHITE}Impossible establir l'horari del vehicle...
 STR_ERROR_TIMETABLE_ONLY_WAIT_AT_STATIONS                       :{WHITE}Els vehicles només poden esperar a les estacions
@@ -5122,11 +5127,6 @@ STR_BASEMUSIC_WIN_DESCRIPTION                                   :Música origina
 STR_BASEMUSIC_DOS_DESCRIPTION                                   :Música original del Transport Tycoon Deluxe pel DOS.
 STR_BASEMUSIC_TTO_DESCRIPTION                                   :Música original del Transport Tycoon Deluxe (original/editor d'escenaris) pel DOS.
 STR_BASEMUSIC_NONE_DESCRIPTION                                  :Una llista de música sense cap peça.
-
-STR_TRADITIONAL_TRAIN_NAME                                      :{G=Masculin}Tren {COMMA}
-STR_TRADITIONAL_ROAD_VEHICLE_NAME                               :{G=Masculin}Automòbil {COMMA}
-STR_TRADITIONAL_SHIP_NAME                                       :{G=Masculin}Vaixell {COMMA}
-STR_TRADITIONAL_AIRCRAFT_NAME                                   :{G=Masculin}Avió {COMMA}
 
 ##id 0x2000
 # Town building names

@@ -1,13 +1,22 @@
 name: CodeQL
 
 on:
-  push:
-    branches:
-    - master
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches:
-    - master
+#  push:
+#    branches:
+#    - master
+#  pull_request:
+#    # The branches below must be a subset of the branches above
+#    branches:
+#    - master
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Ref to build (for Pull Requests, use refs/pull/NNN/head)'
+        required: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 jobs:
   analyze:
@@ -20,7 +29,14 @@ jobs:
 
     steps:
     - name: Checkout
+      if: github.event_name != 'workflow_dispatch'
       uses: actions/checkout@v3
+
+    - name: Checkout (Manual)
+      if: github.event_name == 'workflow_dispatch'
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.inputs.ref }}
 
     - name: Install dependencies
       run: |
@@ -31,6 +47,7 @@ jobs:
         echo "::group::Install dependencies"
         sudo apt-get install -y --no-install-recommends \
           liballegro4-dev \
+          libcurl4-openssl-dev \
           libfontconfig-dev \
           libicu-dev \
           liblzma-dev \

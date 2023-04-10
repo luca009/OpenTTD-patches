@@ -1199,6 +1199,9 @@ DEF_CONSOLE_CMD(ConReturn)
  *  default console commands
  ******************************/
 extern bool CloseConsoleLogIfActive();
+extern const std::vector<GRFFile *> &GetAllGRFFiles();
+extern void ConPrintFramerate(); // framerate_gui.cpp
+extern void ShowFramerateWindow();
 
 DEF_CONSOLE_CMD(ConScript)
 {
@@ -3019,7 +3022,10 @@ DEF_CONSOLE_CMD(ConCheckCaches)
 	if (broadcast) {
 		DoCommandP(0, 0, 0, CMD_DESYNC_CHECK);
 	} else {
-		CheckCaches(true, nullptr, CHECK_CACHE_ALL | CHECK_CACHE_EMIT_LOG);
+		auto logger = [&](const char *str) {
+			IConsolePrint(CC_WARNING, str);
+		};
+		CheckCaches(true, logger, CHECK_CACHE_ALL | CHECK_CACHE_EMIT_LOG);
 	}
 
 	return true;
@@ -3344,7 +3350,6 @@ DEF_CONSOLE_CMD(ConNewGRFProfile)
 		return true;
 	}
 
-	extern const std::vector<GRFFile *> &GetAllGRFFiles();
 	const std::vector<GRFFile *> &files = GetAllGRFFiles();
 
 	/* "list" sub-command */
@@ -3579,8 +3584,6 @@ static void IConsoleDebugLibRegister()
 
 DEF_CONSOLE_CMD(ConFramerate)
 {
-	extern void ConPrintFramerate(); // framerate_gui.cpp
-
 	if (argc == 0) {
 		IConsoleHelp("Show frame rate and game speed information");
 		return true;
@@ -3592,8 +3595,6 @@ DEF_CONSOLE_CMD(ConFramerate)
 
 DEF_CONSOLE_CMD(ConFramerateWindow)
 {
-	extern void ShowFramerateWindow();
-
 	if (argc == 0) {
 		IConsoleHelp("Open the frame rate window");
 		return true;

@@ -2043,6 +2043,7 @@ static SettingsContainer &GetSettingsTree()
 			company->Add(new SettingEntry("company.infra_others_buy_in_depot[3]"));
 			company->Add(new SettingEntry("company.advance_order_on_clone"));
 			company->Add(new SettingEntry("company.copy_clone_add_to_group"));
+			company->Add(new SettingEntry("company.remain_if_next_order_same_station"));
 		}
 
 		SettingsPage *accounting = main->Add(new SettingsPage(STR_CONFIG_SETTING_ACCOUNTING));
@@ -2122,6 +2123,7 @@ static SettingsContainer &GetSettingsTree()
 			limitations->Add(new SettingEntry("vehicle.max_ships"));
 			limitations->Add(new SettingEntry("vehicle.max_train_length"));
 			limitations->Add(new SettingEntry("vehicle.through_load_speed_limit"));
+			limitations->Add(new SettingEntry("vehicle.rail_depot_speed_limit"));
 			limitations->Add(new SettingEntry("station.station_spread"));
 			limitations->Add(new SettingEntry("station.distant_join_stations"));
 			limitations->Add(new SettingEntry("construction.road_stop_on_town_road"));
@@ -2233,6 +2235,7 @@ static SettingsContainer &GetSettingsTree()
 				towns->Add(new SettingEntry("economy.town_zone_calc_mode"));
 				towns->Add(new SettingEntry("economy.allow_town_roads"));
 				towns->Add(new SettingEntry("economy.allow_town_level_crossings"));
+				towns->Add(new SettingEntry("economy.allow_town_bridges"));
 				towns->Add(new SettingEntry("economy.town_build_tunnels"));
 				towns->Add(new SettingEntry("economy.town_max_road_slope"));
 				towns->Add(new SettingEntry("economy.found_town"));

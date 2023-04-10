@@ -34,6 +34,7 @@
 #include "news_gui.h"
 #include "ai/ai_gui.hpp"
 #include "game/game_gui.hpp"
+#include "script/script_gui.h"
 #include "tilehighlight_func.h"
 #include "smallmap_gui.h"
 #include "graph_gui.h"
@@ -571,9 +572,7 @@ static CallBackFunction ToolbarSubsidiesClick(Window *w)
  */
 static CallBackFunction MenuClickSubsidies(int index)
 {
-	switch (index) {
-		case 0: ShowSubsidiesList(); break;
-	}
+	ShowSubsidiesList();
 	return CBF_NONE;
 }
 
@@ -1185,7 +1184,7 @@ static CallBackFunction MenuClickHelp(int index)
 	switch (index) {
 		case  0: return PlaceLandBlockInfo();
 		case  2: IConsoleSwitch();                 break;
-		case  3: ShowAIDebugWindow();              break;
+		case  3: ShowScriptDebugWindow();          break;
 		case  4: ShowScreenshotWindow();           break;
 		case  5: ShowFramerateWindow();            break;
 		case  6: ShowModifierKeyToggleWindow();    break;
@@ -2117,7 +2116,7 @@ struct MainToolbarWindow : Window {
 			case MTHK_BUILD_AIRPORT: ShowBuildAirToolbar(); break;
 			case MTHK_BUILD_TREES: ShowBuildTreesToolbar(); break;
 			case MTHK_MUSIC: ShowMusicWindow(); break;
-			case MTHK_AI_DEBUG: ShowAIDebugWindow(); break;
+			case MTHK_SCRIPT_DEBUG: ShowScriptDebugWindow(); break;
 			case MTHK_SMALL_SCREENSHOT: MakeScreenshotWithConfirm(SC_VIEWPORT); break;
 			case MTHK_ZOOMEDIN_SCREENSHOT: MakeScreenshotWithConfirm(SC_ZOOMEDIN); break;
 			case MTHK_DEFAULTZOOM_SCREENSHOT: MakeScreenshotWithConfirm(SC_DEFAULTZOOM); break;
@@ -2196,7 +2195,8 @@ struct MainToolbarWindow : Window {
 	void OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
 		if (!gui_scope) return;
-		HandleZoomMessage(this, GetMainWindow()->viewport, WID_TN_ZOOM_IN, WID_TN_ZOOM_OUT);
+		Window *w = FindWindowById(WC_MAIN_WINDOW, 0);
+		if (w != nullptr) HandleZoomMessage(this, w->viewport, WID_TN_ZOOM_IN, WID_TN_ZOOM_OUT);
 	}
 
 	static HotkeyList hotkeys;
@@ -2238,7 +2238,7 @@ static Hotkey maintoolbar_hotkeys[] = {
 	Hotkey(WKC_SHIFT | WKC_F10, "build_airport", MTHK_BUILD_AIRPORT),
 	Hotkey(WKC_SHIFT | WKC_F11, "build_trees", MTHK_BUILD_TREES),
 	Hotkey(WKC_SHIFT | WKC_F12, "music", MTHK_MUSIC),
-	Hotkey((uint16)0, "ai_debug", MTHK_AI_DEBUG),
+	Hotkey((uint16)0, "ai_debug", MTHK_SCRIPT_DEBUG),
 	Hotkey(WKC_CTRL  | 'S', "small_screenshot", MTHK_SMALL_SCREENSHOT),
 	Hotkey(WKC_CTRL  | 'P', "zoomedin_screenshot", MTHK_ZOOMEDIN_SCREENSHOT),
 	Hotkey(WKC_CTRL  | 'D', "defaultzoom_screenshot", MTHK_DEFAULTZOOM_SCREENSHOT),
@@ -2577,7 +2577,8 @@ struct ScenarioEditorToolbarWindow : Window {
 	void OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
 		if (!gui_scope) return;
-		HandleZoomMessage(this, GetMainWindow()->viewport, WID_TE_ZOOM_IN, WID_TE_ZOOM_OUT);
+		Window *w = FindWindowById(WC_MAIN_WINDOW, 0);
+		if (w != nullptr) HandleZoomMessage(this, w->viewport, WID_TE_ZOOM_IN, WID_TE_ZOOM_OUT);
 	}
 
 	void OnQueryTextFinished(char *str) override

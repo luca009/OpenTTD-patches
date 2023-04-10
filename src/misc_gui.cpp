@@ -29,6 +29,7 @@
 #include "guitimer_func.h"
 #include "viewport_func.h"
 #include "rev.h"
+#include "core/backup_type.hpp"
 
 #include "widgets/misc_widget.h"
 
@@ -395,12 +396,9 @@ public:
 	void OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
 		if (!gui_scope) return;
-		switch (data) {
-			case 1:
-				/* ReInit, "debug" sprite might have changed */
-				this->ReInit();
-				break;
-		}
+
+		/* ReInit, "debug" sprite might have changed */
+		if (data == 1) this->ReInit();
 	}
 };
 
@@ -893,8 +891,7 @@ void QueryString::DrawEditBox(const Window *w, int wid) const
 	DrawPixelInfo dpi;
 	if (!FillDrawPixelInfo(&dpi, fr.left, fr.top, fr.Width(), fr.Height())) return;
 
-	DrawPixelInfo *old_dpi = _cur_dpi;
-	_cur_dpi = &dpi;
+	AutoRestoreBackup dpi_backup(_cur_dpi, &dpi);
 
 	/* We will take the current widget length as maximum width, with a small
 	 * space reserved at the end for the caret to show */
@@ -912,8 +909,6 @@ void QueryString::DrawEditBox(const Window *w, int wid) const
 		int caret_width = GetStringBoundingBox("_").width;
 		DrawString(tb->caretxoffs + delta, tb->caretxoffs + delta + caret_width, 0, "_", TC_WHITE);
 	}
-
-	_cur_dpi = old_dpi;
 }
 
 /**
@@ -1011,7 +1006,8 @@ void QueryString::ClickEditBox(Window *w, Point pt, int wid, int click_count, bo
 	assert((wi->type & WWT_MASK) == WWT_EDITBOX);
 
 	bool rtl = _current_text_dir == TD_RTL;
-	int clearbtn_width = GetSpriteSize(rtl ? SPR_IMG_DELETE_RIGHT : SPR_IMG_DELETE_LEFT).width;
+	Dimension sprite_size = GetSpriteSize(rtl ? SPR_IMG_DELETE_RIGHT : SPR_IMG_DELETE_LEFT);
+	int clearbtn_width = sprite_size.width + WidgetDimensions::scaled.imgbtn.Horizontal();
 
 	Rect cr = wi->GetCurrentRect().WithWidth(clearbtn_width, !rtl);
 
@@ -1226,8 +1222,8 @@ struct QueryWindow : public Window {
 	void FindWindowPlacementAndResize(int def_width, int def_height) override
 	{
 		/* Position query window over the calling window, ensuring it's within screen bounds. */
-		this->left = Clamp(parent->left + (parent->width / 2) - (this->width / 2), 0, _screen.width - this->width);
-		this->top = Clamp(parent->top + (parent->height / 2) - (this->height / 2), 0, _screen.height - this->height);
+		this->left = SoftClamp(parent->left + (parent->width / 2) - (this->width / 2), 0, _screen.width - this->width);
+		this->top = SoftClamp(parent->top + (parent->height / 2) - (this->height / 2), 0, _screen.height - this->height);
 		this->SetDirty();
 	}
 

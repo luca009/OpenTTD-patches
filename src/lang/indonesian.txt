@@ -196,11 +196,6 @@ STR_UNITS_VELOCITY_METRIC                                       :{COMMA}{NBSP}km
 STR_UNITS_VELOCITY_SI                                           :{COMMA}{NBSP}meter/detik
 STR_UNITS_VELOCITY_GAMEUNITS                                    :{DECIMAL}{NBSP}ubin/hari
 
-STR_UNIT_NAME_VELOCITY_IMPERIAL                                 :mil/j
-STR_UNIT_NAME_VELOCITY_METRIC                                   :km/jam
-STR_UNIT_NAME_VELOCITY_SI                                       :meter/detik
-STR_UNIT_NAME_VELOCITY_GAMEUNITS                                :ubin/hari
-
 STR_UNITS_POWER_IMPERIAL                                        :{COMMA}{NBSP}dk
 STR_UNITS_POWER_METRIC                                          :{COMMA}{NBSP}dk
 STR_UNITS_POWER_SI                                              :{COMMA}{NBSP}kW
@@ -249,7 +244,6 @@ STR_TOOLTIP_SORT_ORDER                                          :{BLACK}Pilih mo
 STR_TOOLTIP_SORT_CRITERIA                                       :{BLACK}Pilih kriteria pengurutan
 STR_TOOLTIP_FILTER_CRITERIA                                     :{BLACK}Pilih kriteria
 STR_BUTTON_SORT_BY                                              :{BLACK}Urutkan
-STR_BUTTON_RENAME                                               :{BLACK}Ubah nama
 STR_BUTTON_CATCHMENT                                            :{BLACK}Jangkauan
 STR_TOOLTIP_CATCHMENT                                           :{BLACK}Tombol tampilan area cakupan
 
@@ -596,12 +590,6 @@ STR_MONTH_SEP                                                   :September
 STR_MONTH_OCT                                                   :Oktober
 STR_MONTH_NOV                                                   :Nopember
 STR_MONTH_DEC                                                   :Desember
-
-###length VEHICLE_TYPES
-STR_VEHICLE_TYPE_TRAINS                                         :Kereta
-STR_VEHICLE_TYPE_ROAD_VEHICLES                                  :Kendaraan Jalan Raya
-STR_VEHICLE_TYPE_SHIPS                                          :Kapal
-STR_VEHICLE_TYPE_AIRCRAFT                                       :Pesawat
 
 # Graph window
 STR_GRAPH_KEY_BUTTON                                            :{BLACK}Item
@@ -1218,6 +1206,7 @@ STR_CONFIG_SETTING_HORIZONTAL_POS_RIGHT                         :Kanan
 
 STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN                         :Maksimum pinjaman awal: {STRING}
 STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_HELPTEXT                :Jumlah maksimum yang dapat dipinjam (tanpa menghitung inflasi)
+###setting-zero-is-special
 
 STR_CONFIG_SETTING_INTEREST_RATE                                :Bunga pinjaman: {STRING}
 STR_CONFIG_SETTING_INTEREST_RATE_HELPTEXT                       :Bunga pinjaman; juga mengendalikan inflasi jika dinyalakan
@@ -2367,7 +2356,6 @@ STR_NETWORK_CLIENT_LIST_NEW_COMPANY                             :(Perusahaan bar
 STR_NETWORK_CLIENT_LIST_NEW_COMPANY_TOOLTIP                     :{BLACK}Ciptakan perusahaan baru dan bergabung
 STR_NETWORK_CLIENT_LIST_PLAYER_ICON_SELF_TOOLTIP                :{BLACK}Ini adalah Anda
 STR_NETWORK_CLIENT_LIST_PLAYER_ICON_HOST_TOOLTIP                :{BLACK}Ini adalah hos permainan
-STR_NETWORK_CLIENT_LIST_CLIENT_COMPANY_COUNT                    :{BLACK}{NUM} klien / {NUM} Perusahaan
 
 # Matches ConnectionType
 ###length 5
@@ -3156,9 +3144,6 @@ STR_MAPGEN_DESERT_COVERAGE                                      :{BLACK}Cakupan 
 STR_MAPGEN_DESERT_COVERAGE_UP                                   :{BLACK}Meningkatkan cakupan gurun sepuluh persen
 STR_MAPGEN_DESERT_COVERAGE_DOWN                                 :{BLACK}Kurangi cakupan gurun pasir sebesar sepuluh persen
 STR_MAPGEN_DESERT_COVERAGE_TEXT                                 :{BLACK}{NUM}%
-STR_MAPGEN_SNOW_LINE_HEIGHT                                     :{BLACK}Tinggi garis salju:
-STR_MAPGEN_SNOW_LINE_UP                                         :{BLACK}Naikkan ketinggian garis salju satu angka
-STR_MAPGEN_SNOW_LINE_DOWN                                       :{BLACK}Turunkan ketinggian garis salju satu angka
 STR_MAPGEN_TERRAIN_TYPE                                         :{BLACK}Jenis dataran:
 STR_MAPGEN_SEA_LEVEL                                            :{BLACK}Area perairan:
 STR_MAPGEN_QUANTITY_OF_RIVERS                                   :{BLACK}Sungai:
@@ -3215,7 +3200,6 @@ STR_MAPGEN_HEIGHTMAP_SIZE                                       :{ORANGE}{NUM} x
 STR_MAPGEN_TERRAIN_TYPE_QUERY_CAPT                              :{WHITE}Target ketinggian puncak
 STR_MAPGEN_HEIGHTMAP_HEIGHT_QUERY_CAPT                          :{WHITE}Puncak tertinggi
 STR_MAPGEN_SNOW_COVERAGE_QUERY_CAPT                             :{WHITE}Cakupan salju (dalam %)
-STR_MAPGEN_SNOW_LINE_QUERY_CAPT                                 :{WHITE}Ubah ketinggian garis salju
 STR_MAPGEN_DESERT_COVERAGE_QUERY_CAPT                           :{WHITE}Cakupan gurun (dalam %)
 STR_MAPGEN_START_DATE_QUERY_CAPT                                :{WHITE}Ganti Tahun Permulaan
 
@@ -3361,8 +3345,6 @@ STR_NEWGRF_ERROR_MSG_INFO                                       :{SILVER}{STRING
 STR_NEWGRF_ERROR_MSG_WARNING                                    :{RED}Peringatan: {SILVER}{STRING}
 STR_NEWGRF_ERROR_MSG_ERROR                                      :{RED}Kesalahan: {SILVER}{STRING}
 STR_NEWGRF_ERROR_MSG_FATAL                                      :{RED}Fatal: {SILVER}{STRING}
-STR_NEWGRF_ERROR_FATAL_POPUP                                    :{WHITE}Kesalahan fatal NewGRF telah terjadi:{}{STRING}
-STR_NEWGRF_ERROR_POPUP                                          :{WHITE}Terjadi galat pada NewGRF:{}{STRING}
 STR_NEWGRF_ERROR_VERSION_NUMBER                                 :{1:STRING} tidak akan bekerja dengan versi TTDPatch yang telah dilaporkan oleh OpenTTD
 STR_NEWGRF_ERROR_DOS_OR_WINDOWS                                 :{1:STRING} untuk TTD versi {2:STRING}
 STR_NEWGRF_ERROR_UNSET_SWITCH                                   :{1:STRING} didesain untuk digunakan dengan {2:STRING}
@@ -3902,7 +3884,6 @@ STR_PURCHASE_INFO_RUNNINGCOST                                   :{BLACK}Biaya Op
 STR_PURCHASE_INFO_CAPACITY                                      :{BLACK}Kapasitas: {GOLD}{CARGO_LONG} {STRING}
 STR_PURCHASE_INFO_REFITTABLE                                    :(kargo dapat diubah)
 STR_PURCHASE_INFO_DESIGNED_LIFE                                 :{BLACK}Desain: {GOLD}{NUM}{BLACK} Usia: {GOLD}{COMMA} tahun
-STR_PURCHASE_INFO_DESIGNED                                      :{BLACK}Desain: {GOLD}{NUM}
 STR_PURCHASE_INFO_RELIABILITY                                   :{BLACK}Kehandalan Maks.: {GOLD}{COMMA}%
 STR_PURCHASE_INFO_COST                                          :{BLACK}Biaya: {GOLD}{CURRENCY_LONG}
 STR_PURCHASE_INFO_COST_REFIT                                    :{BLACK}Biaya: {GOLD}{CURRENCY_LONG}{BLACK} (Biaya Karoseri: {GOLD}{CURRENCY_LONG}{BLACK})
@@ -4633,7 +4614,7 @@ STR_SCREENSHOT_WORLD_SCREENSHOT                                 :{BLACK} Tangkap
 STR_SCREENSHOT_HEIGHTMAP_SCREENSHOT                             :{BLACK}Tangkapan layar Peta Ketinggian
 STR_SCREENSHOT_MINIMAP_SCREENSHOT                               :{BLACK}Tangkapan layar minimap
 
-# AI Parameters
+# Script Parameters
 STR_AI_SETTINGS_CAPTION_AI                                      :{WHITE}Parameter AI
 STR_AI_SETTINGS_CLOSE                                           :{BLACK}Tutup
 STR_AI_SETTINGS_RESET                                           :{BLACK}Reset
@@ -5092,6 +5073,8 @@ STR_ERROR_CAN_T_COPY_ORDER_LIST                                 :{WHITE}Tidak da
 STR_ERROR_TOO_FAR_FROM_PREVIOUS_DESTINATION                     :{WHITE}... terlalu jauh dari tujuan sebelumnya
 STR_ERROR_AIRCRAFT_NOT_ENOUGH_RANGE                             :{WHITE}... pesawat tidak dapat menjangkau
 
+# Extra messages which go on the third line of errors, explaining why orders failed
+
 # Timetable related errors
 STR_ERROR_CAN_T_TIMETABLE_VEHICLE                               :{WHITE}Tidak dapat membuat jadwal keberangkatan kendaraan...
 STR_ERROR_TIMETABLE_ONLY_WAIT_AT_STATIONS                       :{WHITE}Kendaran hanya dapat menunggu di stasiun
@@ -5119,11 +5102,6 @@ STR_BASEMUSIC_WIN_DESCRIPTION                                   :Musik pengiring
 STR_BASEMUSIC_DOS_DESCRIPTION                                   :Musik orisinil Transport Tycoon Deluxe versi DOS.
 STR_BASEMUSIC_TTO_DESCRIPTION                                   :Musik orisinil Transport Tycoon (Orisinil/Editor Dunia) versi DOS.
 STR_BASEMUSIC_NONE_DESCRIPTION                                  :Paket musik tanpa musik sungguhan.
-
-STR_TRADITIONAL_TRAIN_NAME                                      :Kereta {COMMA}
-STR_TRADITIONAL_ROAD_VEHICLE_NAME                               :Kendaraan Jalan Raya {COMMA}
-STR_TRADITIONAL_SHIP_NAME                                       :Kapal {COMMA}
-STR_TRADITIONAL_AIRCRAFT_NAME                                   :Pesawat {COMMA}
 
 ##id 0x2000
 # Town building names

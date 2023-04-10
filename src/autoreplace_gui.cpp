@@ -239,10 +239,12 @@ class ReplaceVehicleWindow : public Window {
 				if (this->reset_sel_engine && this->sel_engine[1] != INVALID_ENGINE) {
 					int position = 0;
 					for (const auto &item : this->engines[1]) {
-						if (item.engine_id == this->sel_engine[1]) break;
+						if (item.engine_id == this->sel_engine[1]) {
+							this->vscroll[1]->ScrollTowards(position);
+							break;
+						}
 						++position;
 					}
-					this->vscroll[1]->ScrollTowards(position);
 				}
 			}
 		}
@@ -456,7 +458,7 @@ public:
 						bool when_old = false;
 						EngineID e = EngineReplacementForCompany(c, this->sel_engine[0], this->sel_group, &when_old);
 						str = when_old ? STR_REPLACE_REPLACING_WHEN_OLD : STR_ENGINE_NAME;
-						SetDParam(0, e);
+						SetDParam(0, PackEngineNameDParam(e, EngineNameContext::PurchaseList));
 					}
 				} else {
 					str = STR_REPLACE_NOT_REPLACING_VEHICLE_SELECTED;
@@ -630,6 +632,7 @@ public:
 
 						InvalidateWindowData(WC_REPLACE_VEHICLE, (VehicleType)this->window_number, 0); // Update the autoreplace window
 						InvalidateWindowClassesData(WC_BUILD_VEHICLE); // The build windows needs updating as well
+						InvalidateWindowClassesData(WC_BUILD_VIRTUAL_TRAIN);
 						return;
 					}
 					if ((item.flags & EngineDisplayFlags::Shaded) == EngineDisplayFlags::None) e = item.engine_id;

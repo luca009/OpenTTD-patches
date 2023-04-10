@@ -431,6 +431,14 @@ void GetSlopePixelZOnEdge(Slope tileh, DiagDirection edge, int *z1, int *z2)
 	if (RemoveHalftileSlope(tileh) == corners[edge][3]) *z2 += TILE_HEIGHT; // z2 is highest corner of a steep slope
 }
 
+Slope GetFoundationSlopeFromTileSlope(TileIndex tile, Slope tileh, int *z)
+{
+	Foundation f = _tile_type_procs[GetTileType(tile)]->get_foundation_proc(tile, tileh);
+	uint z_inc = ApplyFoundationToSlope(f, &tileh);
+	if (z != nullptr) *z += z_inc;
+	return tileh;
+}
+
 /**
  * Get slope of a tile on top of a (possible) foundation
  * If a tile does not have a foundation, the function returns the same as GetTileSlope.
@@ -442,10 +450,7 @@ void GetSlopePixelZOnEdge(Slope tileh, DiagDirection edge, int *z1, int *z2)
 Slope GetFoundationSlope(TileIndex tile, int *z)
 {
 	Slope tileh = GetTileSlope(tile, z);
-	Foundation f = _tile_type_procs[GetTileType(tile)]->get_foundation_proc(tile, tileh);
-	uint z_inc = ApplyFoundationToSlope(f, &tileh);
-	if (z != nullptr) *z += z_inc;
-	return tileh;
+	return GetFoundationSlopeFromTileSlope(tile, tileh, z);
 }
 
 
@@ -827,14 +832,10 @@ CommandCost CmdClearArea(TileIndex tile, DoCommandFlag flags, uint32 p1, uint32 
 
 
 TileIndex _cur_tileloop_tile;
+TileIndex _aux_tileloop_tile;
 
-/**
- * Gradually iterate over all tiles on the map, calling their TileLoopProcs once every 256 ticks.
- */
-void RunTileLoop()
+static uint32 GetTileLoopFeedback()
 {
-	PerformanceAccumulator framerate(PFE_GL_LANDSCAPE);
-
 	/* The pseudorandom sequence of tiles is generated using a Galois linear feedback
 	 * shift register (LFSR). This allows a deterministic pseudorandom ordering, but
 	 * still with minimal state and fast iteration. */
@@ -846,7 +847,17 @@ void RunTileLoop()
 		0x4004B2, 0x800B87, 0x10004F3, 0x200072D, 0x40006AE, 0x80009E3,
 	};
 	static_assert(lengthof(feedbacks) == MAX_MAP_TILES_BITS - 2 * MIN_MAP_SIZE_BITS + 1);
-	const uint32 feedback = feedbacks[MapLogX() + MapLogY() - 2 * MIN_MAP_SIZE_BITS];
+	return feedbacks[MapLogX() + MapLogY() - 2 * MIN_MAP_SIZE_BITS];
+}
+
+/**
+ * Gradually iterate over all tiles on the map, calling their TileLoopProcs once every 256 ticks.
+ */
+void RunTileLoop()
+{
+	PerformanceAccumulator framerate(PFE_GL_LANDSCAPE);
+
+	const uint32 feedback = GetTileLoopFeedback();
 
 	/* We update every tile every 256 ticks, so divide the map size by 2^8 = 256 */
 	uint count = 1 << (MapLogX() + MapLogY() - 8);
@@ -873,6 +884,30 @@ void RunTileLoop()
 	_cur_tileloop_tile = tile;
 }
 
+void RunAuxiliaryTileLoop()
+{
+	/* At day lengths <= 4, flooding is handled by main tile loop */
+	if (_settings_game.economy.day_length_factor <= 4 || (_scaled_tick_counter % 4) != 0) return;
+
+	PerformanceAccumulator framerate(PFE_GL_LANDSCAPE);
+
+	const uint32 feedback = GetTileLoopFeedback();
+	uint count = 1 << (MapLogX() + MapLogY() - 8);
+	TileIndex tile = _aux_tileloop_tile;
+
+	while (count--) {
+		if (!IsNonFloodingWaterTile(tile)) {
+			FloodingBehaviour fb = GetFloodingBehaviour(tile);
+			if (fb != FLOOD_NONE) TileLoopWaterFlooding(fb, tile);
+		}
+
+		/* Get the next tile in sequence using a Galois LFSR. */
+		tile = (tile >> 1) ^ (-(int32)(tile & 1) & feedback);
+	}
+
+	_aux_tileloop_tile = tile;
+}
+
 void InitializeLandscape()
 {
 	for (uint y = _settings_game.construction.freeform_edges ? 1 : 0; y < MapMaxY(); y++) {
@@ -895,12 +930,15 @@ static void GenerateTerrain(int type, uint flag)
 {
 	uint32 r = Random();
 
-	const Sprite *templ = GetSprite((((r >> 24) * _genterrain_tbl_1[type]) >> 8) + _genterrain_tbl_2[type] + 4845, ST_MAPGEN);
+	/* Choose one of the templates from the graphics file. */
+	const Sprite *templ = GetSprite((((r >> 24) * _genterrain_tbl_1[type]) >> 8) + _genterrain_tbl_2[type] + SPR_MAPGEN_BEGIN, ST_MAPGEN);
 	if (templ == nullptr) usererror("Map generator sprites could not be loaded");
 
+	/* Chose a random location to apply the template to. */
 	uint x = r & MapMaxX();
 	uint y = (r >> MapLogX()) & MapMaxY();
 
+	/* Make sure the template is not too close to the upper edges; bottom edges are checked later. */
 	uint edge_distance = 1 + (_settings_game.construction.freeform_edges ? 1 : 0);
 	if (x <= edge_distance || y <= edge_distance) return;
 
@@ -913,6 +951,9 @@ static void GenerateTerrain(int type, uint flag)
 	const byte *p = templ->data;
 
 	if ((flag & 4) != 0) {
+		/* This is only executed in secondary/tertiary loops to generate the terrain for arctic and tropic.
+		 * It prevents the templates to be applied to certain parts of the map based on the flags, thus
+		 * creating regions with different elevations/topography. */
 		uint xw = x * MapSizeY();
 		uint yw = y * MapSizeX();
 		uint bias = (MapSizeX() + MapSizeY()) * 16;
@@ -937,11 +978,15 @@ static void GenerateTerrain(int type, uint flag)
 		}
 	}
 
+	/* Ensure the template does not overflow at the bottom edges of the map; upper edges were checked before. */
 	if (x + w >= MapMaxX()) return;
 	if (y + h >= MapMaxY()) return;
 
 	TileIndex tile = TileXY(x, y);
 
+	/* Get the template and overlay in a particular direction over the map's height from the given
+	 * origin point (tile), and update the map's height everywhere where the height from the template
+	 * is higher than the height of the map. In other words, this only raises the tile heights. */
 	switch (direction) {
 		default: NOT_REACHED();
 		case DIAGDIR_NE:

@@ -99,7 +99,7 @@ static bool TestTownOwnsBridge(TileIndex tile, const Town *t)
 
 	if (!town_owned) {
 		/* Or other adjacent road */
-		TileIndex adjacent = tile + TileOffsByDiagDir(ReverseDiagDir(GetTunnelBridgeDirection(GetOtherTunnelBridgeEnd(tile))));
+		adjacent = tile + TileOffsByDiagDir(ReverseDiagDir(GetTunnelBridgeDirection(GetOtherTunnelBridgeEnd(tile))));
 		town_owned = IsTileType(adjacent, MP_ROAD) && IsTileOwner(adjacent, OWNER_TOWN) && GetTownIndex(adjacent) == t->index;
 	}
 
@@ -367,8 +367,7 @@ void DrawHouseImage(HouseID house_id, int left, int top, int right, int bottom)
 {
 	DrawPixelInfo tmp_dpi;
 	if (!FillDrawPixelInfo(&tmp_dpi, left, top, right - left + 1, bottom - top + 1)) return;
-	DrawPixelInfo *old_dpi = _cur_dpi;
-	_cur_dpi = &tmp_dpi;
+	AutoRestoreBackup dpi_backup(_cur_dpi, &tmp_dpi);
 
 	const HouseSpec *hs = HouseSpec::Get(house_id);
 
@@ -412,8 +411,6 @@ void DrawHouseImage(HouseID house_id, int left, int top, int right, int bottom)
 		}
 		if (!ground) break;
 	}
-
-	_cur_dpi = old_dpi;
 }
 
 static int GetSlopePixelZ_Town(TileIndex tile, uint x, uint y)
@@ -998,7 +995,7 @@ static RoadBits GetTownRoadBits(TileIndex tile)
 	return GetAnyRoadBits(tile, RTT_ROAD, true);
 }
 
-RoadType GetTownRoadType(const Town *t)
+RoadType GetTownRoadType()
 {
 	RoadType best_rt = ROADTYPE_ROAD;
 	const RoadTypeInfo *best = nullptr;
@@ -1097,7 +1094,7 @@ static bool IsRoadAllowedHere(Town *t, TileIndex tile, DiagDirection dir)
 		/* No, try if we are able to build a road piece there.
 		 * If that fails clear the land, and if that fails exit.
 		 * This is to make sure that we can build a road here later. */
-		RoadType rt = GetTownRoadType(t);
+		RoadType rt = GetTownRoadType();
 		if (DoCommand(tile, ((dir == DIAGDIR_NW || dir == DIAGDIR_SE) ? ROAD_Y : ROAD_X) | (rt << 4), 0, DC_AUTO | DC_NO_WATER, CMD_BUILD_ROAD).Failed() &&
 				DoCommand(tile, 0, 0, DC_AUTO | DC_NO_WATER | DC_TOWN, CMD_LANDSCAPE_CLEAR).Failed()) {
 			return false;
@@ -1266,7 +1263,7 @@ static bool GrowTownWithExtraHouse(Town *t, TileIndex tile)
  */
 static bool GrowTownWithRoad(const Town *t, TileIndex tile, RoadBits rcmd)
 {
-	RoadType rt = GetTownRoadType(t);
+	RoadType rt = GetTownRoadType();
 	if (DoCommand(tile, rcmd | (rt << 4), t->index, DC_EXEC | DC_AUTO | DC_NO_WATER | DC_TOWN, CMD_BUILD_ROAD).Succeeded()) {
 		_grow_town_result = GROWTH_SUCCEED;
 		return true;
@@ -1287,8 +1284,6 @@ static bool CanRoadContinueIntoNextTile(const Town *t, const TileIndex tile, con
 {
 	const int delta = TileOffsByDiagDir(road_dir); // +1 tile in the direction of the road
 	TileIndex next_tile = tile + delta; // The tile beyond which must be connectable to the target tile
-	RoadBits rcmd = DiagDirToRoadBits(ReverseDiagDir(road_dir));
-	RoadType rt = GetTownRoadType(t);
 
 	/* Before we try anything, make sure the tile is on the map and not the void. */
 	if (!IsValidTile(next_tile)) return false;
@@ -1312,6 +1307,9 @@ static bool CanRoadContinueIntoNextTile(const Town *t, const TileIndex tile, con
 	/* If the next tile is a railroad track, check if towns are allowed to build level crossings.
 	 * If level crossing are not allowed, reject the construction. Else allow DoCommand to determine if the rail track is buildable. */
 	if (IsTileType(next_tile, MP_RAILWAY) && !t->GetAllowBuildLevelCrossings()) return false;
+
+	RoadBits rcmd = DiagDirToRoadBits(ReverseDiagDir(road_dir));
+	RoadType rt = GetTownRoadType();
 
 	/* If a road tile can be built, the construction is allowed. */
 	return DoCommand(next_tile, rcmd | (rt << 4), t->index, DC_AUTO | DC_NO_WATER, CMD_BUILD_ROAD).Succeeded();
@@ -1351,6 +1349,8 @@ static bool RedundantBridgeExistsNearby(TileIndex tile, void *user_data)
 static bool GrowTownWithBridge(const Town *t, const TileIndex tile, const DiagDirection bridge_dir)
 {
 	assert(bridge_dir < DIAGDIR_END);
+
+	if (!t->GetAllowBuildBridges()) return false;
 
 	const Slope slope = GetTileSlope(tile);
 
@@ -1413,7 +1413,7 @@ static bool GrowTownWithBridge(const Town *t, const TileIndex tile, const DiagDi
 
 	for (;;) {
 		/* Can we actually build the bridge? */
-		RoadType rt = GetTownRoadType(t);
+		RoadType rt = GetTownRoadType();
 		if (MayTownBuildBridgeType(bridge_type) && DoCommand(tile, bridge_tile, bridge_type | rt << 8 | TRANSPORT_ROAD << 15, CommandFlagsToDCFlags(GetCommandFlags(CMD_BUILD_BRIDGE)) | DC_TOWN, CMD_BUILD_BRIDGE).Succeeded()) {
 			DoCommand(tile, bridge_tile, bridge_type | rt << 8 | TRANSPORT_ROAD << 15, DC_EXEC | CommandFlagsToDCFlags(GetCommandFlags(CMD_BUILD_BRIDGE)) | DC_TOWN, CMD_BUILD_BRIDGE);
 			_grow_town_result = GROWTH_SUCCEED;
@@ -1503,7 +1503,7 @@ static bool GrowTownWithTunnel(const Town *t, const TileIndex tile, const DiagDi
 	if (!CanRoadContinueIntoNextTile(t, tunnel_tile, tunnel_dir)) return false;
 
 	/* Attempt to build the tunnel. Return false if it fails to let the town build a road instead. */
-	RoadType rt = GetTownRoadType(t);
+	RoadType rt = GetTownRoadType();
 	if (DoCommand(tile, rt | (TRANSPORT_ROAD << 8), 0, CommandFlagsToDCFlags(GetCommandFlags(CMD_BUILD_TUNNEL)), CMD_BUILD_TUNNEL).Succeeded()) {
 		DoCommand(tile, rt | (TRANSPORT_ROAD << 8), 0, DC_EXEC | CommandFlagsToDCFlags(GetCommandFlags(CMD_BUILD_TUNNEL)), CMD_BUILD_TUNNEL);
 		_grow_town_result = GROWTH_SUCCEED;
@@ -2010,7 +2010,7 @@ static bool GrowTown(Town *t)
 			/* Only work with plain land that not already has a house */
 			if (!IsTileType(tile, MP_HOUSE) && IsTileFlat(tile)) {
 				if (DoCommand(tile, 0, 0, DC_AUTO | DC_NO_WATER | DC_TOWN, CMD_LANDSCAPE_CLEAR).Succeeded()) {
-					RoadType rt = GetTownRoadType(t);
+					RoadType rt = GetTownRoadType();
 					DoCommand(tile, GenRandomRoadBits() | (rt << 4), t->index, DC_EXEC | DC_AUTO | DC_TOWN, CMD_BUILD_ROAD);
 					cur_company.Restore();
 					return true;
@@ -2052,21 +2052,37 @@ void UpdateTownRadius(Town *t)
 		{121, 81,  0, 49, 36}, // 88
 	};
 
-	if (_settings_game.economy.town_zone_calc_mode && t->larger_town) {
+	if (_settings_game.economy.town_zone_calc_mode) {
 		int mass = t->cache.num_houses / 8;
-		t->cache.squared_town_zone_radius[0] = mass * _settings_game.economy.city_zone_0_mult;
-		t->cache.squared_town_zone_radius[1] = mass * _settings_game.economy.city_zone_1_mult;
-		t->cache.squared_town_zone_radius[2] = mass * _settings_game.economy.city_zone_2_mult;
-		t->cache.squared_town_zone_radius[3] = mass * _settings_game.economy.city_zone_3_mult;
-		t->cache.squared_town_zone_radius[4] = mass * _settings_game.economy.city_zone_4_mult;
-	} else if (_settings_game.economy.town_zone_calc_mode) {
-		int mass = t->cache.num_houses / 8;
-		t->cache.squared_town_zone_radius[0] = mass * _settings_game.economy.town_zone_0_mult;
-		t->cache.squared_town_zone_radius[1] = mass * _settings_game.economy.town_zone_1_mult;
-		t->cache.squared_town_zone_radius[2] = mass * _settings_game.economy.town_zone_2_mult;
-		t->cache.squared_town_zone_radius[3] = mass * _settings_game.economy.town_zone_3_mult;
-		t->cache.squared_town_zone_radius[4] = mass * _settings_game.economy.town_zone_4_mult;
-	} else if (t->cache.num_houses < 92) {
+		if (t->larger_town) {
+			t->cache.squared_town_zone_radius[0] = mass * _settings_game.economy.city_zone_0_mult;
+			t->cache.squared_town_zone_radius[1] = mass * _settings_game.economy.city_zone_1_mult;
+			t->cache.squared_town_zone_radius[2] = mass * _settings_game.economy.city_zone_2_mult;
+			t->cache.squared_town_zone_radius[3] = mass * _settings_game.economy.city_zone_3_mult;
+			t->cache.squared_town_zone_radius[4] = mass * _settings_game.economy.city_zone_4_mult;
+		} else {
+			t->cache.squared_town_zone_radius[0] = mass * _settings_game.economy.town_zone_0_mult;
+			t->cache.squared_town_zone_radius[1] = mass * _settings_game.economy.town_zone_1_mult;
+			t->cache.squared_town_zone_radius[2] = mass * _settings_game.economy.town_zone_2_mult;
+			t->cache.squared_town_zone_radius[3] = mass * _settings_game.economy.town_zone_3_mult;
+			t->cache.squared_town_zone_radius[4] = mass * _settings_game.economy.town_zone_4_mult;
+		}
+		return;
+	}
+
+	MemSetT(t->cache.squared_town_zone_radius, 0, lengthof(t->cache.squared_town_zone_radius));
+
+	uint16 cb_result = GetTownZonesCallback(t);
+	if (cb_result == 0) {
+		t->cache.squared_town_zone_radius[0] = GetRegister(0x100);
+		t->cache.squared_town_zone_radius[1] = GetRegister(0x101);
+		t->cache.squared_town_zone_radius[2] = GetRegister(0x102);
+		t->cache.squared_town_zone_radius[3] = GetRegister(0x103);
+		t->cache.squared_town_zone_radius[4] = GetRegister(0x104);
+		return;
+	}
+
+	if (t->cache.num_houses < 92) {
 		memcpy(t->cache.squared_town_zone_radius, _town_squared_town_zone_radius_data[t->cache.num_houses / 4], sizeof(t->cache.squared_town_zone_radius));
 	} else {
 		int mass = t->cache.num_houses / 8;
@@ -3828,6 +3844,7 @@ CommandCost CmdOverrideTownSetting(TileIndex tile, DoCommandFlag flags, uint32 p
 			break;
 		case TSOF_OVERRIDE_BUILD_ROADS:
 		case TSOF_OVERRIDE_BUILD_LEVEL_CROSSINGS:
+		case TSOF_OVERRIDE_BUILD_BRIDGES:
 			if (is_override && value != 0 && value != 1) return CMD_ERROR;
 			break;
 		case TSOF_OVERRIDE_BUILD_TUNNELS:
@@ -3848,6 +3865,7 @@ CommandCost CmdOverrideTownSetting(TileIndex tile, DoCommandFlag flags, uint32 p
 					break;
 				case TSOF_OVERRIDE_BUILD_ROADS:
 				case TSOF_OVERRIDE_BUILD_LEVEL_CROSSINGS:
+				case TSOF_OVERRIDE_BUILD_BRIDGES:
 					SB(t->override_values, setting, 1, value & 1);
 					break;
 				case TSOF_OVERRIDE_BUILD_TUNNELS:
@@ -4006,6 +4024,10 @@ static uint GetNormalGrowthRate(Town *t)
 	if (t->larger_town) m /= 2;
 
 	if (_settings_game.economy.town_growth_cargo_transported > 0) {
+		/* The standard growth rate here is proportional to 1/m.
+		 * town_growth_cargo_transported percent of the growth rate is multiplied by the proportion of town cargoes transported.
+		 * The growth rate can only be decreased by this setting, not increased.
+		 */
 		uint32 inverse_m = UINT32_MAX / m;
 		auto calculate_cargo_ratio_fix15 = [](const TransportedCargoStat<uint32> &stat) -> uint32 {
 			return stat.old_max ? ((uint64) (stat.old_act << 15)) / stat.old_max : 1 << 15;

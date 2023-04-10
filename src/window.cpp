@@ -18,6 +18,7 @@
 #include "blitter/factory.hpp"
 #include "zoom_func.h"
 #include "vehicle_base.h"
+#include "depot_func.h"
 #include "window_func.h"
 #include "tilehighlight_func.h"
 #include "network/network.h"
@@ -38,6 +39,7 @@
 #include "network/network_func.h"
 #include "guitimer_func.h"
 #include "news_func.h"
+#include "core/backup_type.hpp"
 
 #include "safeguards.h"
 
@@ -255,9 +257,9 @@ void Window::SetWidgetHighlight(byte widget_index, TextColour highlighted_colour
 		/* If we disable a highlight, check all widgets if anyone still has a highlight */
 		bool valid = false;
 		for (uint i = 0; i < this->nested_array_size; i++) {
-			NWidgetBase *nwid = this->GetWidget<NWidgetBase>(i);
-			if (nwid == nullptr) continue;
-			if (!nwid->IsHighlighted()) continue;
+			NWidgetBase *child_nwid = this->GetWidget<NWidgetBase>(i);
+			if (child_nwid == nullptr) continue;
+			if (!child_nwid->IsHighlighted()) continue;
 
 			valid = true;
 		}
@@ -979,9 +981,8 @@ void DrawOverlappedWindow(Window *w, int left, int top, int right, int bottom, D
  */
 void DrawOverlappedWindowForAll(int left, int top, int right, int bottom)
 {
-	DrawPixelInfo *old_dpi = _cur_dpi;
 	DrawPixelInfo bk;
-	_cur_dpi = &bk;
+	AutoRestoreBackup dpi_backup(_cur_dpi, &bk);
 
 	for (Window *w : Window::IterateFromBack()) {
 		if (MayBeShown(w) &&
@@ -993,7 +994,6 @@ void DrawOverlappedWindowForAll(int left, int top, int right, int bottom)
 			DrawOverlappedWindow(w, std::max(left, w->left), std::max(top, w->top), std::min(right, w->left + w->width), std::min(bottom, w->top + w->height), DOWF_NONE);
 		}
 	}
-	_cur_dpi = old_dpi;
 }
 
 static void SetWindowDirtyPending(Window *w)
@@ -1398,8 +1398,8 @@ static uint GetWindowZPriority(WindowClass wc)
 		case WC_CUSTOM_CURRENCY:
 		case WC_NETWORK_WINDOW:
 		case WC_GRF_PARAMETERS:
-		case WC_AI_LIST:
-		case WC_AI_SETTINGS:
+		case WC_SCRIPT_LIST:
+		case WC_SCRIPT_SETTINGS:
 		case WC_TEXTFILE:
 			++z_priority;
 			FALLTHROUGH;
@@ -3265,7 +3265,6 @@ void UpdateWindows()
 	PerformanceMeasurer framerate(PFE_DRAWING);
 	PerformanceAccumulator::Reset(PFE_DRAWWORLD);
 
-	extern void ProcessPendingPerformanceMeasurements();
 	ProcessPendingPerformanceMeasurements();
 
 	CallWindowRealtimeTickEvent(delta_ms);
@@ -3579,7 +3578,6 @@ void ReInitAllWindows(bool zoom_changed)
 	NWidgetLeaf::InvalidateDimensionCache(); // Reset cached sizes of several widgets.
 	NWidgetScrollbar::InvalidateDimensionCache();
 
-	extern void InitDepotWindowBlockSizes();
 	InitDepotWindowBlockSizes();
 
 	/* When _gui_zoom has changed, we need to resize toolbar and statusbar first,
@@ -3591,7 +3589,6 @@ void ReInitAllWindows(bool zoom_changed)
 		ReInitWindow(w, zoom_changed);
 	}
 
-	void NetworkReInitChatBoxSize();
 	NetworkReInitChatBoxSize();
 
 	/* Make sure essential parts of all windows are visible */

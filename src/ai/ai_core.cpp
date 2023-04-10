@@ -64,7 +64,7 @@
 
 	cur_company.Restore();
 
-	InvalidateWindowData(WC_AI_DEBUG, 0, -1);
+	InvalidateWindowData(WC_SCRIPT_DEBUG, 0, -1);
 	return;
 }
 
@@ -85,18 +85,16 @@
 			PerformanceMeasurer framerate((PerformanceElement)(PFE_AI0 + c->index));
 			cur_company.Change(c->index);
 			c->ai_instance->GameLoop();
+			/* Occasionally collect garbage; every 255 ticks do one company.
+			 * Effectively collecting garbage once every two months per AI. */
+			if ((AI::frame_counter & 255) == 0 && (CompanyID)GB(AI::frame_counter, 8, 4) == c->index) {
+				c->ai_instance->CollectGarbage();
+			}
 		} else {
 			PerformanceMeasurer::SetInactive((PerformanceElement)(PFE_AI0 + c->index));
 		}
 	}
 	cur_company.Restore();
-
-	/* Occasionally collect garbage; every 255 ticks do one company.
-	 * Effectively collecting garbage once every two months per AI. */
-	if ((AI::frame_counter & 255) == 0) {
-		CompanyID cid = (CompanyID)GB(AI::frame_counter, 8, 4);
-		if (Company::IsValidAiID(cid)) Company::Get(cid)->ai_instance->CollectGarbage();
-	}
 }
 
 /* static */ uint AI::GetTick()
@@ -118,8 +116,8 @@
 
 	cur_company.Restore();
 
-	InvalidateWindowData(WC_AI_DEBUG, 0, -1);
-	DeleteWindowById(WC_AI_SETTINGS, company);
+	InvalidateWindowData(WC_SCRIPT_DEBUG, 0, -1);
+	DeleteWindowById(WC_SCRIPT_SETTINGS, company);
 }
 
 /* static */ void AI::Pause(CompanyID company)
@@ -338,9 +336,9 @@
 	AI::scanner_library->RescanDir();
 	ResetConfig();
 
-	InvalidateWindowData(WC_AI_LIST, 0, 1);
-	SetWindowClassesDirty(WC_AI_DEBUG);
-	InvalidateWindowClassesData(WC_AI_SETTINGS);
+	InvalidateWindowData(WC_SCRIPT_LIST, 0, 1);
+	SetWindowClassesDirty(WC_SCRIPT_DEBUG);
+	InvalidateWindowClassesData(WC_SCRIPT_SETTINGS);
 }
 
 /**

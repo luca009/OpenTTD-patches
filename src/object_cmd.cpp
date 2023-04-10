@@ -41,7 +41,7 @@
 
 ObjectPool _object_pool("Object");
 INSTANTIATE_POOL_METHODS(Object)
-uint16 Object::counts[NUM_OBJECTS];
+std::vector<uint16> Object::counts;
 
 /**
  * Get the object associated with a tile.
@@ -269,7 +269,7 @@ CommandCost CmdBuildObject(TileIndex tile, DoCommandFlag flags, uint32 p1, uint3
 	CommandCost cost(EXPENSES_CONSTRUCTION);
 
 	ObjectType type = (ObjectType)GB(p1, 0, 16);
-	if (type >= NUM_OBJECTS) return CMD_ERROR;
+	if (type >= ObjectSpec::Count()) return CMD_ERROR;
 	uint8 view = GB(p2, 0, 2);
 	const ObjectSpec *spec = ObjectSpec::Get(type);
 	if (_game_mode == GM_NORMAL && !spec->IsAvailable() && !_generating_world) return CMD_ERROR;
@@ -521,7 +521,7 @@ CommandCost CmdBuildObjectArea(TileIndex tile, DoCommandFlag flags, uint32 p1, u
 	if (!_settings_game.construction.build_object_area_permitted) return_cmd_error(STR_BUILD_OBJECT_NOT_PERMITTED_BULK);
 
 	ObjectType type = (ObjectType)GB(p2, 3, 16);
-	if (type >= NUM_OBJECTS) return CMD_ERROR;
+	if (type >= ObjectSpec::Count()) return CMD_ERROR;
 	uint8 view = GB(p2, 1, 2);
 	const ObjectSpec *spec = ObjectSpec::Get(type);
 	if (view >= spec->views) return CMD_ERROR;
@@ -1085,7 +1085,7 @@ static bool TryBuildTransmitter()
 void GenerateObjects()
 {
 	/* Set a guestimate on how much we progress */
-	SetGeneratingWorldProgress(GWP_OBJECT, NUM_OBJECTS);
+	SetGeneratingWorldProgress(GWP_OBJECT, (uint)ObjectSpec::Count());
 
 	/* Determine number of water tiles at map border needed for freeform_edges */
 	uint num_water_tiles = 0;
@@ -1101,21 +1101,20 @@ void GenerateObjects()
 	}
 
 	/* Iterate over all possible object types */
-	for (uint i = 0; i < NUM_OBJECTS; i++) {
-		const ObjectSpec *spec = ObjectSpec::Get(i);
+	for (const auto &spec : ObjectSpec::Specs()) {
 
 		/* Continue, if the object was never available till now or shall not be placed */
-		if (!spec->WasEverAvailable() || spec->generate_amount == 0) continue;
+		if (!spec.WasEverAvailable() || spec.generate_amount == 0) continue;
 
-		uint16 amount = spec->generate_amount;
+		uint16 amount = spec.generate_amount;
 
 		/* Scale by map size */
-		if ((spec->flags & OBJECT_FLAG_SCALE_BY_WATER) && _settings_game.construction.freeform_edges) {
+		if ((spec.flags & OBJECT_FLAG_SCALE_BY_WATER) && _settings_game.construction.freeform_edges) {
 			/* Scale the amount of lighthouses with the amount of land at the borders.
 			 * The -6 is because the top borders are MP_VOID (-2) and all corners
 			 * are counted twice (-4). */
 			amount = ScaleByMapSize1D(amount * num_water_tiles) / (2 * MapMaxY() + 2 * MapMaxX() - 6);
-		} else if (spec->flags & OBJECT_FLAG_SCALE_BY_WATER) {
+		} else if (spec.flags & OBJECT_FLAG_SCALE_BY_WATER) {
 			amount = ScaleByMapSize1D(amount);
 		} else {
 			amount = ScaleByMapSize(amount);
@@ -1123,7 +1122,7 @@ void GenerateObjects()
 
 		/* Now try to place the requested amount of this object */
 		for (uint j = ScaleByMapSize(1000); j != 0 && amount != 0 && Object::CanAllocateItem(); j--) {
-			switch (i) {
+			switch (spec.Index()) {
 				case OBJECT_TRANSMITTER:
 					if (TryBuildTransmitter()) amount--;
 					break;
@@ -1133,8 +1132,8 @@ void GenerateObjects()
 					break;
 
 				default:
-					uint8 view = RandomRange(spec->views);
-					if (CmdBuildObject(RandomTile(), DC_EXEC | DC_AUTO | DC_NO_TEST_TOWN_RATING | DC_NO_MODIFY_TOWN_RATING, i, view, nullptr).Succeeded()) amount--;
+					uint8 view = RandomRange(spec.views);
+					if (CmdBuildObject(RandomTile(), DC_EXEC | DC_AUTO | DC_NO_TEST_TOWN_RATING | DC_NO_MODIFY_TOWN_RATING, spec.Index(), view, nullptr).Succeeded()) amount--;
 					break;
 			}
 		}

@@ -10,6 +10,7 @@
 #include "stdafx.h"
 #include <stdarg.h>
 #include <functional>
+#include "core/backup_type.hpp"
 #include "window_gui.h"
 #include "window_func.h"
 #include "random_access_file_type.h"
@@ -351,7 +352,7 @@ struct NewGRFInspectWindow : Window {
 	bool HasChainIndex() const
 	{
 		GrfSpecFeature f = GetFeatureNum(this->window_number);
-		return f == GSF_TRAINS || f == GSF_ROADVEHICLES;
+		return f == GSF_TRAINS || f == GSF_ROADVEHICLES || f == GSF_SHIPS;
 	}
 
 	/**
@@ -415,6 +416,10 @@ struct NewGRFInspectWindow : Window {
 			case WID_NGRFI_VEH_CHAIN: {
 				assert(this->HasChainIndex());
 				GrfSpecFeature f = GetFeatureNum(this->window_number);
+				if (f == GSF_SHIPS) {
+					size->height = FONT_HEIGHT_NORMAL + WidgetDimensions::scaled.framerect.Vertical();
+					break;
+				}
 				size->height = std::max(size->height, GetVehicleImageCellSize((VehicleType)(VEH_TRAIN + (f - GSF_TRAINS)), EIT_IN_DEPOT).height + 2 + WidgetDimensions::scaled.bevel.Vertical());
 				break;
 			}
@@ -456,6 +461,15 @@ struct NewGRFInspectWindow : Window {
 		switch (widget) {
 			case WID_NGRFI_VEH_CHAIN: {
 				const Vehicle *v = Vehicle::Get(this->GetFeatureIndex());
+				if (GetFeatureNum(this->window_number) == GSF_SHIPS) {
+					Rect ir = r.Shrink(WidgetDimensions::scaled.framerect);
+					char buffer[64];
+					uint count = 0;
+					for (const Vehicle *u = v->First(); u != nullptr; u = u->Next()) count++;
+					seprintf(buffer, lastof(buffer), "Part %u of %u", this->chain_index + 1, count);
+					::DrawString(ir.left, ir.right, ir.top, buffer, TC_BLACK);
+					break;
+				}
 				int total_width = 0;
 				int sel_start = 0;
 				int sel_end = 0;
@@ -667,11 +681,12 @@ struct NewGRFInspectWindow : Window {
 								int offset = i - this->vscroll->GetPosition();
 								i++;
 								if (offset >= 0 && offset < this->vscroll->GetCapacity()) {
+									Rect sr = r.Shrink(WidgetDimensions::scaled.frametext).Shrink(0, offset * this->resize.step_height, 0, 0);
 									char buf[512];
 									seprintf(buf, lastof(buf), "  %s: ", info->name);
-									::DrawString(ir.left, ir.right, ir.top + (offset * this->resize.step_height), buf, TC_BLACK);
+									::DrawString(sr.left, sr.right, sr.top, buf, TC_BLACK);
 									seprintf(buf, lastof(buf), "%08x (%s)", value, niv->name);
-									::DrawString(ir.left, ir.right, ir.top + (offset * this->resize.step_height), buf, TC_BLACK);
+									::DrawString(sr.left + prefix_width, sr.right, sr.top, buf, TC_BLACK);
 								}
 							}
 							break;
@@ -1101,7 +1116,7 @@ void ShowNewGRFInspectWindow(GrfSpecFeature feature, uint index, const uint32 gr
 	if (!IsNewGRFInspectable(feature, index)) return;
 
 	WindowNumber wno = GetInspectWindowNumber(feature, index);
-	WindowDesc *desc = (feature == GSF_TRAINS || feature == GSF_ROADVEHICLES) ? &_newgrf_inspect_chain_desc : &_newgrf_inspect_desc;
+	WindowDesc *desc = (feature == GSF_TRAINS || feature == GSF_ROADVEHICLES || feature == GSF_SHIPS) ? &_newgrf_inspect_chain_desc : &_newgrf_inspect_desc;
 	NewGRFInspectWindow *w = AllocateWindowDescFront<NewGRFInspectWindow>(desc, wno, true);
 	w->SetCallerGRFID(grfid);
 }
@@ -1323,17 +1338,13 @@ struct SpriteAlignerWindow : Window {
 
 				DrawPixelInfo new_dpi;
 				if (!FillDrawPixelInfo(&new_dpi, ir.left, ir.top, ir.Width(), ir.Height())) break;
-				DrawPixelInfo *old_dpi = _cur_dpi;
-				_cur_dpi = &new_dpi;
+				AutoRestoreBackup dpi_backup(_cur_dpi, &new_dpi);
 
 				DrawSprite(this->current_sprite, PAL_NONE, x, y, nullptr, ZOOM_LVL_GUI);
 				if (this->crosshair) {
 					GfxDrawLine(x, 0, x, ir.Height() - 1, PC_WHITE, 1, 1);
 					GfxDrawLine(0, y, ir.Width() - 1, y, PC_WHITE, 1, 1);
 				}
-
-				_cur_dpi = old_dpi;
-
 				break;
 			}
 
@@ -1643,6 +1654,9 @@ const char *GetNewGRFCallbackName(CallbackID cbid)
 		CBID(CBID_VEHICLE_REFIT_COST)
 		CBID(CBID_INDUSTRY_PROD_CHANGE_BUILD)
 		CBID(CBID_VEHICLE_SPAWN_VISUAL_EFFECT)
+		CBID(CBID_VEHICLE_NAME)
+		CBID(XCBID_TOWN_ZONES)
+		CBID(XCBID_SHIP_REFIT_PART_NAME)
 		default: return nullptr;
 	}
 }

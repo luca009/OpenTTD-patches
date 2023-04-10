@@ -87,15 +87,15 @@ enum GrfSpecFeature : uint8 {
 	GSF_AIRPORTTILES,
 	GSF_ROADTYPES,
 	GSF_TRAMTYPES,
-
 	GSF_ROADSTOPS,
+
 	GSF_NEWLANDSCAPE,
+	GSF_FAKE_TOWNS,           ///< Fake (but mappable) town GrfSpecFeature for NewGRF debugging (parent scope), and generic callbacks
 	GSF_END,
 
-	GSF_REAL_FEATURE_END = GSF_ROADSTOPS,
+	GSF_REAL_FEATURE_END = GSF_NEWLANDSCAPE,
 
-	GSF_FAKE_TOWNS = GSF_END, ///< Fake town GrfSpecFeature for NewGRF debugging (parent scope)
-	GSF_FAKE_STATION_STRUCT,  ///< Fake station struct GrfSpecFeature for NewGRF debugging
+	GSF_FAKE_STATION_STRUCT = GSF_END,  ///< Fake station struct GrfSpecFeature for NewGRF debugging
 	GSF_FAKE_END,             ///< End of the fake features
 
 	GSF_ERROR_ON_USE = 0xFE,  ///< An invalid value which generates an immediate error on mapping
@@ -175,7 +175,8 @@ struct GRFFilePropertyRemapEntry {
 	const char *name = nullptr;
 	int id = 0;
 	GrfSpecFeature feature = (GrfSpecFeature)0;
-	uint8 property_id = 0;
+	bool extended = false;
+	uint16 property_id = 0;
 };
 
 struct GRFFilePropertyRemapSet {
@@ -317,13 +318,14 @@ struct GRFFile : ZeroedMemoryAllocator {
 	struct HouseSpec **housespec;
 	struct IndustrySpec **industryspec;
 	struct IndustryTileSpec **indtspec;
-	struct ObjectSpec **objectspec;
+	std::vector<struct ObjectSpec *> objectspec;
 	struct AirportSpec **airportspec;
 	struct AirportTileSpec **airtspec;
-	struct RoadStopSpec **roadstops;
+	std::vector<struct RoadStopSpec *> roadstops;
 
 	GRFFeatureMapRemapSet feature_id_remaps;
 	GRFFilePropertyRemapSet action0_property_remaps[GSF_END];
+	btree::btree_map<uint32, GRFFilePropertyRemapEntry> action0_extended_property_remaps;
 	Action5TypeRemapSet action5_type_remaps;
 	std::vector<GRFVariableMapEntry> grf_variable_remaps;
 	std::vector<std::unique_ptr<const char, FreeDeleter>> remap_unknown_property_names;
@@ -357,6 +359,9 @@ struct GRFFile : ZeroedMemoryAllocator {
 
 	uint32 var8D_overlay;                    ///< Overlay for global variable 8D (action 0x14)
 	uint32 var9D_overlay;                    ///< Overlay for global variable 9D (action 0x14)
+	std::vector<uint32> var91_values;        ///< Test result values for global variable 91 (action 0x14, only testable using action 7/9)
+
+	uint32 observed_feature_tests;           ///< Observed feature test bits (see: GRFFeatureTestObservationFlag)
 
 	const SpriteGroup *new_signals_group;    ///< New signals sprite group
 	byte new_signal_ctrl_flags;              ///< Ctrl flags for new signals

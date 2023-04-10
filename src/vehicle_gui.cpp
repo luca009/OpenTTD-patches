@@ -692,6 +692,7 @@ struct RefitWindow : public Window {
 	uint8 num_vehicles;          ///< Number of selected vehicles.
 	bool auto_refit;             ///< Select cargo for auto-refitting.
 	bool is_virtual_train;       ///< TemplateReplacement, whether the selected vehicle is virtual
+	mutable std::map<VehicleID, std::string> ship_part_names; ///< Ship part name strings
 
 	/**
 	 * Collects all (cargo, subcargo) refit options of a vehicle chain.
@@ -707,6 +708,7 @@ struct RefitWindow : public Window {
 
 		do {
 			if (v->type == VEH_TRAIN && std::find(vehicles_to_refit.begin(), vehicles_to_refit.end(), v->index) == vehicles_to_refit.end()) continue;
+			if (v->type == VEH_SHIP && this->num_vehicles == 1 && v->index != this->selected_vehicle) continue;
 			const Engine *e = v->GetEngine();
 			CargoTypes cmask = e->info.refit_mask;
 			byte callback_mask = e->info.callback_mask;
@@ -798,7 +800,7 @@ struct RefitWindow : public Window {
 				}
 				current_index++;
 			}
-		} while (v->IsGroundVehicle() && (v = v->Next()) != nullptr);
+		} while (v->IsArticulatedCallbackVehicleType() && (v = v->Next()) != nullptr);
 	}
 
 	/**
@@ -885,7 +887,15 @@ struct RefitWindow : public Window {
 		NWidgetCore *nwi = this->GetWidget<NWidgetCore>(WID_VR_REFIT);
 		nwi->widget_data = STR_REFIT_TRAIN_REFIT_BUTTON + v->type;
 		nwi->tool_tip    = STR_REFIT_TRAIN_REFIT_TOOLTIP + v->type;
-		this->GetWidget<NWidgetStacked>(WID_VR_SHOW_HSCROLLBAR)->SetDisplayedPlane(v->IsGroundVehicle() ? 0 : SZSP_HORIZONTAL);
+		int hscrollbar_pane;
+		if (v->IsGroundVehicle()) {
+			hscrollbar_pane = 0;
+		} else if (v->type == VEH_SHIP && v->Next() != nullptr && this->order == INVALID_VEH_ORDER_ID) {
+			hscrollbar_pane = 1;
+		} else {
+			hscrollbar_pane = SZSP_HORIZONTAL;
+		}
+		this->GetWidget<NWidgetStacked>(WID_VR_SHOW_HSCROLLBAR)->SetDisplayedPlane(hscrollbar_pane);
 		this->GetWidget<NWidgetCore>(WID_VR_VEHICLE_PANEL_DISPLAY)->tool_tip = (v->type == VEH_TRAIN) ? STR_REFIT_SELECT_VEHICLES_TOOLTIP : STR_NULL;
 
 		this->FinishInitNested(v->index);
@@ -998,9 +1008,45 @@ struct RefitWindow : public Window {
 		}
 	}
 
+	const std::string &GetShipPartName(const Vehicle *v) const
+	{
+		std::string &name = this->ship_part_names[v->index];
+		if (name.empty()) {
+			char buffer[128] = "";
+			const Vehicle *front = v->First();
+			uint offset = 0;
+			for (const Vehicle *u = front; u != v; u = u->Next()) offset++;
+			uint16 callback = GetVehicleCallback(XCBID_SHIP_REFIT_PART_NAME, offset, 0, front->engine_type, front);
+			if (callback != CALLBACK_FAILED && callback < 0x400) {
+				const GRFFile *grffile = v->GetGRF();
+				assert(grffile != nullptr);
+
+				StartTextRefStackUsage(grffile, 6);
+				char *end = GetString(buffer, GetGRFStringID(grffile->grfid, 0xD000 + callback), lastof(buffer));
+				StopTextRefStackUsage();
+
+				name.assign(buffer, end - buffer);
+			} else {
+				SetDParam(0, offset + 1);
+				char *end = GetString(buffer, STR_REFIT_SHIP_PART, lastof(buffer));
+				name.assign(buffer, end - buffer);
+			}
+		}
+		return name;
+	}
+
 	void SetStringParameters(int widget) const override
 	{
 		if (widget == WID_VR_CAPTION) SetDParam(0, Vehicle::Get(this->window_number)->index);
+
+		if (widget == WID_VR_VEHICLE_DROPDOWN) {
+			if (this->num_vehicles == 1) {
+				SetDParam(0, STR_JUST_RAW_STRING);
+				SetDParamStr(1, this->GetShipPartName(Vehicle::Get(this->selected_vehicle)));
+			} else {
+				SetDParam(0, STR_REFIT_WHOLE_SHIP);
+			}
+		}
 	}
 
 	/**
@@ -1147,6 +1193,7 @@ struct RefitWindow : public Window {
 				Vehicle *v = Vehicle::Get(this->window_number);
 				this->selected_vehicle = v->index;
 				this->num_vehicles = UINT8_MAX;
+				this->ship_part_names.clear();
 				FALLTHROUGH;
 			}
 
@@ -1246,6 +1293,29 @@ struct RefitWindow : public Window {
 		}
 	}
 
+	virtual void OnDropdownSelect(int widget, int index) override
+	{
+		if (widget != WID_VR_VEHICLE_DROPDOWN) return;
+
+		const Vehicle *v = Vehicle::Get(this->window_number);
+
+		if (index > 0) {
+			for (const Vehicle *u = v; u != nullptr; u = u->Next()) {
+				if (index == 1) {
+					this->selected_vehicle = u->index;
+					this->num_vehicles = 1;
+					this->InvalidateData(2);
+					return;
+				}
+				index--;
+			}
+		}
+
+		this->selected_vehicle = v->index;
+		this->num_vehicles = UINT8_MAX;
+		this->InvalidateData(2);
+	}
+
 	void OnClick(Point pt, int widget, int click_count) override
 	{
 		switch (widget) {
@@ -1288,6 +1358,26 @@ struct RefitWindow : public Window {
 					}
 				}
 				break;
+
+			case WID_VR_VEHICLE_DROPDOWN: {
+				const Vehicle *v = Vehicle::Get(this->window_number);
+				if (v->type != VEH_SHIP) break;
+
+				DropDownList dlist;
+				int selected = 0;
+				dlist.emplace_back(new DropDownListStringItem(STR_REFIT_WHOLE_SHIP, 0, false));
+
+				int offset = 1;
+				for (const Vehicle *u = v; u != nullptr; u = u->Next()) {
+					if (u->index == this->selected_vehicle && this->num_vehicles == 1) selected = offset;
+					DropDownListCharStringItem *item = new DropDownListCharStringItem(this->GetShipPartName(u), offset, false);
+					dlist.emplace_back(item);
+					offset++;
+				}
+
+				ShowDropDownList(this, std::move(dlist), selected, WID_VR_VEHICLE_DROPDOWN, 0, true);
+				break;
+			}
 		}
 	}
 
@@ -1336,6 +1426,7 @@ static const NWidgetPart _nested_vehicle_refit_widgets[] = {
 		NWidget(WWT_PANEL, COLOUR_GREY, WID_VR_VEHICLE_PANEL_DISPLAY), SetMinimalSize(228, 14), SetResize(1, 0), SetScrollbar(WID_VR_HSCROLLBAR), EndContainer(),
 		NWidget(NWID_SELECTION, INVALID_COLOUR, WID_VR_SHOW_HSCROLLBAR),
 			NWidget(NWID_HSCROLLBAR, COLOUR_GREY, WID_VR_HSCROLLBAR),
+			NWidget(WWT_DROPDOWN, COLOUR_GREY, WID_VR_VEHICLE_DROPDOWN), SetFill(1, 0), SetResize(1, 0), SetDataTip(STR_JUST_STRING1, STR_REFIT_SHIP_PART_DROPDOWN_TOOLTIP),
 		EndContainer(),
 	EndContainer(),
 	NWidget(WWT_TEXTBTN, COLOUR_GREY, WID_VR_SELECT_HEADER), SetDataTip(STR_REFIT_TITLE, STR_NULL), SetResize(1, 0),
@@ -2823,9 +2914,9 @@ struct VehicleDetailsWindow : Window {
 		}
 		if (!gui_scope) return;
 		const Vehicle *v = Vehicle::Get(this->window_number);
-		if (v->type == VEH_ROAD) {
+		if (v->type == VEH_ROAD || v->type == VEH_SHIP) {
 			const NWidgetBase *nwid_info = this->GetWidget<NWidgetBase>(WID_VD_MIDDLE_DETAILS);
-			uint aimed_height = this->GetRoadVehDetailsHeight(v);
+			uint aimed_height = this->GetRoadOrShipVehDetailsHeight(v);
 			/* If the number of articulated parts changes, the size of the window must change too. */
 			if (aimed_height != nwid_info->current_y) {
 				this->ReInit();
@@ -2839,16 +2930,17 @@ struct VehicleDetailsWindow : Window {
 	}
 
 	/**
-	 * Gets the desired height for the road vehicle details panel.
+	 * Gets the desired height for the road vehicle and ship details panel.
 	 * @param v Road vehicle being shown.
 	 * @return Desired height in pixels.
 	 */
-	uint GetRoadVehDetailsHeight(const Vehicle *v)
+	uint GetRoadOrShipVehDetailsHeight(const Vehicle *v)
 	{
 		uint desired_height;
-		if (v->HasArticulatedPart()) {
+		if (v->Next() != nullptr) {
 			/* An articulated RV has its text drawn under the sprite instead of after it, hence 15 pixels extra. */
-			desired_height = ScaleGUITrad(15) + 4 * FONT_HEIGHT_NORMAL + WidgetDimensions::scaled.vsep_normal * 2;
+			desired_height = 4 * FONT_HEIGHT_NORMAL + WidgetDimensions::scaled.vsep_normal * 2;
+			if (v->type == VEH_ROAD) desired_height += ScaleGUITrad(15);
 			/* Add space for the cargo amount for each part. */
 			for (const Vehicle *u = v; u != nullptr; u = u->Next()) {
 				if (u->cargo_cap != 0) desired_height += FONT_HEIGHT_NORMAL;
@@ -2948,11 +3040,8 @@ struct VehicleDetailsWindow : Window {
 				const Vehicle *v = Vehicle::Get(this->window_number);
 				switch (v->type) {
 					case VEH_ROAD:
-						size->height = this->GetRoadVehDetailsHeight(v) + padding.height;
-						break;
-
 					case VEH_SHIP:
-						size->height = 5 * FONT_HEIGHT_NORMAL + WidgetDimensions::scaled.vsep_normal * 2 + padding.height;
+						size->height = this->GetRoadOrShipVehDetailsHeight(v) + padding.height;
 						break;
 
 					case VEH_AIRCRAFT:
@@ -3489,7 +3578,7 @@ static bool IsVehicleRefitable(const Vehicle *v)
 
 	do {
 		if (IsEngineRefittable(v->engine_type)) return true;
-	} while (v->IsGroundVehicle() && (v = v->Next()) != nullptr);
+	} while (v->IsArticulatedCallbackVehicleType() && (v = v->Next()) != nullptr);
 
 	return false;
 }
@@ -4064,8 +4153,8 @@ public:
 		}
 		/* The same system applies to widget WID_VV_REFIT_VEH and VVW_WIDGET_TURN_AROUND.*/
 		if (v->IsGroundVehicle()) {
-			PlaneSelections plane = veh_stopped ? SEL_RT_REFIT : SEL_RT_TURN_AROUND;
-			NWidgetStacked *nwi = this->GetWidget<NWidgetStacked>(WID_VV_SELECT_REFIT_TURN);
+			plane = veh_stopped ? SEL_RT_REFIT : SEL_RT_TURN_AROUND;
+			nwi = this->GetWidget<NWidgetStacked>(WID_VV_SELECT_REFIT_TURN);
 			if (nwi->shown_plane + SEL_RT_BASEPLANE != plane) {
 				this->SelectPlane(plane);
 				this->SetWidgetDirty(WID_VV_SELECT_REFIT_TURN);
@@ -4185,8 +4274,8 @@ bool VehicleClicked(const GUIVehicleGroup &vehgroup)
 
 void StopGlobalFollowVehicle(const Vehicle *v)
 {
-	Window *w = GetMainWindow();
-	if (w->viewport->follow_vehicle == v->index) {
+	Window *w = FindWindowById(WC_MAIN_WINDOW, 0);
+	if (w != nullptr && w->viewport->follow_vehicle == v->index) {
 		ScrollMainWindowTo(v->x_pos, v->y_pos, v->z_pos, true); // lock the main view on the vehicle's last position
 		w->viewport->follow_vehicle = INVALID_VEHICLE;
 	}

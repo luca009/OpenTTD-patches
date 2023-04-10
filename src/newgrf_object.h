@@ -134,8 +134,12 @@ struct ObjectSpec {
 	bool IsAvailable() const;
 	uint Index() const;
 
+	static const std::vector<ObjectSpec> &Specs();
+	static size_t Count();
 	static const ObjectSpec *Get(ObjectType index);
 	static const ObjectSpec *GetByTile(TileIndex tile);
+
+	static void BindToClasses();
 };
 
 /** Object scope resolver. */
@@ -170,7 +174,7 @@ struct ObjectResolverObject : public ResolverObject {
 			CallbackID callback = CBID_NO_CALLBACK, uint32 param1 = 0, uint32 param2 = 0);
 	~ObjectResolverObject();
 
-	ScopeResolver *GetScope(VarSpriteGroupScope scope = VSG_SCOPE_SELF, byte relative = 0) override
+	ScopeResolver *GetScope(VarSpriteGroupScope scope = VSG_SCOPE_SELF, VarSpriteGroupScopeOffset relative = 0) override
 	{
 		switch (scope) {
 			case VSG_SCOPE_SELF:

@@ -196,11 +196,6 @@ STR_UNITS_VELOCITY_METRIC                                       :{COMMA}{NBSP}km
 STR_UNITS_VELOCITY_SI                                           :{COMMA}{NBSP}m/s
 STR_UNITS_VELOCITY_GAMEUNITS                                    :{DECIMAL}{NBSP}Felder/Dag
 
-STR_UNIT_NAME_VELOCITY_IMPERIAL                                 :mph
-STR_UNIT_NAME_VELOCITY_METRIC                                   :km/h
-STR_UNIT_NAME_VELOCITY_SI                                       :m/s
-STR_UNIT_NAME_VELOCITY_GAMEUNITS                                :Felder/Dag
-
 STR_UNITS_POWER_IMPERIAL                                        :{COMMA}{NBSP}bhp
 STR_UNITS_POWER_METRIC                                          :{COMMA}{NBSP}ps
 STR_UNITS_POWER_SI                                              :{COMMA}{NBSP}kW
@@ -249,7 +244,6 @@ STR_TOOLTIP_SORT_ORDER                                          :{BLACK}Richtung
 STR_TOOLTIP_SORT_CRITERIA                                       :{BLACK}Argument fir ze sortéieren
 STR_TOOLTIP_FILTER_CRITERIA                                     :{BLACK}Filterkritère wielen
 STR_BUTTON_SORT_BY                                              :{BLACK}Sortéier no
-STR_BUTTON_RENAME                                               :{BLACK}Ëmbenennen
 STR_BUTTON_CATCHMENT                                            :{BLACK}Reechwäit
 STR_TOOLTIP_CATCHMENT                                           :{BLACK}Reechwäit uweisen un/ausschalten
 
@@ -392,7 +386,7 @@ STR_SCENEDIT_TOOLBAR_TOWN_GENERATION                            :{BLACK}Stieders
 STR_SCENEDIT_TOOLBAR_INDUSTRY_GENERATION                        :{BLACK}Industrieerstellung
 STR_SCENEDIT_TOOLBAR_ROAD_CONSTRUCTION                          :{BLACK}Stroossebau
 STR_SCENEDIT_TOOLBAR_TRAM_CONSTRUCTION                          :{BLACK}Tramkonstruktioun
-STR_SCENEDIT_TOOLBAR_PLANT_TREES                                :{BLACK}Beem planzen. Shift wiesselt tëscht bauen/ongeféier Käschten uweisen
+STR_SCENEDIT_TOOLBAR_PLANT_TREES                                :{BLACK}Beem planzen. Ctrl wielt d'Land diagonal. Shift wiesselt tëscht bauen/ongeféier Käschten uweisen
 STR_SCENEDIT_TOOLBAR_PLACE_SIGN                                 :{BLACK}Schëld opstellen
 STR_SCENEDIT_TOOLBAR_PLACE_OBJECT                               :{BLACK}Objet plazéiren. Ctrl wiel d'Areal diagonal aus. Shift wiesselt tëscht bauen/ongeféier Käschten uweisen
 
@@ -596,12 +590,6 @@ STR_MONTH_SEP                                                   :September
 STR_MONTH_OCT                                                   :Oktober
 STR_MONTH_NOV                                                   :November
 STR_MONTH_DEC                                                   :Dezember
-
-###length VEHICLE_TYPES
-STR_VEHICLE_TYPE_TRAINS                                         :Zich
-STR_VEHICLE_TYPE_ROAD_VEHICLES                                  :Stroossegefierer
-STR_VEHICLE_TYPE_SHIPS                                          :Schëffer
-STR_VEHICLE_TYPE_AIRCRAFT                                       :Fligeren
 
 # Graph window
 STR_GRAPH_KEY_BUTTON                                            :{BLACK}Legend
@@ -1218,6 +1206,9 @@ STR_CONFIG_SETTING_HORIZONTAL_POS_RIGHT                         :Riets
 
 STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN                         :Maximalen Ufanksloun: {STRING}
 STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_HELPTEXT                :Maximalwäert den eng Firma kann léinen (ouni Inflatioun matzerechnen)
+STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_VALUE                   :{CURRENCY_LONG}
+###setting-zero-is-special
+STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_DISABLED                :Kee Kredit {RED}Spill-Script muss am Ufank e Geldbetrag zur Verfügung ginn
 
 STR_CONFIG_SETTING_INTEREST_RATE                                :Zënssaz: {STRING}
 STR_CONFIG_SETTING_INTEREST_RATE_HELPTEXT                       :Zënssaz; kontrolléiert och d'Inflatioun wann ugeschalt
@@ -1600,7 +1591,7 @@ STR_CONFIG_SETTING_RIGHT_MOUSE_WND_CLOSE_HELPTEXT               :Mécht eng Fens
 STR_CONFIG_SETTING_AUTOSAVE                                     :Autospäicheren: {STRING}
 STR_CONFIG_SETTING_AUTOSAVE_HELPTEXT                            :Setz den Interval tëschend automateschen Späicherstänn
 
-STR_CONFIG_SETTING_DATE_FORMAT_IN_SAVE_NAMES                    :Benotz {STRING} Datumsformat fir Späichernimm
+STR_CONFIG_SETTING_DATE_FORMAT_IN_SAVE_NAMES                    :Datumsformat fir Späichernimm: {STRING}
 STR_CONFIG_SETTING_DATE_FORMAT_IN_SAVE_NAMES_HELPTEXT           :Format vum Datum am Numm vum Späicherstand
 ###length 3
 STR_CONFIG_SETTING_DATE_FORMAT_IN_SAVE_NAMES_LONG               :laang (31ten Dez 2008)
@@ -1895,7 +1886,7 @@ STR_CONFIG_SETTING_SOFT_LIMIT_VALUE                             :{COMMA}
 ###setting-zero-is-special
 STR_CONFIG_SETTING_SOFT_LIMIT_DISABLED                          :ausgeschalt
 
-STR_CONFIG_SETTING_ZOOM_MIN                                     :Maximalen Ranzoom Level: {STRING}
+STR_CONFIG_SETTING_ZOOM_MIN                                     :Maximale Razoom Level: {STRING}
 STR_CONFIG_SETTING_ZOOM_MIN_HELPTEXT                            :Maximal Razoomstuf fir Usiichtsfënsteren. Et gëtt méi Späicher gebraucht wann d'Stufen ze grouss ginn
 STR_CONFIG_SETTING_ZOOM_MAX                                     :Maximalen Rauszoom Level: {STRING}
 STR_CONFIG_SETTING_ZOOM_MAX_HELPTEXT                            :Maximal Rauszoom-Stuf fir Usiichtsfënsteren. Méi grouss Rauszoom-Stufen kënnen Ruckeler verursaachen
@@ -1931,31 +1922,31 @@ STR_CONFIG_SETTING_LARGER_TOWNS_DISABLED                        :Keng
 STR_CONFIG_SETTING_CITY_SIZE_MULTIPLIER                         :Ufangs-Gréisst vu Stied multiplizéiren mat: {STRING}
 STR_CONFIG_SETTING_CITY_SIZE_MULTIPLIER_HELPTEXT                :Duerchschnëttsgréisst vu Stied an Proportioun zu normalen Dierfer um Spillstart
 
-STR_CONFIG_SETTING_LINKGRAPH_INTERVAL                           :Aktualiséier d'Distributiounsgrafik all {STRING}{NBSP}D{P 0:2 ag eeg}
-STR_CONFIG_SETTING_LINKGRAPH_INTERVAL_HELPTEXT                  :Zäit tëscht nofolgenden Neiberechnungen vun der Linkgrafik. All Neiberechnung rechent d'Pläng fir eng Komponent vun der Grafik. Dat heescht dass en Wert X fir dës Astellung net all X Deeg aktualiséiert gëtt. Nëmmen een Komponent gëtt aktualiséiert. Wat méi kuerz gesat, wat méi CPU Rechenzäit gebraucht gëtt. Wat se méi laang gesat gëtt, wat méi Zäit vergeet bis Wuerendistributioun op enger neier Route gestart gëtt.
-STR_CONFIG_SETTING_LINKGRAPH_TIME                               :Benotz {STRING}{NBSP}D{P 0:2 ag eeg} fir d'Neiberechnung vum Distributiounsgraf
-STR_CONFIG_SETTING_LINKGRAPH_TIME_HELPTEXT                      :Zäit déi gebraucht gëtt fir all Neiberechnung vun enger Linkgrafikkomponent. Wann eng Neiberechnung ufenkt, gëtt en Thread erstallt dee fir dës Unzuel un Deeg leeft. Wann de Wäert ze kleng ass, kann den Thread net an der gewënschter Zäit faerdeg ginn an et kënnt zu engem Lag. Wann de Wäert méi héich gesat gëtt, brauch d'Distributioun méi lang fir erneiert ze ginn wann eng Streck ännert
+STR_CONFIG_SETTING_LINKGRAPH_INTERVAL                           :Aktualiséier d'Verdeelungsgrafik all {STRING}{NBSP}D{P 0:2 ag eeg}
+STR_CONFIG_SETTING_LINKGRAPH_INTERVAL_HELPTEXT                  :Zäit tëscht nofolgenden Neiberechnungen vun der Linkgrafik. All Neiberechnung rechent d'Pläng fir eng Komponent vun der Grafik. Dat heescht, dass en Wert X fir dës Astellung net all X Deeg aktualiséiert gëtt. Nëmmen een Komponent gëtt aktualiséiert. Wat méi kuerz gesat, wat méi CPU Rechenzäit gebraucht gëtt. Wat se méi laang gesat gëtt, wat méi Zäit vergeet bis Wuereverdeelung op enger neier Route gestart gëtt.
+STR_CONFIG_SETTING_LINKGRAPH_TIME                               :Benotz {STRING}{NBSP}D{P 0:2 ag eeg} fir d'Neiberechnung vum Verdeelungsgraf
+STR_CONFIG_SETTING_LINKGRAPH_TIME_HELPTEXT                      :Zäit déi gebraucht gëtt fir all Neiberechnung vun enger Linkgrafikkomponent. Wann eng Neiberechnung ufenkt, gëtt en Thread erstallt dee fir dës Unzuel un Deeg leeft. Wann de Wäert ze kleng ass, kann den Thread net an der gewënschter Zäit faerdeg ginn an et kënnt zu engem Lag. Wann de Wäert méi héich gesat gëtt, brauch d'Verdeelung méi lang fir erneiert ze ginn wann eng Streck ännert
 
-STR_CONFIG_SETTING_DISTRIBUTION_PAX                             :Distributiounsmodus fir Passagéier: {STRING}
-STR_CONFIG_SETTING_DISTRIBUTION_PAX_HELPTEXT                    :"symmetresch" heescht, dass ongeféier d'selwecht vill Passagéier vun A op B wéi vu B op A geschéckt ginn. "asymmetresch" heescht, dass eng arbiträr Unzuel u Wueren an d'jeweileg Richtung geschéckt ginn. "manuell" heescht dass keng automatësch Distributioun stattfënnt fir Passagéier
-STR_CONFIG_SETTING_DISTRIBUTION_MAIL                            :Distributiounsmodus fir Post: {STRING}
-STR_CONFIG_SETTING_DISTRIBUTION_MAIL_HELPTEXT                   :"symmetresch" heescht, dass ongeféier d'selwecht vill vun A op B wéi vu B op A geschéckt ginn. "asymmetresch" heescht, dass eng arbiträr Unzuel u Wueren an d'jeweileg Richtung geschéckt ginn. "manuell" heescht dass keng automatësch Distributioun stattfënnt fir Post
-STR_CONFIG_SETTING_DISTRIBUTION_ARMOURED                        :Distributiounsmodus fir d'GEPANZERT Wuereklass: {STRING}
-STR_CONFIG_SETTING_DISTRIBUTION_ARMOURED_HELPTEXT               :D'GEPANZERT Wuereklass huet Wäertsaachen am geméissegte Klima, Diamanten am Sub-Tropenklima an Gold am sub-arktësche Klima. NewGRFen kënnen dat änneren. "Symmetrësch" heescht, dass ongeféier d'selwecht vill vun A op B wéi vu B op A geschéckt ginn. "asymmetrësch" heescht, dass eng arbiträr Unzuel u Wueren an d'jeweileg Richtung geschéckt ginn. "manuell" heescht dass keng automatësch Distributioun stattfënnt. Et gëtt emfuelen dëst op asymmetrësch oder manuell ze loossen wann ee sub-arktësch spillt, well Banken kee Gold zréck an d’Minen liwweren. Fir geméissegt Klima an sub-tropësch Klima kann eng Bank mat der anerer Wäertsachen zeréckschécken.
-STR_CONFIG_SETTING_DISTRIBUTION_DEFAULT                         :Distributiounsmodus fir aner Wuerenklassen: {STRING}
-STR_CONFIG_SETTING_DISTRIBUTION_DEFAULT_HELPTEXT                :"asymmetresch" heescht dass eng beléiweg Unzuel un Wueren an béid Richtungen verschéckt ginn. "manuell" heescht dass keng automatësch Distributioun stattfënnt. Meeschtens gëtt "asymmetresch" oder manuell gewielt.
+STR_CONFIG_SETTING_DISTRIBUTION_PAX                             :Verdeelungsmodus fir Passagéier: {STRING}
+STR_CONFIG_SETTING_DISTRIBUTION_PAX_HELPTEXT                    :"Symmetresch" heescht, dass ongeféier d'selwecht vill Passagéier vun A op B wéi vu B op A geschéckt ginn. "Asymmetresch" heescht, dass eng arbiträr Unzuel u Wueren an d'jeweileg Richtung geschéckt ginn. "Manuell" heescht dass keng automatësch Verdeelung stattfënnt fir Passagéier
+STR_CONFIG_SETTING_DISTRIBUTION_MAIL                            :Verdeelungsmodus fir Post: {STRING}
+STR_CONFIG_SETTING_DISTRIBUTION_MAIL_HELPTEXT                   :"Symmetresch" heescht, dass ongeféier d'selwecht vill vun A op B wéi vu B op A geschéckt ginn. "Asymmetresch" heescht, dass eng arbiträr Unzuel u Wueren an d'jeweileg Richtung geschéckt ginn. "Manuell" heescht dass keng automatësch Verdeelung stattfënnt fir Post
+STR_CONFIG_SETTING_DISTRIBUTION_ARMOURED                        :Verdeelungsmodus fir d'GEPANZERT Wuereklass: {STRING}
+STR_CONFIG_SETTING_DISTRIBUTION_ARMOURED_HELPTEXT               :D'GEPANZERT Wuereklass huet Wäertsaachen am geméissegte Klima, Diamanten am Sub-Tropenklima an Gold am sub-arktësche Klima. NewGRFen kënnen dat änneren. "Symmetrësch" heescht, dass ongeféier d'selwecht vill vun A op B wéi vu B op A geschéckt ginn. "Asymmetrësch" heescht, dass eng arbiträr Unzuel u Wueren an d'jeweileg Richtung geschéckt ginn. "Manuell" heescht dass keng automatësch Verdeelung stattfënnt. Et gëtt emfuelen dëst op asymmetrësch oder manuell ze loossen wann ee sub-arktësch spillt, well Banken kee Gold zréck an d’Minen liwweren. Fir geméissegt Klima an sub-tropësch Klima kann eng Bank mat der anerer Wäertsachen zeréckschécken.
+STR_CONFIG_SETTING_DISTRIBUTION_DEFAULT                         :Verdeelungsmodus fir aner Wuereklassen: {STRING}
+STR_CONFIG_SETTING_DISTRIBUTION_DEFAULT_HELPTEXT                :"Asymmetresch" heescht dass eng beléiweg Unzuel un Wueren an béid Richtungen verschéckt ginn. "Manuell" heescht dass keng automatësch Verdeelung stattfënnt.
 ###length 3
 STR_CONFIG_SETTING_DISTRIBUTION_MANUAL                          :manuell
 STR_CONFIG_SETTING_DISTRIBUTION_ASYMMETRIC                      :asymmetresch
 STR_CONFIG_SETTING_DISTRIBUTION_SYMMETRIC                       :symmetresch
 
-STR_CONFIG_SETTING_LINKGRAPH_ACCURACY                           :Distributiounsgenauegkeet: {STRING}
-STR_CONFIG_SETTING_LINKGRAPH_ACCURACY_HELPTEXT                  :Wat de Wäert méi héich ass, wat méi CPU benotzt gëtt fir d'Linkgrafik ze zeechnen. Wann ze héich gesat, kann et zu Lags kommen. Ze niddreg gesat kann d'Distributioun ongenau ginn an d'Wueren net sou verdeelt ginn wéi geduet
+STR_CONFIG_SETTING_LINKGRAPH_ACCURACY                           :Verdeelungsgenauegkeet: {STRING}
+STR_CONFIG_SETTING_LINKGRAPH_ACCURACY_HELPTEXT                  :Wat de Wäert méi héich ass, wat méi CPU benotzt gëtt fir d'Linkgrafik ze zeechnen. Wann ze héich gesat, kann et zu Lags kommen. Ze niddreg gesat kann d'Verdeelung ongenau ginn an d'Wueren net sou verdeelt ginn wéi geduet
 
 STR_CONFIG_SETTING_DEMAND_DISTANCE                              :Afloss vun der Distanz op d'Nofro: {STRING}
 STR_CONFIG_SETTING_DEMAND_DISTANCE_HELPTEXT                     :Wann's de en méi héije Wäert wéi 0 wiels, huet d'Differenz tëscht 2 Statiounen A an B en Afloss dorop wéivill Wueren geschéckt ginn. Wat B méi wäit ewech vun A ass, wat manner Wueren geschéckt ginn. Wat de Wäert méi héich gesat gëtt, wat manner Wueren op eng Statioun wait ewech an méi Wueren op eng Statioun méi no geschéckt ginn.
 STR_CONFIG_SETTING_DEMAND_SIZE                                  :Unzuel vun zeréckgeschéckte Wueren fir de symmetreschen Modus: {STRING}
-STR_CONFIG_SETTING_DEMAND_SIZE_HELPTEXT                         :Wann een dëst op manner wéi 100% setzt, gëtt déi symmetresch Distributioun méi wéi eng asymmetrësch behandelt. Manner Wueren ginn zeréckgeschéckt wann en bestëmmten Wäert op eng Statioun geschéckt gouf. Bei 0% verhält sech d'symmetresch Distributioun wéi eng asymmetresch
+STR_CONFIG_SETTING_DEMAND_SIZE_HELPTEXT                         :Wann een dëst op manner wéi 100% setzt, gëtt déi symmetresch Verdeelung méi wéi eng asymmetrësch behandelt. Manner Wueren ginn zeréckgeschéckt wann en bestëmmten Wäert op eng Statioun geschéckt gouf. Bei 0% verhält sech d'symmetresch Verdeelung wéi eng asymmetresch
 
 STR_CONFIG_SETTING_SHORT_PATH_SATURATION                        :Sättegung vu kuerzen Weeër befier grouss Weeër benotzt ginn: {STRING}
 STR_CONFIG_SETTING_SHORT_PATH_SATURATION_HELPTEXT               :Oft gëtt et e puer Weeër tëscht zwou Statiounen. Cargodist siedegt fir d'éischt de kierzten, dann den zweetkierzten a.s.w. Siedegung gëtt bestemmt durch Kapazitéit an geplangten Notzung. Wann all Wee gesiedegt ass, an nach emmer eng Nofro do ass, ginn all d'Weeër iwwersiedegt, mat Präferenz déi mat grousser Kapazitéit. Gréissten Deel vun der Zäit rechent den Algorithmus d'Kapazitéit allerdéngs net richteg. Des Astellung erlabt engem en Prozentsaz ze bestëmmen fir den éischten Wee befier en zweeten Wee benotzt gëtt. Setz en enner 100% fir iwwerfëllten Statiounen ze vermeide wann d'Kapazitéit iwwerschat gouf.
@@ -2055,7 +2046,7 @@ STR_CONFIG_ERROR_INVALID_GRF_SYSTEM                             :System NewGRF
 STR_CONFIG_ERROR_INVALID_GRF_INCOMPATIBLE                       :net mat dëser Versioun vun OpenTTD kompatibel
 STR_CONFIG_ERROR_INVALID_GRF_UNKNOWN                            :onbekannt
 STR_CONFIG_ERROR_INVALID_SAVEGAME_COMPRESSION_LEVEL             :{WHITE}... Kompressiounslevel '{STRING}' ass net gültëg.
-STR_CONFIG_ERROR_INVALID_SAVEGAME_COMPRESSION_ALGORITHM         :{WHITE}... Spillstand format '{STRING}' gëtt et net. Revertéiren zu '{STRING}'
+STR_CONFIG_ERROR_INVALID_SAVEGAME_COMPRESSION_ALGORITHM         :{WHITE}... Späicherstand format '{STRING}' gëtt et net. Revertéiren zu '{STRING}'
 STR_CONFIG_ERROR_INVALID_BASE_GRAPHICS_NOT_FOUND                :{WHITE}... ignoréiren Basis Grafik Set '{STRING}': net fonnt
 STR_CONFIG_ERROR_INVALID_BASE_SOUNDS_NOT_FOUND                  :{WHITE}... ignoréiren Basis Sound Set '{STRING}': net fonnt
 STR_CONFIG_ERROR_INVALID_BASE_MUSIC_NOT_FOUND                   :{WHITE}... ignoréiren Basis Musik Set '{STRING}': net fonnt
@@ -2123,7 +2114,7 @@ STR_ABANDON_SCENARIO_QUERY                                      :{YELLOW}Bass du
 # Cheat window
 STR_CHEATS                                                      :{WHITE}Cheater
 STR_CHEATS_TOOLTIP                                              :{BLACK}Checkboxen weisen un dass du den Cheat schon eng Kéier benotzt hues
-STR_CHEATS_NOTE                                                 :{BLACK}Notiz: jeglech Benotzung vun dësen Astellungen wäert am Spillstand opgeholl ginn
+STR_CHEATS_NOTE                                                 :{BLACK}Notiz: jeglech Benotzung vun dësen Astellungen wäert am Späicherstand opgeholl ginn
 STR_CHEAT_MONEY                                                 :{LTBLUE}Suen ëm {CURRENCY_LONG} erhéijen
 STR_CHEAT_CHANGE_COMPANY                                        :{LTBLUE}Als Firma {ORANGE}{COMMA} spillen
 STR_CHEAT_EXTRA_DYNAMITE                                        :{LTBLUE}Magësche Bulldozer (Industrien ofrappen, onzerstéierbar Objeten): {ORANGE}{STRING}
@@ -2367,7 +2358,6 @@ STR_NETWORK_CLIENT_LIST_NEW_COMPANY                             :(Nei Firma)
 STR_NETWORK_CLIENT_LIST_NEW_COMPANY_TOOLTIP                     :{BLACK}Eng nei Firma erstellen an hier bäitrieden
 STR_NETWORK_CLIENT_LIST_PLAYER_ICON_SELF_TOOLTIP                :{BLACK}Dat bass du
 STR_NETWORK_CLIENT_LIST_PLAYER_ICON_HOST_TOOLTIP                :{BLACK}Dest ass den Host vun der Partie
-STR_NETWORK_CLIENT_LIST_CLIENT_COMPANY_COUNT                    :{BLACK}{NUM} Client{P "" en} / {NUM} Firm{P a en}
 
 # Matches ConnectionType
 ###length 5
@@ -2710,6 +2700,10 @@ STR_BUILD_SIGNAL_DRAG_SIGNALS_DENSITY_INCREASE_TOOLTIP          :{BLACK}Setzt Si
 STR_SELECT_RAIL_BRIDGE_CAPTION                                  :{WHITE}Zuchbréck auswielen
 STR_SELECT_ROAD_BRIDGE_CAPTION                                  :{WHITE}Stroossebréck auswielen
 STR_SELECT_BRIDGE_SELECTION_TOOLTIP                             :{BLACK}Bréckenauswiel - Wiel deng Bréck aus
+STR_SELECT_BRIDGE_INFO_NAME                                     :{GOLD}{STRING}
+STR_SELECT_BRIDGE_INFO_NAME_MAX_SPEED                           :{GOLD}{STRING},{} {VELOCITY}
+STR_SELECT_BRIDGE_INFO_NAME_COST                                :{GOLD}{0:STRING},{} {WHITE}{2:CURRENCY_LONG}
+STR_SELECT_BRIDGE_INFO_NAME_MAX_SPEED_COST                      :{GOLD}{STRING},{} {VELOCITY} {WHITE}{CURRENCY_LONG}
 STR_BRIDGE_NAME_SUSPENSION_STEEL                                :Stolen Hängebréck
 STR_BRIDGE_NAME_GIRDER_STEEL                                    :Stoldréier Bréck
 STR_BRIDGE_NAME_CANTILEVER_STEEL                                :Fräidroend Stolbréck
@@ -2829,7 +2823,7 @@ STR_OBJECT_CLASS_TRNS                                           :Antennen
 STR_PLANT_TREE_CAPTION                                          :{WHITE}Beem
 STR_PLANT_TREE_TOOLTIP                                          :{BLACK}Wielt de Baamtyp. Wann d'Feld schons e Baam huet, ginn méi Beem vu verschiddenen Arten gesat
 STR_TREES_RANDOM_TYPE                                           :{BLACK}Zoufälleg Beem
-STR_TREES_RANDOM_TYPE_TOOLTIP                                   :{BLACK}Zoufälleg Beem planzen. Shift wiesselt tëscht bauen an ongeféier Käschten uweisen
+STR_TREES_RANDOM_TYPE_TOOLTIP                                   :{BLACK}Zoufälleg Type vu Beem planzen. Ctrl wielt d'Land diagonal. Shift wiesselt tëscht bauen an ongeféier Käschten uweisen
 STR_TREES_RANDOM_TREES_BUTTON                                   :{BLACK}Zoufälleg Beem
 STR_TREES_RANDOM_TREES_TOOLTIP                                  :{BLACK}Beem zoufälleg iwwert d'Landschaft setzen
 STR_TREES_MODE_NORMAL_BUTTON                                    :{BLACK}Normal
@@ -3156,9 +3150,6 @@ STR_MAPGEN_DESERT_COVERAGE                                      :{BLACK}Wüstenu
 STR_MAPGEN_DESERT_COVERAGE_UP                                   :{BLACK}Wüstenundeel em zéng Prozent eropsetzen
 STR_MAPGEN_DESERT_COVERAGE_DOWN                                 :{BLACK}Wüstenundeel em zéng Prozent erofsetzen
 STR_MAPGEN_DESERT_COVERAGE_TEXT                                 :{BLACK}{NUM}%
-STR_MAPGEN_SNOW_LINE_HEIGHT                                     :{BLACK}Weis d'Schnéilinnhéicht
-STR_MAPGEN_SNOW_LINE_UP                                         :{BLACK}Beweg Schnéilinnhéicht erop
-STR_MAPGEN_SNOW_LINE_DOWN                                       :{BLACK}Beweg Schnéilinnhéicht erof
 STR_MAPGEN_TERRAIN_TYPE                                         :{BLACK}Terrain Typ:
 STR_MAPGEN_SEA_LEVEL                                            :{BLACK}Mieresspigel:
 STR_MAPGEN_QUANTITY_OF_RIVERS                                   :{BLACK}Flëss:
@@ -3216,7 +3207,6 @@ STR_MAPGEN_TERRAIN_TYPE_QUERY_CAPT                              :{WHITE}Zil Gipf
 STR_MAPGEN_HEIGHTMAP_HEIGHT_QUERY_CAPT                          :{WHITE}Héchste Punkt
 STR_MAPGEN_SNOW_COVERAGE_QUERY_CAPT                             :{WHITE}Schnéiundeel (a %)
 STR_MAPGEN_DESERT_COVERAGE_QUERY_CAPT                           :{WHITE}Wüstenundeel (a %)
-STR_MAPGEN_SNOW_LINE_QUERY_CAPT                                 :{WHITE}Ännert d'Schnéilinnhéicht
 STR_MAPGEN_START_DATE_QUERY_CAPT                                :{WHITE}Änner d'Startjoer
 
 # SE Map generation
@@ -3361,8 +3351,8 @@ STR_NEWGRF_ERROR_MSG_INFO                                       :{SILVER}{STRING
 STR_NEWGRF_ERROR_MSG_WARNING                                    :{RED}Warnung: {SILVER}{STRING}
 STR_NEWGRF_ERROR_MSG_ERROR                                      :{RED}Fehler: {SILVER}{STRING}
 STR_NEWGRF_ERROR_MSG_FATAL                                      :{RED}Fatal: {SILVER}{STRING}
-STR_NEWGRF_ERROR_FATAL_POPUP                                    :{WHITE}E fatalen NewGRF Fehler ass geschitt:{}{STRING}
-STR_NEWGRF_ERROR_POPUP                                          :{WHITE}En NewGRF Fehler ass geschitt:{}{STRING}
+STR_NEWGRF_ERROR_FATAL_POPUP                                    :{WHITE}Den NewGRF "{STRING}" huet e fatale Fehler gemet:{}{STRING}
+STR_NEWGRF_ERROR_POPUP                                          :{WHITE}Den NewGRF "{STRING}" huet e Fehler gemet:{}{STRING}
 STR_NEWGRF_ERROR_VERSION_NUMBER                                 :{1:STRING} wärt net mat der TTDPatch Versioun déi vun OpenTTD erkannt gouf funktionéiren
 STR_NEWGRF_ERROR_DOS_OR_WINDOWS                                 :{1:STRING} ass fir {2:STRING} Versioun vun TTD
 STR_NEWGRF_ERROR_UNSET_SWITCH                                   :{1:STRING} ass designed fir mat {2:STRING} benotzt ze ginn
@@ -3902,7 +3892,6 @@ STR_PURCHASE_INFO_RUNNINGCOST                                   :{BLACK}Betribsk
 STR_PURCHASE_INFO_CAPACITY                                      :{BLACK}Kapazitéit: {GOLD}{CARGO_LONG} {STRING}
 STR_PURCHASE_INFO_REFITTABLE                                    :(ëmbaubar)
 STR_PURCHASE_INFO_DESIGNED_LIFE                                 :{BLACK}Designt: {GOLD}{NUM}{BLACK} Liewenszäit: {GOLD}{COMMA} Joer
-STR_PURCHASE_INFO_DESIGNED                                      :{BLACK}Designt: {GOLD}{NUM}
 STR_PURCHASE_INFO_RELIABILITY                                   :{BLACK}Max. Zouverläss.: {GOLD}{COMMA}%
 STR_PURCHASE_INFO_COST                                          :{BLACK}Käschten: {GOLD}{CURRENCY_LONG}
 STR_PURCHASE_INFO_COST_REFIT                                    :{BLACK}Käschten: {GOLD}{CURRENCY_LONG}{BLACK} (Embaukäschten: {GOLD}{CURRENCY_LONG}{BLACK})
@@ -4539,7 +4528,7 @@ STR_TIMETABLE_CLEAR_SPEED                                       :{BLACK}Geschwin
 STR_TIMETABLE_CLEAR_SPEED_TOOLTIP                               :{BLACK}Maximal Reesgeschwindegkeet vum gewielten Optrag läschen. Ctrl+Klick läscht d'Geschwindegkeet fir all Opträg
 
 STR_TIMETABLE_RESET_LATENESS                                    :{BLACK}Verspeidungszieler zerécksetzen
-STR_TIMETABLE_RESET_LATENESS_TOOLTIP                            :{BLACK}Setzt de Verspéidungszieler zréck, sou dass d'Gefier mat Zäit ukënnt
+STR_TIMETABLE_RESET_LATENESS_TOOLTIP                            :{BLACK}Setzt de Verspéidungszieler zréck, sou dass d'Gefier mat Zäit ukënnt. Ctrl+klick setzt déi ganz Grupp zeréck, sou das dat lescht Gefiert pünktlech ass an all déi aner méi fréi.
 
 STR_TIMETABLE_AUTOFILL                                          :{BLACK}Autofëllen
 STR_TIMETABLE_AUTOFILL_TOOLTIP                                  :{BLACK}Fëll den Zäitplang automatesch mat de Wäerter vum nächsten Trajet Ctrl+Klick fir Wardzäiten probéiren bäizehalen
@@ -4633,8 +4622,10 @@ STR_SCREENSHOT_WORLD_SCREENSHOT                                 :{BLACK}Screensh
 STR_SCREENSHOT_HEIGHTMAP_SCREENSHOT                             :{BLACK}Héichtekaartscreenshot
 STR_SCREENSHOT_MINIMAP_SCREENSHOT                               :{BLACK}Minimap-Screenshot
 
-# AI Parameters
-STR_AI_SETTINGS_CAPTION_AI                                      :{WHITE}KI Parameter
+# Script Parameters
+STR_AI_SETTINGS_CAPTION                                         :{WHITE}{STRING} Parameter
+STR_AI_SETTINGS_CAPTION_AI                                      :KI
+STR_AI_SETTINGS_CAPTION_GAMESCRIPT                              :Spill-Script
 STR_AI_SETTINGS_CLOSE                                           :{BLACK}Zoumaachen
 STR_AI_SETTINGS_RESET                                           :{BLACK}Reset
 STR_AI_SETTINGS_SETTING                                         :{STRING}: {ORANGE}{STRING}
@@ -4685,7 +4676,7 @@ STR_ERROR_GAME_SAVE_FAILED                                      :{WHITE}Fehler b
 STR_ERROR_UNABLE_TO_DELETE_FILE                                 :{WHITE}Kann d'Datei net läschen
 STR_ERROR_GAME_LOAD_FAILED                                      :{WHITE}Fehler beim Lueden{}{STRING}
 STR_GAME_SAVELOAD_ERROR_BROKEN_INTERNAL_ERROR                   :Interne Fehler: {STRING}
-STR_GAME_SAVELOAD_ERROR_BROKEN_SAVEGAME                         :Futtissen Spillstand - {STRING}
+STR_GAME_SAVELOAD_ERROR_BROKEN_SAVEGAME                         :Futtissen Späicherstand - {STRING}
 STR_GAME_SAVELOAD_ERROR_TOO_NEW_SAVEGAME                        :Spillstand ass mat enger méi neier Versioun gemaach
 STR_GAME_SAVELOAD_ERROR_FILE_NOT_READABLE                       :Datei net liesbar
 STR_GAME_SAVELOAD_ERROR_FILE_NOT_WRITEABLE                      :Datei net beschreiwbar
@@ -5092,6 +5083,8 @@ STR_ERROR_CAN_T_COPY_ORDER_LIST                                 :{WHITE}Kann d'O
 STR_ERROR_TOO_FAR_FROM_PREVIOUS_DESTINATION                     :{WHITE}... ze wäit ewech vu leschter Destinatioun
 STR_ERROR_AIRCRAFT_NOT_ENOUGH_RANGE                             :{WHITE}... Fliger huet net genuch Distanz
 
+# Extra messages which go on the third line of errors, explaining why orders failed
+
 # Timetable related errors
 STR_ERROR_CAN_T_TIMETABLE_VEHICLE                               :{WHITE}Kann dem Gefier keen Zäitplang ginn...
 STR_ERROR_TIMETABLE_ONLY_WAIT_AT_STATIONS                       :{WHITE}Gefierer kënnen nëmmen op Statiounen halen.
@@ -5119,11 +5112,6 @@ STR_BASEMUSIC_WIN_DESCRIPTION                                   :Original Transp
 STR_BASEMUSIC_DOS_DESCRIPTION                                   :Original Transport Tycoon Deluxe DOS Editioun Musik.
 STR_BASEMUSIC_TTO_DESCRIPTION                                   :Original Transport Tycoon (Original/World Editor) DOS Editioun-Musik.
 STR_BASEMUSIC_NONE_DESCRIPTION                                  :E Musikpack ouni Musik.
-
-STR_TRADITIONAL_TRAIN_NAME                                      :Zuch {COMMA}
-STR_TRADITIONAL_ROAD_VEHICLE_NAME                               :Stroossegefier {COMMA}
-STR_TRADITIONAL_SHIP_NAME                                       :Schëff {COMMA}
-STR_TRADITIONAL_AIRCRAFT_NAME                                   :Fliger {COMMA}
 
 ##id 0x2000
 # Town building names

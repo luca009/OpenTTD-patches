@@ -170,9 +170,35 @@ macro(compile_flags)
             endif()
         endif()
 
+        if(OPTION_COMPRESS_DEBUG)
+            include(CheckCXXCompilerFlag)
+            check_cxx_compiler_flag("-gz" GZ_FOUND)
+
+            if(GZ_FOUND)
+                # Compress debug sections.
+                add_compile_options(-gz)
+                set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -gz")
+            endif()
+        endif(OPTION_COMPRESS_DEBUG)
+
+        if(OPTION_LTO)
+            include(CheckCXXCompilerFlag)
+            check_cxx_compiler_flag("-flto" LTO_FOUND)
+
+            if(LTO_FOUND)
+                # Enable LTO.
+                add_compile_options(-flto)
+                set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -flto")
+            endif()
+        endif(OPTION_LTO)
+
         if (OPTION_NO_WARN_UNINIT)
             add_compile_options(-Wno-maybe-uninitialized -Wno-uninitialized)
         endif (OPTION_NO_WARN_UNINIT)
+
+        if (EMSCRIPTEN)
+            add_compile_options(-Wno-deprecated-builtins)
+        endif()
     elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
         add_compile_options(
             -Wall

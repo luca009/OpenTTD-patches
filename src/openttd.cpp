@@ -113,6 +113,10 @@ void CallWindowGameTickEvent();
 bool HandleBootstrap();
 void OnTick_Companies(bool main_tick);
 
+extern void AfterLoadCompanyStats();
+extern Company *DoStartupNewCompany(bool is_ai, CompanyID company = INVALID_COMPANY);
+extern void OSOpenBrowser(const char *url);
+extern void RebuildTownCaches(bool cargo_update_required, bool old_map_position);
 extern void ShowOSErrorBox(const char *buf, bool system);
 extern std::string _config_file;
 
@@ -306,6 +310,7 @@ static void WriteSavegameInfo(const char *name)
 {
 	extern SaveLoadVersion _sl_version;
 	extern std::string _sl_xv_version_label;
+	extern SaveLoadVersion _sl_xv_upstream_version;
 	uint32 last_ottd_rev = 0;
 	byte ever_modified = 0;
 	bool removed_newgrfs = false;
@@ -326,6 +331,9 @@ static void WriteSavegameInfo(const char *name)
 	p += seprintf(p, lastof(buf), "Savegame ver: %d%s\n", _sl_version, type);
 	if (!_sl_xv_version_label.empty()) {
 		p += seprintf(p, lastof(buf), "    Version label: %s\n", _sl_xv_version_label.c_str());
+	}
+	if (_sl_xv_upstream_version != SL_MIN_VERSION) {
+		p += seprintf(p, lastof(buf), "    Upstream version: %u\n", _sl_xv_upstream_version);
 	}
 	for (size_t i = 0; i < XSLFI_SIZE; i++) {
 		if (_sl_xv_feature_versions[i] > 0) {
@@ -543,7 +551,7 @@ void MakeNewgameSettingsLive()
 	/* Copy newgame settings to active settings.
 	 * Also initialise old settings needed for savegame conversion. */
 	_settings_game = _settings_newgame;
-	_settings_time = _settings_game.game_time = _settings_client.gui;
+	_settings_time = _settings_game.game_time = (TimeSettings)_settings_client.gui;
 	_old_vds = _settings_client.company.vehicle;
 
 	for (CompanyID c = COMPANY_FIRST; c < MAX_COMPANIES; c++) {
@@ -566,7 +574,6 @@ void OpenBrowser(const char *url)
 	/* Make sure we only accept urls that are sure to open a browser. */
 	if (strstr(url, "http://") != url && strstr(url, "https://") != url) return;
 
-	extern void OSOpenBrowser(const char *url);
 	OSOpenBrowser(url);
 }
 
@@ -1188,39 +1195,53 @@ bool SafeLoad(const std::string &filename, SaveLoadOperation fop, DetailedFileTy
 
 	_game_mode = newgm;
 
-	switch (lf == nullptr ? SaveOrLoad(filename, fop, dft, subdir) : LoadWithFilter(lf)) {
-		case SL_OK: return true;
+	SaveOrLoadResult result = (lf == nullptr) ? SaveOrLoad(filename, fop, dft, subdir) : LoadWithFilter(lf);
+	if (result == SL_OK) return true;
 
-		case SL_REINIT:
-			if (error_detail != nullptr) *error_detail = GetSaveLoadErrorString();
-			if (_network_dedicated) {
-				/*
-				 * We need to reinit a network map...
-				 * We can't simply load the intro game here as that game has many
-				 * special cases which make clients desync immediately. So we fall
-				 * back to just generating a new game with the current settings.
-				 */
-				DEBUG(net, 0, "Loading game failed, so a new (random) game will be started");
-				MakeNewGame(false, true);
-				return false;
-			}
-			if (_network_server) {
-				/* We can't load the intro game as server, so disconnect first. */
-				NetworkDisconnect();
-			}
+	if (error_detail != nullptr) *error_detail = GetSaveLoadErrorString();
 
-			switch (ogm) {
-				default:
-				case GM_MENU:   LoadIntroGame();      break;
-				case GM_EDITOR: MakeNewEditorWorld(); break;
-			}
-			return false;
-
-		default:
-			if (error_detail != nullptr) *error_detail = GetSaveLoadErrorString();
-			_game_mode = ogm;
-			return false;
+	if (_network_dedicated && ogm == GM_MENU) {
+		/*
+		 * If we are a dedicated server *and* we just were in the menu, then we
+		 * are loading the first savegame. If that fails, not starting the
+		 * server is a better reaction than starting the server with a newly
+		 * generated map as it is quite likely to be started from a script.
+		 */
+		DEBUG(net, 0, "Loading requested map failed; closing server.");
+		_exit_game = true;
+		return false;
 	}
+
+	if (result != SL_REINIT) {
+		_game_mode = ogm;
+		return false;
+	}
+
+	if (_network_dedicated) {
+		/*
+		 * If we are a dedicated server, have already loaded/started a game,
+		 * and then loading the savegame fails in a manner that we need to
+		 * reinitialize everything. We must not fall back into the menu mode
+		 * with the intro game, as that is unjoinable by clients. So there is
+		 * nothing else to do than start a new game, as it might have failed
+		 * trying to reload the originally loaded savegame/scenario.
+		 */
+		DEBUG(net, 0, "Loading game failed, so a new (random) game will be started");
+		MakeNewGame(false, true);
+		return false;
+	}
+
+	if (_network_server) {
+		/* We can't load the intro game as server, so disconnect first. */
+		NetworkDisconnect();
+	}
+
+	switch (ogm) {
+		default:
+		case GM_MENU:   LoadIntroGame();      break;
+		case GM_EDITOR: MakeNewEditorWorld(); break;
+	}
+	return false;
 }
 
 void SwitchToMode(SwitchMode new_mode)
@@ -1340,15 +1361,18 @@ void SwitchToMode(SwitchMode new_mode)
 			}
 			break;
 
-		case SM_SAVE_GAME: // Save game.
+		case SM_SAVE_GAME: { // Save game.
 			/* Make network saved games on pause compatible to singleplayer mode */
-			if (SaveOrLoad(_file_to_saveload.name, SLO_SAVE, DFT_GAME_FILE, NO_DIRECTORY) != SL_OK) {
+			SaveModeFlags flags = SMF_NONE;
+			if (_game_mode == GM_EDITOR) flags |= SMF_SCENARIO;
+			if (SaveOrLoad(_file_to_saveload.name, SLO_SAVE, DFT_GAME_FILE, NO_DIRECTORY, true, flags) != SL_OK) {
 				SetDParamStr(0, GetSaveLoadErrorString());
 				ShowErrorMessage(STR_JUST_RAW_STRING, INVALID_STRING_ID, WL_ERROR);
 			} else {
 				DeleteWindowById(WC_SAVELOAD, 0);
 			}
 			break;
+		}
 
 		case SM_SAVE_HEIGHTMAP: // Save heightmap.
 			MakeHeightmapScreenshot(_file_to_saveload.name.c_str());
@@ -1449,8 +1473,11 @@ void CheckCaches(bool force_check, std::function<void(const char *)> log, CheckC
 	}
 
 	std::vector<std::string> saved_messages;
+	std::function<void(const char *)> log_orig;
 	if (flags & CHECK_CACHE_EMIT_LOG) {
-		log = [&saved_messages](const char *str) {
+		log_orig = std::move(log);
+		log = [&saved_messages, &log_orig](const char *str) {
+			if (log_orig) log_orig(str);
 			saved_messages.emplace_back(str);
 		};
 	}
@@ -1504,7 +1531,6 @@ void CheckCaches(bool force_check, std::function<void(const char *)> log, CheckC
 			old_industry_stations_nears.push_back(ind->stations_near);
 		}
 
-		extern void RebuildTownCaches(bool cargo_update_required, bool old_map_position);
 		RebuildTownCaches(false, false);
 		RebuildSubsidisedSourceAndDestinationCache();
 
@@ -1575,7 +1601,6 @@ void CheckCaches(bool force_check, std::function<void(const char *)> log, CheckC
 		std::vector<CompanyInfrastructure> old_infrastructure;
 		for (const Company *c : Company::Iterate()) old_infrastructure.push_back(c->infrastructure);
 
-		extern void AfterLoadCompanyStats();
 		AfterLoadCompanyStats();
 
 		uint i = 0;
@@ -1841,6 +1866,14 @@ void CheckCaches(bool force_check, std::function<void(const char *)> log, CheckC
 			if (tv->Next()) assert_msg(tv->Next()->Prev() == tv, "%u", tv->index);
 		}
 
+		{
+			extern std::string ValidateTemplateReplacementCaches();
+			std::string template_validation_result = ValidateTemplateReplacementCaches();
+			if (!template_validation_result.empty()) {
+				CCLOG("Template replacement cache validation failed: %s", template_validation_result.c_str());
+			}
+		}
+
 		if (!TraceRestrictSlot::ValidateVehicleIndex()) CCLOG("Trace restrict slot vehicle index validation failed");
 		TraceRestrictSlot::ValidateSlotOccupants(log);
 
@@ -1962,6 +1995,7 @@ void StateGameLoop()
 			SetWindowDirty(WC_STATUS_BAR, 0);
 		}
 
+		RunAuxiliaryTileLoop();
 		if (_tick_skip_counter < _settings_game.economy.day_length_factor) {
 			AnimateAnimatedTiles();
 			CallVehicleTicks();
@@ -1979,7 +2013,7 @@ void StateGameLoop()
 
 #ifndef DEBUG_DUMP_COMMANDS
 		{
-			PerformanceMeasurer framerate(PFE_ALLSCRIPTS);
+			PerformanceMeasurer script_framerate(PFE_ALLSCRIPTS);
 			AI::GameLoop();
 			Game::GameLoop();
 		}

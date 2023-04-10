@@ -197,11 +197,6 @@ STR_UNITS_VELOCITY_METRIC                                       :{COMMA}{NBSP}km
 STR_UNITS_VELOCITY_SI                                           :{COMMA}{NBSP}m/s
 STR_UNITS_VELOCITY_GAMEUNITS                                    :{DECIMAL}{NBSP}cases/jour
 
-STR_UNIT_NAME_VELOCITY_IMPERIAL                                 :mph
-STR_UNIT_NAME_VELOCITY_METRIC                                   :km/h
-STR_UNIT_NAME_VELOCITY_SI                                       :m/s
-STR_UNIT_NAME_VELOCITY_GAMEUNITS                                :cases/jour
-
 STR_UNITS_POWER_IMPERIAL                                        :{COMMA}{NBSP}hp
 STR_UNITS_POWER_METRIC                                          :{COMMA}{NBSP}ch
 STR_UNITS_POWER_SI                                              :{COMMA}{NBSP}kW
@@ -250,7 +245,6 @@ STR_TOOLTIP_SORT_ORDER                                          :{BLACK}Choisir 
 STR_TOOLTIP_SORT_CRITERIA                                       :{BLACK}Choisir le critère de tri
 STR_TOOLTIP_FILTER_CRITERIA                                     :{BLACK}Choisir le critère de filtrage
 STR_BUTTON_SORT_BY                                              :{BLACK}Trier par
-STR_BUTTON_RENAME                                               :{BLACK}Renommer
 STR_BUTTON_CATCHMENT                                            :{BLACK}Couverture
 STR_TOOLTIP_CATCHMENT                                           :{BLACK}Basculer l'affichage de la zone couverte
 
@@ -597,12 +591,6 @@ STR_MONTH_SEP                                                   :Septembre
 STR_MONTH_OCT                                                   :Octobre
 STR_MONTH_NOV                                                   :Novembre
 STR_MONTH_DEC                                                   :Décembre
-
-###length VEHICLE_TYPES
-STR_VEHICLE_TYPE_TRAINS                                         :Trains
-STR_VEHICLE_TYPE_ROAD_VEHICLES                                  :Véhicules routiers
-STR_VEHICLE_TYPE_SHIPS                                          :Navires
-STR_VEHICLE_TYPE_AIRCRAFT                                       :Aéronefs
 
 # Graph window
 STR_GRAPH_KEY_BUTTON                                            :{BLACK}Légende
@@ -1219,6 +1207,9 @@ STR_CONFIG_SETTING_HORIZONTAL_POS_RIGHT                         :À droite
 
 STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN                         :Emprunt initial maximum{NBSP}: {STRING}
 STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_HELPTEXT                :Montant maximum qu'une compagnie peut emprunter (sans tenir compte de l'inflation)
+STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_VALUE                   :{CURRENCY_LONG}
+###setting-zero-is-special
+STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_DISABLED                :Pas d'emprunt {RED}Nécessite un script de jeu qui fournit les fonds initiaux
 
 STR_CONFIG_SETTING_INTEREST_RATE                                :Taux d'intérêt{NBSP}: {STRING}
 STR_CONFIG_SETTING_INTEREST_RATE_HELPTEXT                       :Taux d’intérêt de l'emprunt{NBSP}; contrôle également l'inflation si activé
@@ -1938,13 +1929,13 @@ STR_CONFIG_SETTING_LINKGRAPH_TIME                               :Prendre {STRING
 STR_CONFIG_SETTING_LINKGRAPH_TIME_HELPTEXT                      :Durée maximale (en jours) du recalcul d'une composante du graphe. À chaque itération, un thread est initié, qui a une durée maximale définie par ce réglage. Plus celui-ci est court, plus la probabilité que le thread ne termine pas sa tâche à temps est élevée. Le jeu s'interrompt alors jusqu'à la fin du recalcul ("lag"). Plus le réglage est long, et moins rapidement la distribution sera réactualisée en cas de changement de routes.
 
 STR_CONFIG_SETTING_DISTRIBUTION_PAX                             :Type de distribution pour les passagers{NBSP}: {STRING}
-STR_CONFIG_SETTING_DISTRIBUTION_PAX_HELPTEXT                    :"symétrique" signifie qu'autant de passagers iront d'une station A vers une station B, que de la station B vers la station A. "asymétrique" signifie qu'un nombre arbitraire de passagers peut être envoyé dans les deux directions. "manuel" signifie qu'aucune distribution n'est mise en place pour les passagers.
+STR_CONFIG_SETTING_DISTRIBUTION_PAX_HELPTEXT                    :"Symétrique" signifie qu'autant de passagers iront d'une station A vers une station B, que de la station B vers la station A. "Asymétrique" signifie qu'un nombre arbitraire de passagers peut être envoyé dans les deux directions. "Manuel" signifie qu'aucune distribution n'est mise en place pour les passagers.
 STR_CONFIG_SETTING_DISTRIBUTION_MAIL                            :Type de distribution pour le courrier{NBSP}: {STRING}
-STR_CONFIG_SETTING_DISTRIBUTION_MAIL_HELPTEXT                   :"symétrique" signifie qu'autant de courrier ira d'une station A vers une station B, que de la station B vers la station A. "asymétrique" signifie qu'une quantité arbitraire de courrier peut être envoyée dans les deux directions. "manuel" signifie qu'aucune distribution n'est mise en place pour le courrier.
+STR_CONFIG_SETTING_DISTRIBUTION_MAIL_HELPTEXT                   :"Symétrique" signifie qu'autant de courrier ira d'une station A vers une station B, que de la station B vers la station A. "Asymétrique" signifie qu'une quantité arbitraire de courrier peut être envoyée dans les deux directions. "Manuel" signifie qu'aucune distribution n'est mise en place pour le courrier.
 STR_CONFIG_SETTING_DISTRIBUTION_ARMOURED                        :Type de distribution pour les cargaisons de classe ARMOURED{NBSP}: {STRING}
-STR_CONFIG_SETTING_DISTRIBUTION_ARMOURED_HELPTEXT               :La classe de cargaison ARMOURED contient des biens de valeur dans les climats tempéré, des diamants dans le climat subtropical, et de l'or dans le climat subarctique. Les NewGRFs peuvent changer ça. "symétrique" signifie qu'autant de ces cargaisons iront d'une station A vers une station B, que de la station B vers la station A. "asymétrique" signifie qu'une quantité arbitraire de ces cargaisons peut être envoyée dans les deux directions. "manuel" signifie qu'aucune distribution n'est mise en place pour ces cargaisons. Il est conseillé de choisir "asymétrique" ou "manuel" dans le climat subarctique, car les banques n'enverront pas d'or en retour vers les mines d'or. Dans les climats tempéré et subtropical, on peut choisir aussi "symétrique", car les banques peuvent renvoyer en retour des biens de valeurs aux banques qui en envoient à l'origine.
+STR_CONFIG_SETTING_DISTRIBUTION_ARMOURED_HELPTEXT               :La classe de cargaison ARMOURED contient des biens de valeur dans les climats tempéré, des diamants dans le climat subtropical, et de l'or dans le climat subarctique. Les NewGRFs peuvent changer ça. "Symétrique" signifie qu'autant de ces cargaisons iront d'une station A vers une station B, que de la station B vers la station A. "Asymétrique" signifie qu'une quantité arbitraire de ces cargaisons peut être envoyée dans les deux directions. "Manuel" signifie qu'aucune distribution n'est mise en place pour ces cargaisons. Il est conseillé de choisir "asymétrique" ou "manuel" dans les climats subarctique ou subtropical, car les banques ne font que recevoir des marchandises dans ces climats. Dans le climat tempéré, on peut choisir aussi "symétrique", car les banques peuvent renvoyer en retour des biens de valeurs aux banques qui en envoient à l'origine.
 STR_CONFIG_SETTING_DISTRIBUTION_DEFAULT                         :Type de distribution pour les autres classes de cargaison{NBSP}: {STRING}
-STR_CONFIG_SETTING_DISTRIBUTION_DEFAULT_HELPTEXT                :"asymétrique" signifie qu'une quantité arbitraire de cargaison peut être envoyée dans les deux directions. "manuel" signifie qu'aucune distribution n'est mise en place pour la cargaison.
+STR_CONFIG_SETTING_DISTRIBUTION_DEFAULT_HELPTEXT                :"Asymétrique" signifie qu'une quantité arbitraire de cargaison peut être envoyée dans les deux directions. "Manuel" signifie qu'aucune distribution n'est mise en place pour la cargaison.
 ###length 3
 STR_CONFIG_SETTING_DISTRIBUTION_MANUAL                          :manuel
 STR_CONFIG_SETTING_DISTRIBUTION_ASYMMETRIC                      :asymétrique
@@ -2070,18 +2061,18 @@ STR_VIDEO_DRIVER_ERROR_NO_HARDWARE_ACCELERATION                 :{WHITE} ... auc
 # Intro window
 STR_INTRO_CAPTION                                               :{WHITE}OpenTTD {REV}
 
-STR_INTRO_NEW_GAME                                              :{BLACK}Nouvelle partie
+STR_INTRO_NEW_GAME                                              :{BLACK}Jouer une nouvelle partie
 STR_INTRO_LOAD_GAME                                             :{BLACK}Charger une partie
 STR_INTRO_PLAY_SCENARIO                                         :{BLACK}Jouer un scénario
 STR_INTRO_PLAY_HEIGHTMAP                                        :{BLACK}Jouer une carte d'altitude
 STR_INTRO_SCENARIO_EDITOR                                       :{BLACK}Éditeur de scénario
-STR_INTRO_MULTIPLAYER                                           :{BLACK}Mode multijoueurs
+STR_INTRO_MULTIPLAYER                                           :{BLACK}Jouer en multijoueur
 
-STR_INTRO_GAME_OPTIONS                                          :{BLACK}Options
+STR_INTRO_GAME_OPTIONS                                          :{BLACK}Options globales
 STR_INTRO_HIGHSCORE                                             :{BLACK}Meilleurs scores
-STR_INTRO_CONFIG_SETTINGS_TREE                                  :{BLACK}Paramètres
+STR_INTRO_CONFIG_SETTINGS_TREE                                  :{BLACK}Paramètres de jeu
 STR_INTRO_NEWGRF_SETTINGS                                       :{BLACK}Paramètres NewGRF
-STR_INTRO_ONLINE_CONTENT                                        :{BLACK}Vérifier le contenu en ligne
+STR_INTRO_ONLINE_CONTENT                                        :{BLACK}Contenue additionnel en ligne
 STR_INTRO_AI_SETTINGS                                           :{BLACK}Configuration des IAs
 STR_INTRO_GAMESCRIPT_SETTINGS                                   :{BLACK}Configuration du script de jeu
 STR_INTRO_QUIT                                                  :{BLACK}Quitter
@@ -2239,18 +2230,18 @@ STR_NETWORK_SERVER_VISIBILITY_INVITE_ONLY                       :Invitation uniq
 
 # Network server list
 STR_NETWORK_SERVER_LIST_CAPTION                                 :{WHITE}Multijoueurs
-STR_NETWORK_SERVER_LIST_PLAYER_NAME                             :{BLACK}Nom du joueur{NBSP}:
+STR_NETWORK_SERVER_LIST_PLAYER_NAME                             :{BLACK}Votre nom de joueur :
 STR_NETWORK_SERVER_LIST_ENTER_NAME_TOOLTIP                      :{BLACK}Ceci est le nom sous lequel vous serez connu des autres joueurs
 
-STR_NETWORK_SERVER_LIST_GAME_NAME                               :{BLACK}Nom
+STR_NETWORK_SERVER_LIST_GAME_NAME                               :{BLACK}Nom de la partie
 STR_NETWORK_SERVER_LIST_GAME_NAME_TOOLTIP                       :{BLACK}Nom de la partie
 STR_NETWORK_SERVER_LIST_GENERAL_ONLINE                          :{BLACK}{COMMA}/{COMMA} - {COMMA}/{COMMA}
-STR_NETWORK_SERVER_LIST_CLIENTS_CAPTION                         :{BLACK}Clients
+STR_NETWORK_SERVER_LIST_CLIENTS_CAPTION                         :{BLACK}Clients - Compagnies
 STR_NETWORK_SERVER_LIST_CLIENTS_CAPTION_TOOLTIP                 :{BLACK}Clients en ligne / clients max.{}Compagnies en ligne / compagnies max.
 STR_NETWORK_SERVER_LIST_MAP_SIZE_SHORT                          :{BLACK}{COMMA}{NBSP}×{NBSP}{COMMA}
 STR_NETWORK_SERVER_LIST_MAP_SIZE_CAPTION                        :{BLACK}Taille
 STR_NETWORK_SERVER_LIST_MAP_SIZE_CAPTION_TOOLTIP                :{BLACK}Taille de la carte{}Cliquer pour trier par surface
-STR_NETWORK_SERVER_LIST_DATE_CAPTION                            :{BLACK}Date
+STR_NETWORK_SERVER_LIST_DATE_CAPTION                            :{BLACK}Année en jeu
 STR_NETWORK_SERVER_LIST_DATE_CAPTION_TOOLTIP                    :{BLACK}Date courante
 STR_NETWORK_SERVER_LIST_YEARS_CAPTION                           :{BLACK}Années
 STR_NETWORK_SERVER_LIST_YEARS_CAPTION_TOOLTIP                   :{BLACK}Nombre d'années{}écoulées dans le jeu
@@ -2284,11 +2275,11 @@ STR_NETWORK_SERVER_LIST_REFRESH_TOOLTIP                         :{BLACK}Actualis
 
 STR_NETWORK_SERVER_LIST_SEARCH_SERVER_INTERNET                  :{BLACK}Recherche internet
 STR_NETWORK_SERVER_LIST_SEARCH_SERVER_INTERNET_TOOLTIP          :{BLACK}Rechercher des serveurs publiés sur internet
-STR_NETWORK_SERVER_LIST_SEARCH_SERVER_LAN                       :{BLACK}Recherche LAN
+STR_NETWORK_SERVER_LIST_SEARCH_SERVER_LAN                       :{BLACK}Recherche sur le réseau local
 STR_NETWORK_SERVER_LIST_SEARCH_SERVER_LAN_TOOLTIP               :{BLACK}Rechercher des serveurs sur le réseau local
 STR_NETWORK_SERVER_LIST_ADD_SERVER                              :{BLACK}Ajouter un serveur
 STR_NETWORK_SERVER_LIST_ADD_SERVER_TOOLTIP                      :{BLACK}Ajouter un serveur à la liste. Ce peut être soit une adresse de serveur, soit un code d'invitation
-STR_NETWORK_SERVER_LIST_START_SERVER                            :{BLACK}Héberger/créer un serveur de jeu
+STR_NETWORK_SERVER_LIST_START_SERVER                            :{BLACK}Créer un serveur de jeu
 STR_NETWORK_SERVER_LIST_START_SERVER_TOOLTIP                    :{BLACK}Démarrer son propre serveur, sur cet ordinateur-ci
 
 STR_NETWORK_SERVER_LIST_PLAYER_NAME_OSKTITLE                    :{BLACK}Entrer votre nom
@@ -2368,7 +2359,8 @@ STR_NETWORK_CLIENT_LIST_NEW_COMPANY                             :(Nouvelle compa
 STR_NETWORK_CLIENT_LIST_NEW_COMPANY_TOOLTIP                     :{BLACK}Créer une nouvelle compagnie et la rejoindre
 STR_NETWORK_CLIENT_LIST_PLAYER_ICON_SELF_TOOLTIP                :{BLACK}C'est vous
 STR_NETWORK_CLIENT_LIST_PLAYER_ICON_HOST_TOOLTIP                :{BLACK}C'est l'hôte du jeu
-STR_NETWORK_CLIENT_LIST_CLIENT_COMPANY_COUNT                    :{BLACK}{NUM} client{P "" s} / {NUM} compagnie{P "" s}
+STR_NETWORK_CLIENT_LIST_CLIENT_COMPANY_COUNT                    :{BLACK}{NUM} client{P "" s} - {NUM}/{NUM} companie{P "" s}
+STR_NETWORK_CLIENT_LIST_CLIENT_COMPANY_COUNT_TOOLTIP            :{BLACK}Actuellement, le nombre de clients connectés, le nombre d'entreprises et le nombre d'entreprises maximum autorisées par l'administrateur du serveur est atteint.
 
 # Matches ConnectionType
 ###length 5
@@ -2619,8 +2611,6 @@ STR_LINKGRAPH_LEGEND_OVERLOADED                                 :{TINY_FONT}{BLA
 STR_LINKGRAPH_STATS_TOOLTIP                                     :{BLACK}{CARGO_LONG} à transporter par mois de {STATION} à {STATION} ({COMMA}% de la capacité){STRING}
 STR_LINKGRAPH_STATS_TOOLTIP_RETURN_EXTENSION                    :{}{CARGO_LONG} à transporter en retour ({COMMA}% de la capacité)
 STR_LINKGRAPH_STATS_TOOLTIP_TIME_EXTENSION                      :{}Temps de trajet moyen{NBSP}: {NUM}{NBSP}jour{P "" s}
-STR_LINKGRAPH_STATS_TOOLTIP_TIME_EXTENSION_GENERAL              :{}Temps de trajet moyen{NBSP}: {STRING}
-STR_LINKGRAPH_STATS_TOOLTIP_CAPACITY                            :{}Capacité{NBSP}: {CARGO_LONG}
 
 # Base for station construction window(s)
 STR_STATION_BUILD_COVERAGE_AREA_TITLE                           :{BLACK}Afficher la zone couverte
@@ -2713,6 +2703,10 @@ STR_BUILD_SIGNAL_DRAG_SIGNALS_DENSITY_INCREASE_TOOLTIP          :{BLACK}Augmente
 STR_SELECT_RAIL_BRIDGE_CAPTION                                  :{WHITE}Choisir un pont ferroviaire
 STR_SELECT_ROAD_BRIDGE_CAPTION                                  :{WHITE}Choisir un pont routier
 STR_SELECT_BRIDGE_SELECTION_TOOLTIP                             :{BLACK}Sélection de pont - Cliquer sur le type de pont désiré pour le construire.
+STR_SELECT_BRIDGE_INFO_NAME                                     :{GOLD}{STRING}
+STR_SELECT_BRIDGE_INFO_NAME_MAX_SPEED                           :{GOLD}{STRING},{} {VELOCITY}
+STR_SELECT_BRIDGE_INFO_NAME_COST                                :{GOLD}{0:STRING},{} {WHITE}{2:CURRENCY_LONG}
+STR_SELECT_BRIDGE_INFO_NAME_MAX_SPEED_COST                      :{GOLD}{STRING},{} {VELOCITY} {WHITE}{CURRENCY_LONG}
 STR_BRIDGE_NAME_SUSPENSION_STEEL                                :Suspendu en acier
 STR_BRIDGE_NAME_GIRDER_STEEL                                    :À poutres en acier
 STR_BRIDGE_NAME_CANTILEVER_STEEL                                :Porte-à-faux en acier
@@ -3159,9 +3153,6 @@ STR_MAPGEN_DESERT_COVERAGE                                      :{BLACK}Couvertu
 STR_MAPGEN_DESERT_COVERAGE_UP                                   :{BLACK}Augmenter la couverture du désert de dix pour cent
 STR_MAPGEN_DESERT_COVERAGE_DOWN                                 :{BLACK}Diminuer la couverture du désert de dix pour cent
 STR_MAPGEN_DESERT_COVERAGE_TEXT                                 :{BLACK}{NUM}%
-STR_MAPGEN_SNOW_LINE_HEIGHT                                     :{BLACK}Alt. d'enneigement{NBSP}:
-STR_MAPGEN_SNOW_LINE_UP                                         :{BLACK}Augmenter l'altitude d'enneigement
-STR_MAPGEN_SNOW_LINE_DOWN                                       :{BLACK}Baisser l'altitude d'enneigement
 STR_MAPGEN_TERRAIN_TYPE                                         :{BLACK}Type de terrain{NBSP}:
 STR_MAPGEN_SEA_LEVEL                                            :{BLACK}Niveau de la mer{NBSP}:
 STR_MAPGEN_QUANTITY_OF_RIVERS                                   :{BLACK}Nb. de rivières{NBSP}:
@@ -3219,7 +3210,6 @@ STR_MAPGEN_TERRAIN_TYPE_QUERY_CAPT                              :{WHITE}Hauteur 
 STR_MAPGEN_HEIGHTMAP_HEIGHT_QUERY_CAPT                          :{WHITE}Le point le plus haut
 STR_MAPGEN_SNOW_COVERAGE_QUERY_CAPT                             :{WHITE}Couverture de neige (en %)
 STR_MAPGEN_DESERT_COVERAGE_QUERY_CAPT                           :{WHITE}Couverture du désert (en %)
-STR_MAPGEN_SNOW_LINE_QUERY_CAPT                                 :{WHITE}Modifier l'altitude d'enneigement
 STR_MAPGEN_START_DATE_QUERY_CAPT                                :{WHITE}Modifier l'année de départ
 
 # SE Map generation
@@ -3364,8 +3354,8 @@ STR_NEWGRF_ERROR_MSG_INFO                                       :{SILVER}{STRING
 STR_NEWGRF_ERROR_MSG_WARNING                                    :{RED}Attention{NBSP}: {SILVER}{STRING}
 STR_NEWGRF_ERROR_MSG_ERROR                                      :{RED}Erreur{NBSP}: {SILVER}{STRING}
 STR_NEWGRF_ERROR_MSG_FATAL                                      :{RED}Erreur fatale{NBSP}: {SILVER}{STRING}
-STR_NEWGRF_ERROR_FATAL_POPUP                                    :{WHITE}Une erreur NewGRF fatale est survenue{NBSP}:{}{STRING}
-STR_NEWGRF_ERROR_POPUP                                          :{WHITE}Une erreur NewGRF est survenue{NBSP}:{}{STRING}
+STR_NEWGRF_ERROR_FATAL_POPUP                                    :{WHITE}Le NewGRF "{STRING}" a retourné une erreur fatale{NBSP}:{}{STRING}
+STR_NEWGRF_ERROR_POPUP                                          :{WHITE}Le NewGRF "{STRING}" a retourné une erreur{NBSP}:{}{STRING}
 STR_NEWGRF_ERROR_VERSION_NUMBER                                 :{1:STRING} ne fonctionnera pas avec la version de TTDPatch rapportée par OpenTTD
 STR_NEWGRF_ERROR_DOS_OR_WINDOWS                                 :{1:STRING} est conçu pour la version {2:STRING} de TTD
 STR_NEWGRF_ERROR_UNSET_SWITCH                                   :{1:STRING} est conçu pour être utilisé avec {2:STRING}
@@ -3905,7 +3895,6 @@ STR_PURCHASE_INFO_RUNNINGCOST                                   :{BLACK}Coûts d
 STR_PURCHASE_INFO_CAPACITY                                      :{BLACK}Capacité{NBSP}: {GOLD}{CARGO_LONG} {STRING}
 STR_PURCHASE_INFO_REFITTABLE                                    :(réaménageable)
 STR_PURCHASE_INFO_DESIGNED_LIFE                                 :{BLACK}Conçu en{NBSP}: {GOLD}{NUM}{BLACK} − Durée de vie{NBSP}: {GOLD}{COMMA} an{P "" s}
-STR_PURCHASE_INFO_DESIGNED                                      :{BLACK}Conçu en{NBSP}: {GOLD}{NUM}
 STR_PURCHASE_INFO_RELIABILITY                                   :{BLACK}Fiabilité max.{NBSP}: {GOLD}{COMMA}{NBSP}%
 STR_PURCHASE_INFO_COST                                          :{BLACK}Prix{NBSP}: {GOLD}{CURRENCY_LONG}
 STR_PURCHASE_INFO_COST_REFIT                                    :{BLACK}Coût{NBSP}: {GOLD}{CURRENCY_LONG}{BLACK} (Coût de réaménagement{NBSP}: {GOLD}{CURRENCY_LONG}{BLACK})
@@ -4542,7 +4531,7 @@ STR_TIMETABLE_CLEAR_SPEED                                       :{BLACK}Annuler 
 STR_TIMETABLE_CLEAR_SPEED_TOOLTIP                               :{BLACK}Annuler la vitesse maximale de déplacement de l'ordre sélectionné. Ctrl-clic pour annuler la vitesse de tous les ordres
 
 STR_TIMETABLE_RESET_LATENESS                                    :{BLACK}RAZ compteur de retard
-STR_TIMETABLE_RESET_LATENESS_TOOLTIP                            :{BLACK}Remettre à zéro le compteur de retard (le véhicule sera donc à l'heure)
+STR_TIMETABLE_RESET_LATENESS_TOOLTIP                            :{BLACK}Remettre à zéro le compteur de retard, le véhicule sera donc à l'heure. Ctrl-clic pour remettre à zéro le groupe entier, le véhicule le plus en retard sera donc à l'heure et les autres en avance
 
 STR_TIMETABLE_AUTOFILL                                          :{BLACK}Autoremplir
 STR_TIMETABLE_AUTOFILL_TOOLTIP                                  :{BLACK}Remplir l'horaire automatiquement avec les valeurs du prochain trajet. Ctrl-clic pour essayer de préserver les temps d'attente
@@ -4636,8 +4625,10 @@ STR_SCREENSHOT_WORLD_SCREENSHOT                                 :{BLACK}Capture 
 STR_SCREENSHOT_HEIGHTMAP_SCREENSHOT                             :{BLACK}Capture d'écran de la carte d'altitude
 STR_SCREENSHOT_MINIMAP_SCREENSHOT                               :{BLACK}Capture d'écran de la mini-carte
 
-# AI Parameters
-STR_AI_SETTINGS_CAPTION_AI                                      :{WHITE}Paramètres de l'IA
+# Script Parameters
+STR_AI_SETTINGS_CAPTION                                         :{WHITE}Paramètres {STRING}
+STR_AI_SETTINGS_CAPTION_AI                                      :de l'IA
+STR_AI_SETTINGS_CAPTION_GAMESCRIPT                              :du script de jeu
 STR_AI_SETTINGS_CLOSE                                           :{BLACK}Fermer
 STR_AI_SETTINGS_RESET                                           :{BLACK}Réinitialiser
 STR_AI_SETTINGS_SETTING                                         :{STRING}{NBSP}: {ORANGE}{STRING}
@@ -5095,6 +5086,20 @@ STR_ERROR_CAN_T_COPY_ORDER_LIST                                 :{WHITE}Impossib
 STR_ERROR_TOO_FAR_FROM_PREVIOUS_DESTINATION                     :{WHITE}... trop loin de la destination précédente
 STR_ERROR_AIRCRAFT_NOT_ENOUGH_RANGE                             :{WHITE}... l'aéronef n'a pas un rayon d'action suffisant
 
+# Extra messages which go on the third line of errors, explaining why orders failed
+STR_ERROR_NO_RAIL_STATION                                       :Il n'y a pas de gare
+STR_ERROR_NO_BUS_STATION                                        :Il n'y a pas de gare routière
+STR_ERROR_NO_TRUCK_STATION                                      :{WHITE}Il n'y a pas de station de camion
+STR_ERROR_NO_DOCK                                               :{WHITE}Il n'y a pas de quai
+STR_ERROR_NO_AIRPORT                                            :{WHITE}Il n'y a pas d'aéroport/héliport
+STR_ERROR_NO_STOP_COMPATIBLE_ROAD_TYPE                          :{WHITE}Il n'y a pas d'arrêts avec un type de route compatible
+STR_ERROR_NO_STOP_COMPATIBLE_TRAM_TYPE                          :{WHITE}Il n'y a pas d'arrêts avec un type de tram compatible
+STR_ERROR_NO_STOP_ARTICULATED_VEHICLE                           :{WHITE}Il n'y a pas d'arrêts convenables pour les véhicules routiers articulés. Ce type de véhicule nécessite un arrêt avec passage et non pas en baie
+STR_ERROR_AIRPORT_NO_PLANES                                     :{WHITE}Cet avion ne peut pas atterrir à cet héliport
+STR_ERROR_AIRPORT_NO_HELICOPTERS                                :{WHITE}Cet hélicoptère ne peut pas atterrir à cet aéroport
+STR_ERROR_NO_RAIL_WAYPOINT                                      :{WHITE}Il n'y a pas de point de passage ferroviaire
+STR_ERROR_NO_BUOY                                               :{WHITE}Il n'y a pas de bouée
+
 # Timetable related errors
 STR_ERROR_CAN_T_TIMETABLE_VEHICLE                               :{WHITE}Impossible d'affecter un horaire au véhicule...
 STR_ERROR_TIMETABLE_ONLY_WAIT_AT_STATIONS                       :{WHITE}Les véhicules ne peuvent attendre qu'aux stations
@@ -5122,11 +5127,6 @@ STR_BASEMUSIC_WIN_DESCRIPTION                                   :Musiques origin
 STR_BASEMUSIC_DOS_DESCRIPTION                                   :Musiques originales de Transport Tycoon Deluxe (version DOS).
 STR_BASEMUSIC_TTO_DESCRIPTION                                   :Musiques originales de Transport Tycoon (version Originale/World Editor).
 STR_BASEMUSIC_NONE_DESCRIPTION                                  :Un pack de musiques sans musiques.
-
-STR_TRADITIONAL_TRAIN_NAME                                      :Train {COMMA}
-STR_TRADITIONAL_ROAD_VEHICLE_NAME                               :Véhicule routier {COMMA}
-STR_TRADITIONAL_SHIP_NAME                                       :Navire {COMMA}
-STR_TRADITIONAL_AIRCRAFT_NAME                                   :Aéronef {COMMA}
 
 ##id 0x2000
 # Town building names

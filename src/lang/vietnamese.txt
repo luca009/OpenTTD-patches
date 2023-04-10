@@ -196,11 +196,6 @@ STR_UNITS_VELOCITY_METRIC                                       :{COMMA}{NBSP}km
 STR_UNITS_VELOCITY_SI                                           :{COMMA}{NBSP}m/s
 STR_UNITS_VELOCITY_GAMEUNITS                                    :{DECIMAL}{NBSP}ô/ngày
 
-STR_UNIT_NAME_VELOCITY_IMPERIAL                                 :mph
-STR_UNIT_NAME_VELOCITY_METRIC                                   :km/h
-STR_UNIT_NAME_VELOCITY_SI                                       :m/s
-STR_UNIT_NAME_VELOCITY_GAMEUNITS                                :ô/ngày
-
 STR_UNITS_POWER_IMPERIAL                                        :{COMMA}{NBSP}hp
 STR_UNITS_POWER_METRIC                                          :{COMMA}{NBSP}hp
 STR_UNITS_POWER_SI                                              :{COMMA}{NBSP}kW
@@ -249,7 +244,6 @@ STR_TOOLTIP_SORT_ORDER                                          :{BLACK}Chọn t
 STR_TOOLTIP_SORT_CRITERIA                                       :{BLACK}Chọn tiêu chí sắp xếp
 STR_TOOLTIP_FILTER_CRITERIA                                     :{BLACK}Chọn tiêu chí lọc bỏ
 STR_BUTTON_SORT_BY                                              :{BLACK}Sắp xếp bởi
-STR_BUTTON_RENAME                                               :{BLACK}Đổi tên
 STR_BUTTON_CATCHMENT                                            :{BLACK}Vùng che phủ
 STR_TOOLTIP_CATCHMENT                                           :{BLACK}Đổi ẩn/hiện vùng che phủ
 
@@ -596,12 +590,6 @@ STR_MONTH_SEP                                                   :Tháng Chín
 STR_MONTH_OCT                                                   :Tháng Mười
 STR_MONTH_NOV                                                   :Tháng Mười Một
 STR_MONTH_DEC                                                   :Tháng Mười Hai
-
-###length VEHICLE_TYPES
-STR_VEHICLE_TYPE_TRAINS                                         :Tàu hỏa
-STR_VEHICLE_TYPE_ROAD_VEHICLES                                  :Xe cộ
-STR_VEHICLE_TYPE_SHIPS                                          :Tàu thủy
-STR_VEHICLE_TYPE_AIRCRAFT                                       :Máy bay
 
 # Graph window
 STR_GRAPH_KEY_BUTTON                                            :{BLACK}Nút
@@ -1218,6 +1206,9 @@ STR_CONFIG_SETTING_HORIZONTAL_POS_RIGHT                         :Phải
 
 STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN                         :Khoảng vay khởi nghiệp tối đa: {STRING}
 STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_HELPTEXT                :Hạn mức tối đa một công ty có thể vay (không tính lạm phát)
+STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_VALUE                   :{CURRENCY_LONG}
+###setting-zero-is-special
+STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_DISABLED                :Không có khoản vay {RED}Cần Game Script để cung cấp khoảng vốn ban đầu
 
 STR_CONFIG_SETTING_INTEREST_RATE                                :Lãi suất vay: {STRING}
 STR_CONFIG_SETTING_INTEREST_RATE_HELPTEXT                       :Lãi xuất vay; ảnh hưởng tới cả lạm phát nếu bật tùy chọn đó
@@ -2367,7 +2358,8 @@ STR_NETWORK_CLIENT_LIST_NEW_COMPANY                             :(Công ty mới
 STR_NETWORK_CLIENT_LIST_NEW_COMPANY_TOOLTIP                     :{BLACK}Khai sinh một công ty và gia nhập
 STR_NETWORK_CLIENT_LIST_PLAYER_ICON_SELF_TOOLTIP                :{BLACK}Đây là bạn
 STR_NETWORK_CLIENT_LIST_PLAYER_ICON_HOST_TOOLTIP                :{BLACK}Đây là người tổ chức ván chơi
-STR_NETWORK_CLIENT_LIST_CLIENT_COMPANY_COUNT                    :{BLACK}{NUM} người chơi / {NUM} công ty
+STR_NETWORK_CLIENT_LIST_CLIENT_COMPANY_COUNT                    :{BLACK}{NUM} nguời chơi - {NUM}/{NUM} công ty
+STR_NETWORK_CLIENT_LIST_CLIENT_COMPANY_COUNT_TOOLTIP            :{BLACK}Số lượng máy trạm, số lượng công ty và số lượng công ty tối đa mà quản lý máy chủ cho phép
 
 # Matches ConnectionType
 ###length 5
@@ -2618,8 +2610,6 @@ STR_LINKGRAPH_LEGEND_OVERLOADED                                 :{TINY_FONT}{BLA
 STR_LINKGRAPH_STATS_TOOLTIP                                     :{BLACK}{CARGO_LONG} sẽ được vận chuyển hằng tháng từ {STATION} đến {STATION} ({COMMA}% dung lượng){STRING}
 STR_LINKGRAPH_STATS_TOOLTIP_RETURN_EXTENSION                    :{}{CARGO_LONG} sẽ được hoàn chuyển ({COMMA}% dung lượng)
 STR_LINKGRAPH_STATS_TOOLTIP_TIME_EXTENSION                      :{}Thời gian đi lại trung bình: {NUM}{NBSP}ngày
-STR_LINKGRAPH_STATS_TOOLTIP_TIME_EXTENSION_GENERAL              :{}Thời gian đi lại trung bình: {STRING}
-STR_LINKGRAPH_STATS_TOOLTIP_CAPACITY                            :{}Sức chứa: {CARGO_LONG}
 
 # Base for station construction window(s)
 STR_STATION_BUILD_COVERAGE_AREA_TITLE                           :{BLACK}Hiện rõ vùng phủ ảnh hưởng
@@ -2712,6 +2702,10 @@ STR_BUILD_SIGNAL_DRAG_SIGNALS_DENSITY_INCREASE_TOOLTIP          :{BLACK}Tăng m�
 STR_SELECT_RAIL_BRIDGE_CAPTION                                  :{WHITE}Chọn Loại Cầu Tàu Hỏa
 STR_SELECT_ROAD_BRIDGE_CAPTION                                  :{WHITE}Chọn Loại Cầu Đường Bộ
 STR_SELECT_BRIDGE_SELECTION_TOOLTIP                             :{BLACK}Chọn cầu - chọn loại cầu bạn muốn xây dựng
+STR_SELECT_BRIDGE_INFO_NAME                                     :{GOLD}{STRING}
+STR_SELECT_BRIDGE_INFO_NAME_MAX_SPEED                           :{GOLD}{STRING},{} {VELOCITY}
+STR_SELECT_BRIDGE_INFO_NAME_COST                                :{GOLD}{0:STRING},{} {WHITE}{2:CURRENCY_LONG}
+STR_SELECT_BRIDGE_INFO_NAME_MAX_SPEED_COST                      :{GOLD}{STRING},{} {VELOCITY} {WHITE}{CURRENCY_LONG}
 STR_BRIDGE_NAME_SUSPENSION_STEEL                                :Cầu treo thép
 STR_BRIDGE_NAME_GIRDER_STEEL                                    :Cầu dầm thép
 STR_BRIDGE_NAME_CANTILEVER_STEEL                                :Cầu dầm chìa thép
@@ -3158,9 +3152,6 @@ STR_MAPGEN_DESERT_COVERAGE                                      :{BLACK}Độ ph
 STR_MAPGEN_DESERT_COVERAGE_UP                                   :{BLACK}Tăng độ phủ sa mạc lên mười phần trăm
 STR_MAPGEN_DESERT_COVERAGE_DOWN                                 :{BLACK}Giảm độ phủ sa mạc đi mười phần trăm
 STR_MAPGEN_DESERT_COVERAGE_TEXT                                 :{BLACK}{NUM}%
-STR_MAPGEN_SNOW_LINE_HEIGHT                                     :{BLACK}Độ cao tuyết phủ:
-STR_MAPGEN_SNOW_LINE_UP                                         :{BLACK}Di chuyển độ cao tuyết phủ lên cao
-STR_MAPGEN_SNOW_LINE_DOWN                                       :{BLACK}Di chuyển độ cao tuyết phủ xuống thấp
 STR_MAPGEN_TERRAIN_TYPE                                         :{BLACK}Kiểu nền đất:
 STR_MAPGEN_SEA_LEVEL                                            :{BLACK}Mực nước biển:
 STR_MAPGEN_QUANTITY_OF_RIVERS                                   :{BLACK}Số sông/suối:
@@ -3218,7 +3209,6 @@ STR_MAPGEN_TERRAIN_TYPE_QUERY_CAPT                              :{WHITE}Độ ca
 STR_MAPGEN_HEIGHTMAP_HEIGHT_QUERY_CAPT                          :{WHITE}Độ cao đỉnh cao nhất
 STR_MAPGEN_SNOW_COVERAGE_QUERY_CAPT                             :{WHITE}Độ phủ địa hình tuyết (giá trị %)
 STR_MAPGEN_DESERT_COVERAGE_QUERY_CAPT                           :{WHITE}Độ phủ sa mạc (giá trị %)
-STR_MAPGEN_SNOW_LINE_QUERY_CAPT                                 :{WHITE}Thay đổi độ cao tuyết phủ
 STR_MAPGEN_START_DATE_QUERY_CAPT                                :{WHITE}Thay đổi thời điểm bắt đầu
 
 # SE Map generation
@@ -3363,8 +3353,8 @@ STR_NEWGRF_ERROR_MSG_INFO                                       :{SILVER}{STRING
 STR_NEWGRF_ERROR_MSG_WARNING                                    :{RED}Cảnh báo: {SILVER}{STRING}
 STR_NEWGRF_ERROR_MSG_ERROR                                      :{RED}Lỗi: {SILVER}{STRING}
 STR_NEWGRF_ERROR_MSG_FATAL                                      :{RED}Lỗi nghiêm trọng: {SILVER}{STRING}
-STR_NEWGRF_ERROR_FATAL_POPUP                                    :{WHITE}Xảy ra lỗi NewGRF nghiêm trọng:{}{STRING}
-STR_NEWGRF_ERROR_POPUP                                          :{WHITE}Có lỗi NewGRF xảy ra:{}{STRING}
+STR_NEWGRF_ERROR_FATAL_POPUP                                    :{WHITE}NewGRF "{STRING}" đã xảy ra một lỗi nghiêm trọng:{}{STRING}
+STR_NEWGRF_ERROR_POPUP                                          :{WHITE}NewGRF "{STRING}" đã xảy ra lỗi:{}{STRING}
 STR_NEWGRF_ERROR_VERSION_NUMBER                                 :{1:STRING} sẽ không hoạt động với phiên bản TTDPatch version theo như báo cáo của OpenTTD.
 STR_NEWGRF_ERROR_DOS_OR_WINDOWS                                 :{1:STRING} để dành cho phiên bản {2:STRING} của TTD.
 STR_NEWGRF_ERROR_UNSET_SWITCH                                   :{1:STRING} được thiết kế để dùng với {2:STRING}
@@ -3904,7 +3894,6 @@ STR_PURCHASE_INFO_RUNNINGCOST                                   :{BLACK}Chi phí
 STR_PURCHASE_INFO_CAPACITY                                      :{BLACK}Sức chứa: {GOLD}{CARGO_LONG} {STRING}
 STR_PURCHASE_INFO_REFITTABLE                                    :(cải biến được)
 STR_PURCHASE_INFO_DESIGNED_LIFE                                 :{BLACK}Thiết kế: {GOLD}{NUM}{BLACK} Niên hạn: {GOLD}{COMMA} năm
-STR_PURCHASE_INFO_DESIGNED                                      :{BLACK}Thiết kế: {GOLD}{NUM}
 STR_PURCHASE_INFO_RELIABILITY                                   :{BLACK}Độ tin cậy tối đa: {GOLD}{COMMA}%
 STR_PURCHASE_INFO_COST                                          :{BLACK}Giá thành: {GOLD}{CURRENCY_LONG}
 STR_PURCHASE_INFO_COST_REFIT                                    :{BLACK}Giá: {GOLD}{CURRENCY_LONG}{BLACK} (Giá cải biến: {GOLD}{CURRENCY_LONG}{BLACK})
@@ -4541,7 +4530,7 @@ STR_TIMETABLE_CLEAR_SPEED                                       :{BLACK}Xóa Gi�
 STR_TIMETABLE_CLEAR_SPEED_TOOLTIP                               :{BLACK}Xóa tốc độ đối đa đối với lộ trình được chọn. Ctrl+Click xoá tốc độ cho mọi lộ trình
 
 STR_TIMETABLE_RESET_LATENESS                                    :{BLACK}Lập lại bộ đếm trễ
-STR_TIMETABLE_RESET_LATENESS_TOOLTIP                            :{BLACK}Thiết lập lại bộ đếm trễ giờ, để việc di chuyển phương tiện được tính lại đúng đắn
+STR_TIMETABLE_RESET_LATENESS_TOOLTIP                            :{BLACK}Thiết lập lại bộ đếm trễ giờ, để phương tiện được tính là đúng giờ. Ctrl+Click sẽ thiết lập lại nguyên nhóm, phương tiện mới nhất sẽ được tính là đúng giờ, và các phương tiện khác được tính là sớm
 
 STR_TIMETABLE_AUTOFILL                                          :{BLACK}Tự điền
 STR_TIMETABLE_AUTOFILL_TOOLTIP                                  :{BLACK}Tự điền bảng lịch trình qua việc đo thời gian hành trình kế tiếp. Ctrl+Click để cố giữ thời gian chờ không đổi
@@ -4635,8 +4624,10 @@ STR_SCREENSHOT_WORLD_SCREENSHOT                                 :{BLACK}Chụp t
 STR_SCREENSHOT_HEIGHTMAP_SCREENSHOT                             :{BLACK}Chụp bản đồ địa hình
 STR_SCREENSHOT_MINIMAP_SCREENSHOT                               :{BLACK}Chụp màn hình bản đồ nhỏ
 
-# AI Parameters
-STR_AI_SETTINGS_CAPTION_AI                                      :{WHITE}Tham số AI
+# Script Parameters
+STR_AI_SETTINGS_CAPTION                                         :{WHITE}{STRING} Tham số
+STR_AI_SETTINGS_CAPTION_AI                                      :AI
+STR_AI_SETTINGS_CAPTION_GAMESCRIPT                              :Game Script
 STR_AI_SETTINGS_CLOSE                                           :{BLACK}Đóng
 STR_AI_SETTINGS_RESET                                           :{BLACK}Thiết Lập Lại
 STR_AI_SETTINGS_SETTING                                         :{STRING}: {ORANGE}{STRING}
@@ -5094,6 +5085,9 @@ STR_ERROR_CAN_T_COPY_ORDER_LIST                                 :{WHITE}Không t
 STR_ERROR_TOO_FAR_FROM_PREVIOUS_DESTINATION                     :{WHITE}... quá xa điểm lộ trình kế trước
 STR_ERROR_AIRCRAFT_NOT_ENOUGH_RANGE                             :{WHITE}... máy bay không đủ tầm xa
 
+# Extra messages which go on the third line of errors, explaining why orders failed
+STR_ERROR_AIRPORT_NO_HELICOPTERS                                :{WHITE}Không thể hạ cánh trực thăng ở sân bay này
+
 # Timetable related errors
 STR_ERROR_CAN_T_TIMETABLE_VEHICLE                               :{WHITE}Không thể lập lịch trình cho phương tiện...
 STR_ERROR_TIMETABLE_ONLY_WAIT_AT_STATIONS                       :{WHITE}Phương tiện chỉ có thể chờ ở nhà ga, bến, cảng.
@@ -5121,11 +5115,6 @@ STR_BASEMUSIC_WIN_DESCRIPTION                                   :Nhạc gốc t�
 STR_BASEMUSIC_DOS_DESCRIPTION                                   :Nhạc của nguyên bản Transport Tycoon Deluxe cho DOS.
 STR_BASEMUSIC_TTO_DESCRIPTION                                   :Nhạc của nguyên bản Transport Tycoon (Original/World Editor) cho DOS.
 STR_BASEMUSIC_NONE_DESCRIPTION                                  :Gói âm nhạc này không có nhạc nào.
-
-STR_TRADITIONAL_TRAIN_NAME                                      :Đoàn tàu {COMMA}
-STR_TRADITIONAL_ROAD_VEHICLE_NAME                               :Ôtô {COMMA}
-STR_TRADITIONAL_SHIP_NAME                                       :Tàu thuỷ {COMMA}
-STR_TRADITIONAL_AIRCRAFT_NAME                                   :Máy bay {COMMA}
 
 ##id 0x2000
 # Town building names

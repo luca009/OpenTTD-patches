@@ -196,11 +196,6 @@ STR_UNITS_VELOCITY_METRIC                                       :{COMMA} km/h
 STR_UNITS_VELOCITY_SI                                           :{COMMA} m/s
 STR_UNITS_VELOCITY_GAMEUNITS                                    :{DECIMAL}{NBSP}dale/zi
 
-STR_UNIT_NAME_VELOCITY_IMPERIAL                                 :mph
-STR_UNIT_NAME_VELOCITY_METRIC                                   :km/h
-STR_UNIT_NAME_VELOCITY_SI                                       :m/s
-STR_UNIT_NAME_VELOCITY_GAMEUNITS                                :dale/zi
-
 STR_UNITS_POWER_IMPERIAL                                        :{COMMA}cp
 STR_UNITS_POWER_METRIC                                          :{COMMA}cp
 STR_UNITS_POWER_SI                                              :{COMMA}kW
@@ -249,7 +244,6 @@ STR_TOOLTIP_SORT_ORDER                                          :{BLACK}Alegeți
 STR_TOOLTIP_SORT_CRITERIA                                       :{BLACK}Alegeți criteriul de sortare
 STR_TOOLTIP_FILTER_CRITERIA                                     :{BLACK}Alegeți criteriul de filtrare
 STR_BUTTON_SORT_BY                                              :{BLACK}Ordonează
-STR_BUTTON_RENAME                                               :{BLACK}Nume nou
 STR_BUTTON_CATCHMENT                                            :Arie de acoperire
 STR_TOOLTIP_CATCHMENT                                           :{BLACK}Comută afișajul ariei de acoperire
 
@@ -596,12 +590,6 @@ STR_MONTH_SEP                                                   :septembrie
 STR_MONTH_OCT                                                   :octombrie
 STR_MONTH_NOV                                                   :noiembrie
 STR_MONTH_DEC                                                   :decembrie
-
-###length VEHICLE_TYPES
-STR_VEHICLE_TYPE_TRAINS                                         :Trenuri
-STR_VEHICLE_TYPE_ROAD_VEHICLES                                  :Autovehicule
-STR_VEHICLE_TYPE_SHIPS                                          :Nave
-STR_VEHICLE_TYPE_AIRCRAFT                                       :Aeronave
 
 # Graph window
 STR_GRAPH_KEY_BUTTON                                            :{BLACK}Legendă
@@ -1216,8 +1204,11 @@ STR_CONFIG_SETTING_HORIZONTAL_POS_LEFT                          :stânga
 STR_CONFIG_SETTING_HORIZONTAL_POS_CENTER                        :centru
 STR_CONFIG_SETTING_HORIZONTAL_POS_RIGHT                         :dreapta
 
-STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN                         :Valoarea maximă a împrumutului initial: {STRING}
+STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN                         :Valoarea maximă a împrumutului inițial: {STRING}
 STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_HELPTEXT                :Valoarea maximă pe care o companie o poate împrumuta (fără a ține cont de inflație)
+STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_VALUE                   :{CURRENCY_LONG}
+###setting-zero-is-special
+STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_DISABLED                :Niciun împrumut {RED}Necesită un script de joc pentru oferirea fondurilor inițiale
 
 STR_CONFIG_SETTING_INTEREST_RATE                                :Rata dobânzii: {STRING}
 STR_CONFIG_SETTING_INTEREST_RATE_HELPTEXT                       :Rata dobânzii; de asemenea controlează inflația dacă este activată
@@ -2367,7 +2358,6 @@ STR_NETWORK_CLIENT_LIST_NEW_COMPANY                             :(Companie nouă
 STR_NETWORK_CLIENT_LIST_NEW_COMPANY_TOOLTIP                     :{BLACK}Creează o nouă companie și intră în ea
 STR_NETWORK_CLIENT_LIST_PLAYER_ICON_SELF_TOOLTIP                :{BLACK}Aici ești tu
 STR_NETWORK_CLIENT_LIST_PLAYER_ICON_HOST_TOOLTIP                :{BLACK}Aceasta este gazda jocului
-STR_NETWORK_CLIENT_LIST_CLIENT_COMPANY_COUNT                    :{BLACK}{NUM} {P client clienți "de clienți"} / {NUM}{P companie companii "de companii"}
 
 # Matches ConnectionType
 ###length 5
@@ -3160,9 +3150,6 @@ STR_MAPGEN_DESERT_COVERAGE                                      :{BLACK}Acoperir
 STR_MAPGEN_DESERT_COVERAGE_UP                                   :{BLACK}Mărește întinderea deșertului cu zece procente
 STR_MAPGEN_DESERT_COVERAGE_DOWN                                 :{BLACK}Reduce întinderea deșertului cu zece procente
 STR_MAPGEN_DESERT_COVERAGE_TEXT                                 :{BLACK}{NUM}%
-STR_MAPGEN_SNOW_LINE_HEIGHT                                     :{BLACK}Înălţimea zăpezii:
-STR_MAPGEN_SNOW_LINE_UP                                         :{BLACK}Mută linia zăpezii cu un punct în sus
-STR_MAPGEN_SNOW_LINE_DOWN                                       :{BLACK}Mută linia zăpezii cu un punct în jos
 STR_MAPGEN_TERRAIN_TYPE                                         :{BLACK}Tip teren:
 STR_MAPGEN_SEA_LEVEL                                            :{BLACK}Nivelul mării:
 STR_MAPGEN_QUANTITY_OF_RIVERS                                   :{BLACK}Râuri:
@@ -3220,7 +3207,6 @@ STR_MAPGEN_TERRAIN_TYPE_QUERY_CAPT                              :{WHITE}Înălț
 STR_MAPGEN_HEIGHTMAP_HEIGHT_QUERY_CAPT                          :{WHITE}Cel mai înalt vârf
 STR_MAPGEN_SNOW_COVERAGE_QUERY_CAPT                             :{WHITE}Acoperire cu zăpadă (în %)
 STR_MAPGEN_DESERT_COVERAGE_QUERY_CAPT                           :{WHITE}Acoperire cu deșert (în %)
-STR_MAPGEN_SNOW_LINE_QUERY_CAPT                                 :{WHITE}Modifică înălţimea zăpezii
 STR_MAPGEN_START_DATE_QUERY_CAPT                                :{WHITE}Modifică anul de început
 
 # SE Map generation
@@ -3365,8 +3351,8 @@ STR_NEWGRF_ERROR_MSG_INFO                                       :{SILVER}{STRING
 STR_NEWGRF_ERROR_MSG_WARNING                                    :{RED}Atenţie: {SILVER}{STRING}
 STR_NEWGRF_ERROR_MSG_ERROR                                      :{RED}Eroare: {SILVER}{STRING}
 STR_NEWGRF_ERROR_MSG_FATAL                                      :{RED}Fatal: {SILVER}{STRING}
-STR_NEWGRF_ERROR_FATAL_POPUP                                    :{WHITE}O eroare fatală NewGRF a avut loc:{}{STRING}
-STR_NEWGRF_ERROR_POPUP                                          :{WHITE}O eroare NewGRF a avut loc:{}{STRING}
+STR_NEWGRF_ERROR_FATAL_POPUP                                    :{WHITE}NewGRF-ul "{STRING}" a avut o eroare fatală:{}{STRING}
+STR_NEWGRF_ERROR_POPUP                                          :{WHITE}NewGRF-ul "{STRING}" a avut o eroare:{}{STRING}
 STR_NEWGRF_ERROR_VERSION_NUMBER                                 :{1:STRING} nu va funcţiona cu versiunea TTDPatch raportată de OpenTTD
 STR_NEWGRF_ERROR_DOS_OR_WINDOWS                                 :{1:STRING} este pentru versiunea {2:STRING} a TTD
 STR_NEWGRF_ERROR_UNSET_SWITCH                                   :{1:STRING} este conceput pentru a fi folosit cu {2:STRING}
@@ -3906,7 +3892,6 @@ STR_PURCHASE_INFO_RUNNINGCOST                                   :{BLACK}Cost de 
 STR_PURCHASE_INFO_CAPACITY                                      :{BLACK}Capacitate: {GOLD}{CARGO_LONG} {STRING}
 STR_PURCHASE_INFO_REFITTABLE                                    :(suportă alte mărfuri)
 STR_PURCHASE_INFO_DESIGNED_LIFE                                 :{BLACK}An apariţie: {GOLD}{NUM}{BLACK} Durata de viaţă: {GOLD}{COMMA} ani
-STR_PURCHASE_INFO_DESIGNED                                      :{BLACK}An apariţie: {GOLD}{NUM}
 STR_PURCHASE_INFO_RELIABILITY                                   :{BLACK}Eficienţă max.: {GOLD}{COMMA}%
 STR_PURCHASE_INFO_COST                                          :{BLACK}Cost: {GOLD}{CURRENCY_LONG}
 STR_PURCHASE_INFO_COST_REFIT                                    :{BLACK}Cost: {GOLD}{CURRENCY_LONG}{BLACK} (Cost reparații: {GOLD}{CURRENCY_LONG}{BLACK})
@@ -4543,7 +4528,7 @@ STR_TIMETABLE_CLEAR_SPEED                                       :{BLACK}Şterge 
 STR_TIMETABLE_CLEAR_SPEED_TOOLTIP                               :{BLACK}Ștergeți viteza maximă de deplasare a comenzii evidențiate. Ctrl+Click șterge viteza pentru toate comenzile
 
 STR_TIMETABLE_RESET_LATENESS                                    :{BLACK}Reinitializeaza contorul de intarziere
-STR_TIMETABLE_RESET_LATENESS_TOOLTIP                            :{BLACK}Reiniţializează contorul de întârziere, astfel ca vehiculul să ajungă la timp
+STR_TIMETABLE_RESET_LATENESS_TOOLTIP                            :{BLACK}Reiniţializează contorul de întârziere, astfel ca vehiculul să ajungă la timp. Ctrl+clic va reseta tot grupul astfel încât cel mai întârziat vehicul va ajunge la timp și toate celelalte vor ajunge mai devreme
 
 STR_TIMETABLE_AUTOFILL                                          :{BLACK}Auto-completare
 STR_TIMETABLE_AUTOFILL_TOOLTIP                                  :{BLACK}Completați automat orarul cu valorile din următoarea călătorie. Ctrl+Click pentru a încerca să păstrați timpii de așteptare
@@ -4566,7 +4551,7 @@ STR_DATE_YEAR_TOOLTIP                                           :{BLACK}Alege an
 
 
 # AI debug window
-STR_AI_DEBUG                                                    :{WHITE}Depanare IA / Script Joc
+STR_AI_DEBUG                                                    :{WHITE}Depanare IA / Script de joc
 STR_AI_DEBUG_NAME_AND_VERSION                                   :{BLACK}{STRING} (v{NUM})
 STR_AI_DEBUG_NAME_TOOLTIP                                       :{BLACK}Numele scriptului
 STR_AI_DEBUG_SETTINGS                                           :{BLACK}Setări
@@ -4592,7 +4577,7 @@ STR_ERROR_AI_DEBUG_SERVER_ONLY                                  :{YELLOW}Fereast
 # AI configuration window
 STR_AI_CONFIG_CAPTION_AI                                        :{WHITE}Configurație AI
 STR_AI_CONFIG_CAPTION_GAMESCRIPT                                :{WHITE}Configurarea scriptului de joc
-STR_AI_CONFIG_GAMELIST_TOOLTIP                                  :{BLACK}Script Joc încărcat în jocul următor
+STR_AI_CONFIG_GAMELIST_TOOLTIP                                  :{BLACK}Scriptul care va fi încărcat în jocul următor
 STR_AI_CONFIG_AILIST_TOOLTIP                                    :{BLACK}Modulul de IA care va fi încărcat în jocul următor
 STR_AI_CONFIG_HUMAN_PLAYER                                      :Jucator uman
 STR_AI_CONFIG_RANDOM_AI                                         :IA aleator
@@ -4604,12 +4589,12 @@ STR_AI_CONFIG_MOVE_UP_TOOLTIP                                   :{BLACK}Mută IA
 STR_AI_CONFIG_MOVE_DOWN                                         :{BLACK}În jos
 STR_AI_CONFIG_MOVE_DOWN_TOOLTIP                                 :{BLACK}Mută IA selectată jos în listă
 
-STR_AI_CONFIG_GAMESCRIPT                                        :{SILVER}Script Joc
+STR_AI_CONFIG_GAMESCRIPT                                        :{SILVER}Script de joc
 STR_AI_CONFIG_GAMESCRIPT_PARAM                                  :{SILVER}Parametri
 STR_AI_CONFIG_AI                                                :{SILVER}IA
 
 STR_AI_CONFIG_CHANGE_AI                                         :{BLACK}Selectați IA
-STR_AI_CONFIG_CHANGE_GAMESCRIPT                                 :{BLACK}Selectați Scriptul jocului
+STR_AI_CONFIG_CHANGE_GAMESCRIPT                                 :{BLACK}Selectați scriptul jocului
 STR_AI_CONFIG_CHANGE_TOOLTIP                                    :{BLACK}Încarcă un alt script
 STR_AI_CONFIG_CONFIGURE                                         :{BLACK}Configurază
 STR_AI_CONFIG_CONFIGURE_TOOLTIP                                 :{BLACK}Configurează parametrii scriptului
@@ -4637,8 +4622,10 @@ STR_SCREENSHOT_WORLD_SCREENSHOT                                 :{BLACK}Captură
 STR_SCREENSHOT_HEIGHTMAP_SCREENSHOT                             :{BLACK}Captură de hartă topografică
 STR_SCREENSHOT_MINIMAP_SCREENSHOT                               :{BLACK}Captură de hartă a lumii
 
-# AI Parameters
-STR_AI_SETTINGS_CAPTION_AI                                      :{WHITE}Parametrii IA
+# Script Parameters
+STR_AI_SETTINGS_CAPTION                                         :{WHITE}{STRING} Parametri
+STR_AI_SETTINGS_CAPTION_AI                                      :{WHITE}IA
+STR_AI_SETTINGS_CAPTION_GAMESCRIPT                              :Script de joc
 STR_AI_SETTINGS_CLOSE                                           :{BLACK}Închide
 STR_AI_SETTINGS_RESET                                           :{BLACK}Resetează
 STR_AI_SETTINGS_SETTING                                         :{STRING}: {ORANGE}{STRING}
@@ -5096,6 +5083,11 @@ STR_ERROR_CAN_T_COPY_ORDER_LIST                                 :{WHITE}Nu pot c
 STR_ERROR_TOO_FAR_FROM_PREVIOUS_DESTINATION                     :{WHITE}... prea departe de destinaţia precedentă
 STR_ERROR_AIRCRAFT_NOT_ENOUGH_RANGE                             :{WHITE}... avionul nu are o rază de acțiune suficientă
 
+# Extra messages which go on the third line of errors, explaining why orders failed
+STR_ERROR_NO_STOP_ARTICULATED_VEHICLE                           :{WHITE}Nu există opriri care să fie potrivite pentru vehiculele rutiere articulate.{}Vehiculele rutiere articulate necesită o oprire de drum, nu o oprire într-o rampă.
+STR_ERROR_NO_RAIL_WAYPOINT                                      :{WHITE}Nu există niciun punct intermediar feroviar
+STR_ERROR_NO_BUOY                                               :{WHITE}Nu există geamanduri
+
 # Timetable related errors
 STR_ERROR_CAN_T_TIMETABLE_VEHICLE                               :{WHITE}Nu pot programa vehiculul...
 STR_ERROR_TIMETABLE_ONLY_WAIT_AT_STATIONS                       :{WHITE}Vehiculele pot aştepta numai în staţii
@@ -5123,11 +5115,6 @@ STR_BASEMUSIC_WIN_DESCRIPTION                                   :Muzica original
 STR_BASEMUSIC_DOS_DESCRIPTION                                   :Muzica originală a ediției Transport Tycoon Deluxe pentru DOS.
 STR_BASEMUSIC_TTO_DESCRIPTION                                   :Setul original de muzică al Transport Tycoon (Original/World Editor) pentru DOS.
 STR_BASEMUSIC_NONE_DESCRIPTION                                  :Un set de muzică fără muzică inclusă.
-
-STR_TRADITIONAL_TRAIN_NAME                                      :Trenul {COMMA}
-STR_TRADITIONAL_ROAD_VEHICLE_NAME                               :Autovehiculul {COMMA}
-STR_TRADITIONAL_SHIP_NAME                                       :Nava {COMMA}
-STR_TRADITIONAL_AIRCRAFT_NAME                                   :Aeronava {COMMA}
 
 ##id 0x2000
 # Town building names

@@ -27,6 +27,7 @@
 #include "effectvehicle_base.h"
 #include "elrail_func.h"
 #include "roadveh.h"
+#include "train.h"
 #include "town.h"
 #include "company_base.h"
 #include "core/random_func.hpp"
@@ -51,6 +52,8 @@ typedef std::vector<RoadVehicle *> RoadVehicleList;
 RoadTypeInfo _roadtypes[ROADTYPE_END];
 std::vector<RoadType> _sorted_roadtypes;
 RoadTypes _roadtypes_hidden_mask;
+std::array<RoadTypes, RTCM_END> _collision_mode_roadtypes;
+RoadTypes _roadtypes_non_train_colliding;
 
 /**
  * Bitmap of road/tram types.
@@ -72,7 +75,7 @@ void ResetRoadTypes()
 		{ 0, 0, 0, 0, 0, 0 },
 		{ 0, 0, 0, 0, 0, 0 },
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, {}, {}, 0, {}, {} },
-		ROADTYPES_NONE, ROTFB_NONE, RXTFB_NONE, 0, 0, 0, 0,
+		ROADTYPES_NONE, ROTFB_NONE, RXTFB_NONE, RTCM_NORMAL, 0, 0, 0, 0,
 		RoadTypeLabelList(), 0, 0, ROADTYPES_NONE, ROADTYPES_NONE, 0,
 		{}, {} };
 	for (; i < lengthof(_roadtypes);          i++) _roadtypes[i] = empty_roadtype;
@@ -134,6 +137,18 @@ void InitRoadTypes()
 	std::sort(_sorted_roadtypes.begin(), _sorted_roadtypes.end(), CompareRoadTypes);
 }
 
+void InitRoadTypesCaches()
+{
+	std::fill(_collision_mode_roadtypes.begin(), _collision_mode_roadtypes.end(), ROADTYPES_NONE);
+	_roadtypes_non_train_colliding = ROADTYPES_NONE;
+
+	for (RoadType rt = ROADTYPE_BEGIN; rt != ROADTYPE_END; rt++) {
+		const RoadTypeInfo &rti = _roadtypes[rt];
+		SetBit(_collision_mode_roadtypes[rti.collision_mode], rt);
+		if (HasBit(rti.extra_flags, RXTF_NO_TRAIN_COLLISION)) SetBit(_roadtypes_non_train_colliding, rt);
+	}
+}
+
 /**
  * Allocate a new road type label
  */
@@ -149,6 +164,7 @@ RoadType AllocateRoadType(RoadTypeLabel label, RoadTramType rtt)
 			rti->alternate_labels.clear();
 			rti->flags = ROTFB_NONE;
 			rti->extra_flags = RXTFB_NONE;
+			rti->collision_mode = RTCM_NORMAL;
 			rti->introduction_date = INVALID_DATE;
 
 			/* Make us compatible with ourself. */
@@ -243,9 +259,21 @@ static btree::btree_set<TileIndex> _road_cache_one_way_state_pending_interpolate
 static bool _defer_update_road_cache_one_way_state = false;
 bool _mark_tile_dirty_on_road_cache_one_way_state_update = false;
 
+static void RefreshTileOnCachedOneWayStateChange(TileIndex tile)
+{
+	if (IsAnyRoadStopTile(tile) && IsCustomRoadStopSpecIndex(tile)) {
+		MarkTileGroundDirtyByTile(tile, VMDF_NOT_MAP_MODE);
+		return;
+	}
+	if (unlikely(_mark_tile_dirty_on_road_cache_one_way_state_update)) {
+		MarkTileGroundDirtyByTile(tile, VMDF_NOT_MAP_MODE);
+		return;
+	}
+}
+
 static void UpdateTileRoadCachedOneWayState(TileIndex tile)
 {
-	if (unlikely(_mark_tile_dirty_on_road_cache_one_way_state_update)) MarkTileGroundDirtyByTile(tile, VMDF_NOT_MAP_MODE);
+	RefreshTileOnCachedOneWayStateChange(tile);
 
 	DisallowedRoadDirections drd = GetOneWayRoadTileDisallowedRoadDirections(tile);
 	if (drd != DRD_NONE) {
@@ -348,7 +376,7 @@ static void InterpolateRoadFollowRoadBitSetState(TileIndex tile, uint8 bit, Inte
 			SetRoadCachedOneWayState(tile, (RoadCachedOneWayState)(irr ^ (HasBit(bits_to_rcows, (inbit << 2) | bit) ? 0 : 3)));
 		}
 		_road_cache_one_way_state_pending_interpolate_tiles.erase(tile);
-		if (unlikely(_mark_tile_dirty_on_road_cache_one_way_state_update)) MarkTileGroundDirtyByTile(tile, VMDF_NOT_MAP_MODE);
+		RefreshTileOnCachedOneWayStateChange(tile);
 		TileIndex next = InterpolateRoadFollowTileStep(tile, bit);
 		if (next == INVALID_TILE) return;
 		DisallowedRoadDirections drd = GetOneWayRoadTileDisallowedRoadDirections(next);
@@ -1318,6 +1346,8 @@ CommandCost CmdBuildRoad(TileIndex tile, DoCommandFlag flags, uint32 p1, uint32 
 				/* Only allow building the outer roadbit, so building long roads stops at existing bridges */
 				if (MirrorRoadBits(DiagDirToRoadBits(GetTunnelBridgeDirection(tile))) != pieces) goto do_clear;
 				if (HasTileRoadType(tile, rtt)) return_cmd_error(STR_ERROR_ALREADY_BUILT);
+				if (RoadNoTunnels(rt)) return_cmd_error(STR_ERROR_TUNNEL_DISALLOWED_ROAD);
+
 				/* Don't allow adding roadtype to the bridge/tunnel when vehicles are already driving on it */
 				CommandCost ret = TunnelBridgeIsFree(tile, other_end);
 				if (ret.Failed()) return ret;
@@ -2282,19 +2312,26 @@ static void DrawTile_Road(TileInfo *ti, DrawTileProcParams params)
 			/* Draw rail/PBS overlay */
 			bool draw_pbs = _game_mode != GM_MENU && _settings_client.gui.show_track_reservation && HasCrossingReservation(ti->tile);
 			if (rti->UsesOverlay()) {
-				PaletteID pal = draw_pbs ? PALETTE_CRASH : PAL_NONE;
+				pal = draw_pbs ? PALETTE_CRASH : PAL_NONE;
 				SpriteID rail = GetCustomRailSprite(rti, ti->tile, RTSG_CROSSING) + axis;
 				DrawGroundSprite(rail, pal);
 
+				auto is_usable_crossing = [&](TileIndex t) -> bool {
+					if (HasRoadTypeRoad(t) && !HasBit(_roadtypes_non_train_colliding, GetRoadTypeRoad(t))) return true;
+					if (HasRoadTypeTram(t) && !HasBit(_roadtypes_non_train_colliding, GetRoadTypeTram(t))) return true;
+					return false;
+				};
 
-				if (_settings_game.vehicle.adjacent_crossings) {
+				if (!is_usable_crossing(ti->tile)) {
+					/* Do not draw crossing overlays */
+				} else if (_settings_game.vehicle.adjacent_crossings) {
 					const Axis axis = GetCrossingRoadAxis(ti->tile);
 					const DiagDirection dir1 = AxisToDiagDir(axis);
 					const DiagDirection dir2 = ReverseDiagDir(dir1);
 					uint adjacent_diagdirs = 0;
 					for (DiagDirection dir : { dir1, dir2 }) {
 						const TileIndex t = TileAddByDiagDir(ti->tile, dir);
-						if (t < MapSize() && IsLevelCrossingTile(t) && GetCrossingRoadAxis(t) == axis) {
+						if (t < MapSize() && IsLevelCrossingTile(t) && GetCrossingRoadAxis(t) == axis && is_usable_crossing(t)) {
 							SetBit(adjacent_diagdirs, dir);
 						}
 					}
@@ -2329,7 +2366,7 @@ static void DrawTile_Road(TileInfo *ti, DrawTileProcParams params)
 				}
 			} else if (draw_pbs || tram_rti != nullptr || road_rti->UsesOverlay()) {
 				/* Add another rail overlay, unless there is only the base road sprite. */
-				PaletteID pal = draw_pbs ? PALETTE_CRASH : PAL_NONE;
+				pal = draw_pbs ? PALETTE_CRASH : PAL_NONE;
 				SpriteID rail = GetCrossingRoadAxis(ti->tile) == AXIS_Y ? GetRailTypeInfo(GetRailType(ti->tile))->base_sprites.single_x : GetRailTypeInfo(GetRailType(ti->tile))->base_sprites.single_y;
 				DrawGroundSprite(rail, pal);
 			}
@@ -2594,7 +2631,7 @@ static void TileLoop_Road(TileIndex tile)
 
 		/* Possibly change road type */
 		if (GetRoadOwner(tile, RTT_ROAD) == OWNER_TOWN) {
-			RoadType rt = GetTownRoadType(t);
+			RoadType rt = GetTownRoadType();
 			if (rt != GetRoadTypeRoad(tile)) {
 				SetRoadType(tile, RTT_ROAD, rt);
 			}
@@ -2642,7 +2679,7 @@ static TrackStatus GetTileTrackStatus_Road(TileIndex tile, TransportType mode, u
 			break;
 
 		case TRANSPORT_ROAD: {
-			RoadTramType rtt = (RoadTramType)sub_mode;
+			RoadTramType rtt = (RoadTramType)GB(sub_mode, 0, 8);
 			if (!HasTileRoadType(tile, rtt)) break;
 			switch (GetRoadTileType(tile)) {
 				case ROAD_TILE_NORMAL: {
@@ -2690,8 +2727,16 @@ static TrackStatus GetTileTrackStatus_Road(TileIndex tile, TransportType mode, u
 					if (side != INVALID_DIAGDIR && axis != DiagDirToAxis(side)) break;
 
 					trackdirbits = TrackBitsToTrackdirBits(AxisToTrackBits(axis));
-					if (IsCrossingBarred(tile)) {
+					auto is_non_colliding = [&]() -> bool {
+						uint8 rtfield = GB(sub_mode, 8, 8);
+						if (rtfield == 0) return false;
+						RoadType rt = (RoadType)(rtfield - 1);
+						return HasBit(_roadtypes_non_train_colliding, rt);
+					};
+					if (!(sub_mode & TTSSM_NO_RED_SIGNALS) && IsCrossingBarred(tile) && !is_non_colliding()) {
 						red_signals = trackdirbits;
+						if (TrainOnCrossing(tile)) break;
+
 						auto mask_red_signal_bits_if_crossing_barred = [&](TileIndex t, TrackdirBits mask) {
 							if (IsLevelCrossingTile(t) && IsCrossingBarred(t)) red_signals &= mask;
 						};
@@ -3042,6 +3087,10 @@ CommandCost CmdConvertRoad(TileIndex tile, DoCommandFlag flags, uint32 p1, uint3
 				break;
 			case MP_TUNNELBRIDGE:
 				if (GetTunnelBridgeTransportType(tile) != TRANSPORT_ROAD) continue;
+				if (IsTunnel(tile) && RoadNoTunnels(to_type)) {
+					error.MakeError(STR_ERROR_TUNNEL_DISALLOWED_ROAD);
+					continue;
+				}
 				break;
 			default: continue;
 		}

@@ -198,11 +198,6 @@ STR_UNITS_VELOCITY_METRIC                                       :{COMMA}{NBSP}km
 STR_UNITS_VELOCITY_SI                                           :{COMMA}{NBSP}m/s
 STR_UNITS_VELOCITY_GAMEUNITS                                    :{DECIMAL}{NBSP}lauciņi/diena
 
-STR_UNIT_NAME_VELOCITY_IMPERIAL                                 :jūdzes stundā
-STR_UNIT_NAME_VELOCITY_METRIC                                   :km/h
-STR_UNIT_NAME_VELOCITY_SI                                       :m/s
-STR_UNIT_NAME_VELOCITY_GAMEUNITS                                :lauciņi/diena
-
 STR_UNITS_POWER_IMPERIAL                                        :{COMMA}{NBSP}ZS
 STR_UNITS_POWER_METRIC                                          :{COMMA}{NBSP}ZS
 STR_UNITS_POWER_SI                                              :{COMMA}{NBSP}kW
@@ -251,7 +246,6 @@ STR_TOOLTIP_SORT_ORDER                                          :{BLACK}Izvēlē
 STR_TOOLTIP_SORT_CRITERIA                                       :{BLACK}Izvēlēties kārtošanas pazīmes
 STR_TOOLTIP_FILTER_CRITERIA                                     :{BLACK}Izvēlēties filtrēšanas pazīmes
 STR_BUTTON_SORT_BY                                              :{BLACK}Kārtot pēc
-STR_BUTTON_RENAME                                               :{BLACK}Pārdēvēt
 STR_BUTTON_CATCHMENT                                            :{BLACK}Pārklājums
 STR_TOOLTIP_CATCHMENT                                           :{BLACK}Pārslēgt pārklājuma laukuma rādīšanu
 
@@ -598,12 +592,6 @@ STR_MONTH_SEP                                                   :Septembris
 STR_MONTH_OCT                                                   :Oktobris
 STR_MONTH_NOV                                                   :Novembris
 STR_MONTH_DEC                                                   :Decembris
-
-###length VEHICLE_TYPES
-STR_VEHICLE_TYPE_TRAINS                                         :Vilcieni
-STR_VEHICLE_TYPE_ROAD_VEHICLES                                  :Autotransporta līdzekļi
-STR_VEHICLE_TYPE_SHIPS                                          :Kuģi
-STR_VEHICLE_TYPE_AIRCRAFT                                       :Lidaparāti
 
 # Graph window
 STR_GRAPH_KEY_BUTTON                                            :{BLACK}Apzīmējumu atslēga
@@ -1220,6 +1208,9 @@ STR_CONFIG_SETTING_HORIZONTAL_POS_RIGHT                         :pa labi
 
 STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN                         :Maksimālais sākotnējais aizdevums: {STRING}
 STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_HELPTEXT                :Maksimālais aizdevuma daudzums, ko uzņēmums var izsniegt (neskaitot inflāciju)
+STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_VALUE                   :{CURRENCY_LONG}
+###setting-zero-is-special
+STR_CONFIG_SETTING_MAXIMUM_INITIAL_LOAN_DISABLED                :Nav aizdevuma {RED}Lai nodrošinātu sākotnējos līdzekļus, ir nepieciešams spēles skripts
 
 STR_CONFIG_SETTING_INTEREST_RATE                                :Procentu likme: {STRING}
 STR_CONFIG_SETTING_INTEREST_RATE_HELPTEXT                       :Aizdevumu procentu likme; ja ieslēgts, ietekmē arī inflāciju
@@ -1945,7 +1936,7 @@ STR_CONFIG_SETTING_DISTRIBUTION_MAIL_HELPTEXT                   :"simetriska" no
 STR_CONFIG_SETTING_DISTRIBUTION_ARMOURED                        :Izplatīšanas režīms APSARGĀJAMAI preču klasei: {STRING}
 STR_CONFIG_SETTING_DISTRIBUTION_ARMOURED_HELPTEXT               :APSARGĀJAMĀ kravas klase satur vērtslietas mērenajā joslā, dimantus subtropu joslā un zeltu subarktiskajā joslā. NewGRF paplašinājumi var to mainīt. "simetriska" nozīmē, ka apmēram vienāds daudzums kravas tiks nosūtīts virzienā no stacijas A uz B, cik no B uz A. "asimetriska" nozīmē, ka patvaļīgs kravas daudzums var tikt nosūtīts katrā no virzieniem. "manuāli" nozīmē, ka pastam netiks veikta automātiska izplatīšana. Šo vērtību vēlams iestatīt kā asimetrisku vai manuālu, kad spēlē subarktiskajā joslā, jo bankas nesūta zeltu atpakaļ uz zelta raktuvēm. Mērenajā un subtropu joslā var izvēlēties simetrisku, jo bankas sūtīs vērtslietas atpakaļ uz izcelsmes banku, kad saņems vērtslietu pievedumu.
 STR_CONFIG_SETTING_DISTRIBUTION_DEFAULT                         :Izplatīšanas modelis citām kravu klasēm: {STRING}
-STR_CONFIG_SETTING_DISTRIBUTION_DEFAULT_HELPTEXT                :"asimetriska" nozīmē, ka patvaļīgu kravas daudzumu var nosūtīt abos virzienos."manuāli" nozīmē, ka šīm kravām netiks veikta automātiska izplatīšana.
+STR_CONFIG_SETTING_DISTRIBUTION_DEFAULT_HELPTEXT                :"Asimetrisks" nozīmē, ka jebkurā virzienā var nosūtīt patvaļīgu daudzumu kravas. "Manuāli" nozīmē, ka šīm kravām automātiska sadale nenotiks
 ###length 3
 STR_CONFIG_SETTING_DISTRIBUTION_MANUAL                          :manuāli
 STR_CONFIG_SETTING_DISTRIBUTION_ASYMMETRIC                      :asimetriska
@@ -2371,7 +2362,6 @@ STR_NETWORK_CLIENT_LIST_NEW_COMPANY                             :(Jauna kompāni
 STR_NETWORK_CLIENT_LIST_NEW_COMPANY_TOOLTIP                     :{BLACK}Izveidot jaunu kompāniju un pievienoties tai
 STR_NETWORK_CLIENT_LIST_PLAYER_ICON_SELF_TOOLTIP                :{BLACK}Tas esat jūs
 STR_NETWORK_CLIENT_LIST_PLAYER_ICON_HOST_TOOLTIP                :{BLACK}Šis ir spēles īpašnieks
-STR_NETWORK_CLIENT_LIST_CLIENT_COMPANY_COUNT                    :{BLACK}{NUM} klient{P s а u} / {NUM} kompānij{P a u as}
 
 # Matches ConnectionType
 ###length 5
@@ -2714,6 +2704,9 @@ STR_BUILD_SIGNAL_DRAG_SIGNALS_DENSITY_INCREASE_TOOLTIP          :{BLACK}Palielin
 STR_SELECT_RAIL_BRIDGE_CAPTION                                  :{WHITE}Izvēlēties dzelzceļa tiltu
 STR_SELECT_ROAD_BRIDGE_CAPTION                                  :{WHITE}Izvēlēties tiltu
 STR_SELECT_BRIDGE_SELECTION_TOOLTIP                             :{BLACK}Tiltu izvēle - klikšķināt uz vēlamo tiltu, lai to uzbūvētu
+STR_SELECT_BRIDGE_INFO_NAME                                     :{GOLD}{STRING}
+STR_SELECT_BRIDGE_INFO_NAME_MAX_SPEED                           :{GOLD}{STRING},{} {VELOCITY}
+STR_SELECT_BRIDGE_INFO_NAME_MAX_SPEED_COST                      :{GOLD}{STRING},{} {VELOCITY} {WHITE}{CURRENCY_LONG}
 STR_BRIDGE_NAME_SUSPENSION_STEEL                                :Vanšu, tērauda
 STR_BRIDGE_NAME_GIRDER_STEEL                                    :Siju, tērauda
 STR_BRIDGE_NAME_CANTILEVER_STEEL                                :Izgriežamais, tērauda
@@ -3161,9 +3154,6 @@ STR_MAPGEN_DESERT_COVERAGE                                      :{BLACK}Tuksneš
 STR_MAPGEN_DESERT_COVERAGE_UP                                   :{BLACK}Palielināt tuksneša pārklājumu par desmit procentiem
 STR_MAPGEN_DESERT_COVERAGE_DOWN                                 :{BLACK}Samazināt tuksneša pārklājumu par desmit procentiem
 STR_MAPGEN_DESERT_COVERAGE_TEXT                                 :{BLACK}{NUM}%
-STR_MAPGEN_SNOW_LINE_HEIGHT                                     :{BLACK}Sniega līnijas augstums
-STR_MAPGEN_SNOW_LINE_UP                                         :{BLACK}Paaugstināt sniega līnijas augstumu
-STR_MAPGEN_SNOW_LINE_DOWN                                       :{BLACK}Pazemināt sniega līnijas augstumu
 STR_MAPGEN_TERRAIN_TYPE                                         :{BLACK}Apvidus reljefs:
 STR_MAPGEN_SEA_LEVEL                                            :{BLACK}Jūras līmenis:
 STR_MAPGEN_QUANTITY_OF_RIVERS                                   :{BLACK}Upes:
@@ -3221,7 +3211,6 @@ STR_MAPGEN_TERRAIN_TYPE_QUERY_CAPT                              :{WHITE}Vēlamā
 STR_MAPGEN_HEIGHTMAP_HEIGHT_QUERY_CAPT                          :{WHITE} Augstākā virsotne
 STR_MAPGEN_SNOW_COVERAGE_QUERY_CAPT                             :{WHITE}Sniega pārklājums (iekš %)
 STR_MAPGEN_DESERT_COVERAGE_QUERY_CAPT                           :{WHITE}Tuksneša pārklājums (iekš %)
-STR_MAPGEN_SNOW_LINE_QUERY_CAPT                                 :{WHITE}Mainīt sniega līnijas augstumu
 STR_MAPGEN_START_DATE_QUERY_CAPT                                :{WHITE}Mainīt sākuma gadu
 
 # SE Map generation
@@ -3366,8 +3355,6 @@ STR_NEWGRF_ERROR_MSG_INFO                                       :{SILVER}{STRING
 STR_NEWGRF_ERROR_MSG_WARNING                                    :{RED}Brīdinājums: {SILVER}{STRING}
 STR_NEWGRF_ERROR_MSG_ERROR                                      :{RED}Kļūda: {SILVER}{STRING}
 STR_NEWGRF_ERROR_MSG_FATAL                                      :{RED}Fatāls: {SILVER}{STRING}
-STR_NEWGRF_ERROR_FATAL_POPUP                                    :{WHITE}Notikusi fatāla NewGRF kļūda:{}{STRING}
-STR_NEWGRF_ERROR_POPUP                                          :{WHITE}Radusies NewGRF kļūda:{}{STRING}
 STR_NEWGRF_ERROR_VERSION_NUMBER                                 :{1:STRING} nedarbosies kopā ar TTDPatch versiju (par ko ziņoja OpenTTD).
 STR_NEWGRF_ERROR_DOS_OR_WINDOWS                                 :{1:STRING} ir paredzēts TTD versijai {2:STRING}
 STR_NEWGRF_ERROR_UNSET_SWITCH                                   :{1:STRING} ir paredzēts lietošanai ar {2:STRING}
@@ -3913,7 +3900,6 @@ STR_PURCHASE_INFO_RUNNINGCOST                                   :{BLACK}Kārtēj
 STR_PURCHASE_INFO_CAPACITY                                      :{BLACK}Ietilpība: {GOLD}{CARGO_LONG} {STRING}
 STR_PURCHASE_INFO_REFITTABLE                                    :(pielāgojams)
 STR_PURCHASE_INFO_DESIGNED_LIFE                                 :{BLACK}Projektēts: {GOLD}{NUM}{BLACK} Kalpošanas laiks: {GOLD}{COMMA} gad{P s i u}
-STR_PURCHASE_INFO_DESIGNED                                      :{BLACK}Projektēts: {GOLD}{NUM}
 STR_PURCHASE_INFO_RELIABILITY                                   :{BLACK}Maksimālā uzticamība: {GOLD}{COMMA}%
 STR_PURCHASE_INFO_COST                                          :{BLACK}Cena: {GOLD}{CURRENCY_LONG}
 STR_PURCHASE_INFO_COST_REFIT                                    :{BLACK}Izmaksas: {GOLD}{CURRENCY_LONG}{BLACK} (Pielāgošanas izmaksas: {GOLD}{CURRENCY_LONG}{BLACK})
@@ -4644,7 +4630,8 @@ STR_SCREENSHOT_WORLD_SCREENSHOT                                 :{BLACK}Visas ka
 STR_SCREENSHOT_HEIGHTMAP_SCREENSHOT                             :{BLACK}Augstumkartes ekrānuzņēmums
 STR_SCREENSHOT_MINIMAP_SCREENSHOT                               :{BLACK}Minikartes ekrānuzņēmums
 
-# AI Parameters
+# Script Parameters
+STR_AI_SETTINGS_CAPTION                                         :{WHITE}{STRING} Iestatījumi
 STR_AI_SETTINGS_CAPTION_AI                                      :{WHITE}MI Parametri
 STR_AI_SETTINGS_CLOSE                                           :{BLACK}Aizvērt
 STR_AI_SETTINGS_RESET                                           :{BLACK}Atiestatīt
@@ -5103,6 +5090,8 @@ STR_ERROR_CAN_T_COPY_ORDER_LIST                                 :{WHITE}Nevar ko
 STR_ERROR_TOO_FAR_FROM_PREVIOUS_DESTINATION                     :{WHITE}... pārāk tālu no iepriekšējā galamērķa
 STR_ERROR_AIRCRAFT_NOT_ENOUGH_RANGE                             :{WHITE}... lidaparātam ir nepietiekams apgabals
 
+# Extra messages which go on the third line of errors, explaining why orders failed
+
 # Timetable related errors
 STR_ERROR_CAN_T_TIMETABLE_VEHICLE                               :{WHITE}Nevar panākt transportalīdzekļa iekļaušanos sarakstā
 STR_ERROR_TIMETABLE_ONLY_WAIT_AT_STATIONS                       :{WHITE}Transportlīdzekļus var gaidīt tikai stacijās
@@ -5130,11 +5119,6 @@ STR_BASEMUSIC_WIN_DESCRIPTION                                   :Oriģinālā Tr
 STR_BASEMUSIC_DOS_DESCRIPTION                                   :Oriģinālā Transport Tycoon Deluxe DOS laidiena mūzika.
 STR_BASEMUSIC_TTO_DESCRIPTION                                   :Oriģinālā Transport Tycoon (Original/World Editor) DOS laidiena mūzika.
 STR_BASEMUSIC_NONE_DESCRIPTION                                  :Mūzikas kopa bez mūzikas
-
-STR_TRADITIONAL_TRAIN_NAME                                      :Vilciens {COMMA}
-STR_TRADITIONAL_ROAD_VEHICLE_NAME                               :Autotransporta līdzeklis {COMMA}
-STR_TRADITIONAL_SHIP_NAME                                       :Kuģis {COMMA}
-STR_TRADITIONAL_AIRCRAFT_NAME                                   :Lidaparāts {COMMA}
 
 ##id 0x2000
 # Town building names

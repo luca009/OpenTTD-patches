@@ -100,9 +100,6 @@ static_assert((int)NETWORK_COMPANY_NAME_LENGTH == MAX_LENGTH_COMPANY_NAME_CHARS 
 /** The amount of clients connected */
 byte _network_clients_connected = 0;
 
-/* Some externs / forwards */
-extern void StateGameLoop();
-
 /**
  * Return whether there is any client connected or trying to connect at all.
  * @return whether we have any client activity
@@ -1359,12 +1356,14 @@ void NetworkStartUp()
 	NetworkUDPInitialize();
 	DEBUG(net, 3, "Network online, multiplayer available");
 	NetworkFindBroadcastIPs(&_broadcast_list);
+	NetworkHTTPInitialize();
 }
 
 /** This shuts the network down */
 void NetworkShutDown()
 {
 	NetworkDisconnect(true);
+	NetworkHTTPUninitialize();
 	NetworkUDPClose();
 
 	DEBUG(net, 3, "Shutting down network");

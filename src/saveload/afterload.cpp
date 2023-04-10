@@ -41,7 +41,7 @@
 #include "../company_func.h"
 #include "../road_cmd.h"
 #include "../ai/ai.hpp"
-#include "../ai/ai_gui.hpp"
+#include "../script/script_gui.h"
 #include "../game/game.hpp"
 #include "../town.h"
 #include "../economy_base.h"
@@ -79,6 +79,8 @@
 #include <algorithm>
 
 #include "../safeguards.h"
+
+extern bool IndividualRoadVehicleController(RoadVehicle *v, const RoadVehicle *prev);
 
 /**
  * Makes a tile canal or water depending on the surroundings.
@@ -620,15 +622,17 @@ TileIndex GetOtherTunnelBridgeEndOld(TileIndex tile)
  */
 static void StartScripts()
 {
-	/* Start the GameScript. */
-	Game::StartNew();
+	/* Script debug window requires AIs to be started before trying to start GameScript. */
 
 	/* Start the AIs. */
 	for (const Company *c : Company::Iterate()) {
 		if (Company::IsValidAiID(c->index)) AI::StartNew(c->index, false);
 	}
 
-	ShowAIDebugWindowIfAIError();
+	/* Start the GameScript. */
+	Game::StartNew();
+
+	ShowScriptDebugWindowIfScriptError();
 }
 
 /**
@@ -645,6 +649,9 @@ bool AfterLoadGame()
 	extern TileIndex _cur_tileloop_tile; // From landscape.cpp.
 	/* The LFSR used in RunTileLoop iteration cannot have a zeroed state, make it non-zeroed. */
 	if (_cur_tileloop_tile == 0) _cur_tileloop_tile = 1;
+
+	extern TileIndex _aux_tileloop_tile;
+	if (_aux_tileloop_tile == 0) _aux_tileloop_tile = 1;
 
 	if (IsSavegameVersionBefore(SLV_98)) GamelogOldver();
 
@@ -881,6 +888,7 @@ bool AfterLoadGame()
 	/* Load the sprites */
 	GfxLoadSprites();
 	LoadStringWidthTable();
+	ReInitAllWindows(false);
 
 	/* Copy temporary data to Engine pool */
 	CopyTempEngineData();
@@ -2689,8 +2697,7 @@ bool AfterLoadGame()
 			if (IsTileType(t, MP_TREES)) {
 				uint density = GB(_m[t].m2, 6, 2);
 				uint ground = GB(_m[t].m2, 4, 2);
-				uint counter = GB(_m[t].m2, 0, 4);
-				_m[t].m2 = ground << 6 | density << 4 | counter;
+				_m[t].m2 = ground << 6 | density << 4;
 			}
 		}
 	}
@@ -3003,8 +3010,7 @@ bool AfterLoadGame()
 
 					if (rv->state == RVSB_IN_DEPOT || rv->state == RVSB_WORMHOLE) break;
 
-					TrackStatus ts = GetTileTrackStatus(rv->tile, TRANSPORT_ROAD, GetRoadTramType(rv->roadtype));
-					TrackBits trackbits = TrackStatusToTrackBits(ts);
+					TrackBits trackbits = TrackdirBitsToTrackBits(GetTileTrackdirBits(rv->tile, TRANSPORT_ROAD, GetRoadTramType(rv->roadtype)));
 
 					/* Only X/Y tracks can be sloped. */
 					if (trackbits != TRACK_BIT_X && trackbits != TRACK_BIT_Y) break;
@@ -3398,7 +3404,6 @@ bool AfterLoadGame()
 				RoadVehicle *u = v;
 				RoadVehicle *prev = nullptr;
 				for (uint sf : skip_frames) {
-					extern bool IndividualRoadVehicleController(RoadVehicle *v, const RoadVehicle *prev);
 					if (sf >= cur_skip) IndividualRoadVehicleController(u, prev);
 
 					prev = u;
@@ -3872,7 +3877,7 @@ bool AfterLoadGame()
 	if (SlXvIsFeatureMissing(XSLFI_SAFER_CROSSINGS)) {
 		for (TileIndex t = 0; t < map_size; t++) {
 			if (IsLevelCrossingTile(t)) {
-				SetCrossingOccupiedByRoadVehicle(t, EnsureNoRoadVehicleOnGround(t).Failed());
+				SetCrossingOccupiedByRoadVehicle(t, IsTrainCollidableRoadVehicleOnGround(t));
 			}
 		}
 	}
@@ -4061,6 +4066,10 @@ bool AfterLoadGame()
 		_settings_game.vehicle.through_load_speed_limit = 15;
 	}
 
+	if (SlXvIsFeatureMissing(XSLFI_RAIL_DEPOT_SPEED_LIMIT)) {
+		_settings_game.vehicle.rail_depot_speed_limit = 61;
+	}
+
 	if (SlXvIsFeaturePresent(XSLFI_SCHEDULED_DISPATCH, 1, 2)) {
 		for (OrderList *order_list : OrderList::Iterate()) {
 			if (order_list->GetScheduledDispatchScheduleCount() == 1) {
@@ -4127,6 +4136,13 @@ bool AfterLoadGame()
 			if (IsTileType(t, MP_TREES)) {
 				ClearOldTreeCounter(t);
 			}
+		}
+	}
+
+	if (SlXvIsFeatureMissing(XSLFI_REMAIN_NEXT_ORDER_STATION)) {
+		for (Company *c : Company::Iterate()) {
+			/* Approximately the same time as when this was feature was added and unconditionally enabled */
+			c->settings.remain_if_next_order_same_station = SlXvIsFeaturePresent(XSLFI_TRACE_RESTRICT_TUNBRIDGE);
 		}
 	}
 
@@ -4264,6 +4280,10 @@ void ReloadNewGRFData()
 	}
 
 	UpdateExtraAspectsVariable();
+
+	InitRoadTypesCaches();
+
+	ReInitAllWindows(false);
 
 	/* Update company statistics. */
 	AfterLoadCompanyStats();
